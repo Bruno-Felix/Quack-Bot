@@ -11,7 +11,7 @@ DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 from functions import buscar_objekts, gerar_have_carteira, gerar_lista_links_carteiras, gerar_lista_links_objekts
 from response import criar_resposta_discord
 
-from data import dict_comandos, dict_carteira_comandos
+from data import dict_comandos_integrantes, dict_carteira_comandos
 
 class MyClient(discord.Client):
     async def on_ready(self):
@@ -50,7 +50,7 @@ class MyClient(discord.Client):
         pessoa = None
 
         try:
-            integrante = dict_comandos[message.content]
+            integrante = dict_comandos_integrantes[message.content]
         except Exception:
             pass
 

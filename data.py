@@ -63,7 +63,7 @@ dict_carteira_comandos = {
     "!henry":       'henry',
 }
 
-dict_comandos = {
+dict_comandos_integrantes = {
     "!seoyeon": "seoyeon",
     "!hyerin": "hyerin",
     "!jiwoo": "jiwoo",
