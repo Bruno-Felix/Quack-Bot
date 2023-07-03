@@ -1,16 +1,3 @@
-url_site_carteira = 'https://myobjekts.vercel.app/'
-
-links_objekts = {
-    'drive':      'https://drive.google.com/drive/folders/1H4KGvJnL2EJyDzHwU-cCY52Kxy-rNrA6/',
-    'planilha 1': 'https://docs.google.com/spreadsheets/d/1oYcaPiZlT6_Wpt-ktcH6Yng95ZUQLA8lT0MWoK_fcSQ/',
-    'planilha 2': 'https://docs.google.com/spreadsheets/d/1uVt5X0aUAKz2C6JdEJMpOloIH3aOdNYcdtLU2dMkLeA/'
-}
-
-season = {
-    'Atom': 'Atom',
-    'Binary': 'Binary'
-}
-
 lista_carteiras = {
     "xiaorina":    '0xa446932803BC8a80d87b546732eDF7c51AC264B7',
     "Helmets":     '0x4D57c9F72e1C3263Eb932cd7B5F105D6C877Ab01',
@@ -82,4 +69,18 @@ dict_comandos_integrantes = {
     "!kimlip": "kimlip",
     "!jinsoul": "jinsoul",
     "!choerry": "choerry",
+    "!xinyu": "xinyu"
+}
+
+url_site_carteira = 'https://myobjekts.vercel.app/'
+
+links_objekts = {
+    'drive':      'https://drive.google.com/drive/folders/1H4KGvJnL2EJyDzHwU-cCY52Kxy-rNrA6/',
+    'planilha 1': 'https://docs.google.com/spreadsheets/d/1oYcaPiZlT6_Wpt-ktcH6Yng95ZUQLA8lT0MWoK_fcSQ/',
+    'planilha 2': 'https://docs.google.com/spreadsheets/d/1uVt5X0aUAKz2C6JdEJMpOloIH3aOdNYcdtLU2dMkLeA/'
+}
+
+season = {
+    'Atom': 'Atom',
+    'Binary': 'Binary'
 }
