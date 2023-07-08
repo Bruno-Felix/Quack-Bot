@@ -43,7 +43,6 @@ dict_carteira_comandos = {
     "!larine":      'larine',
     "!fantasia":    'fantasia',
     "!powech":      'powech',
-    "!carter":      'carter',
     "!arca":        'arca',
     "!panchicao":   'panchicao',
     "!henry":       'henry',
