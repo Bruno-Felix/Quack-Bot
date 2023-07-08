@@ -18,7 +18,6 @@ lista_carteiras = {
     'larine':      '0x1d1C610B24b66415a3A66d8409FF61617C8cA2F0',
     'fantasia':    '0x24F8B565E3dBb8B9CBadC6053c2AA673d7ed5404',
     'powech':      '0x921448F40E65eb7828a6b5573EE4359485eaBA5c',
-    'carter':      '0x54A29cFf6fDD6789f8f4d10F7b517faa65520BFf',
     'arca':        '0xabFd09fCFFe5a5B8BA540fa29229ebf81c9A70f6',
     'panchicao':   '0x47C0D8336d659199926c5ee8eb3e2E6537BC9Bb7',
     'henry':       '0xE732670F1A0c5795e4823d978B4f3284c7E89746'
