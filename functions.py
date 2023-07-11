@@ -24,25 +24,25 @@ def gerar_have_carteira(input):
 def gerar_lista_links_carteiras():
     lista_links_carteiras = []
 
-    shorteners = pyshorteners.Shortener()
+    """ shorteners = pyshorteners.Shortener() """
 
     for carteira in lista_carteiras:
         link = gerar_link_carteira(carteira)
-        shorten_url = shorteners.tinyurl.short(link)
+        """ shorten_url = shorteners.tinyurl.short(link) """
 
-        lista_links_carteiras.append(carteira + ': ' + shorten_url)
+        lista_links_carteiras.append(carteira + ': ' + link)
 
     return lista_links_carteiras
 
 def gerar_lista_links_objekts():
     lista_links_objekts = []
 
-    shorteners = pyshorteners.Shortener()
+    """ shorteners = pyshorteners.Shortener() """
 
     for lk in links_objekts:
         link = links_objekts[lk]
-        shorten_url = shorteners.tinyurl.short(link)
+        """ shorten_url = shorteners.tinyurl.short(link) """
 
-        lista_links_objekts.append(lk + ': ' + shorten_url)
+        lista_links_objekts.append(lk + ': ' + link)
 
     return lista_links_objekts
