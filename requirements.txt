@@ -2,3 +2,4 @@ discord.py
 requests
 pyshorteners
 python-dotenv
+pandas
