@@ -28,7 +28,7 @@ commands_idols = {
     'SeoYeon': 'SeoYeon',
     'HyeRin': 'HyeRin',
     'JiWoo': 'JiWoo',
-    'Chaeyeon': 'chaeyeon',
+    'ChaeYeon': 'ChaeYeon',
     'YooYeon': 'YooYeon',
     'SooMin': 'SooMin',
     'NaKyoung': 'NaKyoung',
