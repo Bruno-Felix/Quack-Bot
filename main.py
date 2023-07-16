@@ -97,7 +97,7 @@ for index, wallet in enumerate(commands_wallets):
     usuario = "Selecione o usuario que deseja ver a carteira",
 )
 @app_commands.choices(usuario = wallet_options)
-@bot.tree.command(name = 'carteira', description = 'Busque quem do xet tem o objekt da integrante que você deseja')
+@bot.tree.command(name = 'carteira', description = 'Veja os FCOs da carteira de uma pessoa')
 async def cosmo(interaction: discord.Interaction, usuario: app_commands.Choice[str]):
     await interaction.response.defer()
 
