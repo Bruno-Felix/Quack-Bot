@@ -109,7 +109,7 @@ async def cosmo(interaction: discord.Interaction, usuario: app_commands.Choice[s
 
     embed = discord.Embed(
         title = usuario.name,
-        color = 0xddddd
+        color = 0x0099ff
     )
 
     embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
