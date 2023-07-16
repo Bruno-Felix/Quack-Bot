@@ -20,5 +20,6 @@ wallet_ids_list = {
     'powech':      '0x921448F40E65eb7828a6b5573EE4359485eaBA5c',
     'arca':        '0xabFd09fCFFe5a5B8BA540fa29229ebf81c9A70f6',
     'panchicao':   '0x47C0D8336d659199926c5ee8eb3e2E6537BC9Bb7',
-    'henry':       '0xE732670F1A0c5795e4823d978B4f3284c7E89746'
+    'henry':       '0xE732670F1A0c5795e4823d978B4f3284c7E89746',
+    'chagas':      '0x7D26d9A4448B6d334D142AECEcb720674346e8bF',
 }

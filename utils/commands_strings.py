@@ -21,6 +21,7 @@ commands_wallets = {
     'arca':        'arca',
     'panchicao':   'panchicao',
     'henry':       'henry',
+    'chagas':      'chagas'
 }
 
 commands_idols = {
