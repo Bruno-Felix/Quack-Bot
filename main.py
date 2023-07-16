@@ -1,15 +1,15 @@
 import os
-from os.path import join, dirname
 import discord
+from os.path import join, dirname
+from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
-from dotenv import load_dotenv
 
 from utils.commands_strings import commands_idols, commands_wallets, season
 
 from idol import search_idol_on_objekts_list, separate_idol_objekts_list_by_grids, separate_idol_objekts_list_by_idol
 from wallets import get_all_wallets, get_one_wallet
-from bot_response import resposta_buscar_objekts_integrante, response_bot_wallet_by_idol
+from bot_response import response_bot_search_idol_objekts, response_bot_wallet_by_idol
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -67,8 +67,8 @@ async def cosmo(interaction: discord.Interaction, idol: app_commands.Choice[str]
     objekts_list = get_all_wallets()
     idol_objekts_list = search_idol_on_objekts_list(objekts_list, idol.name, season=season)
 
-    response1, response2, response3 = separate_idol_objekts_list_by_grids(idol_objekts_list)
-    response1, response2, response3 = resposta_buscar_objekts_integrante(response1, response2, response3)
+    grid_1, grid_2, grid_3 = separate_idol_objekts_list_by_grids(idol_objekts_list)
+    grid_1, grid_2, grid_3 = response_bot_search_idol_objekts(grid_1, grid_2, grid_3)
     # --- code ---
 
     embed = discord.Embed(
@@ -76,14 +76,13 @@ async def cosmo(interaction: discord.Interaction, idol: app_commands.Choice[str]
         color = 0xddddd
     )
 
-    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-
     file = discord.File("static/cosmo.png", filename = "image.png")
     embed.set_thumbnail(url = "attachment://image.png")
     
-    embed.add_field(name = '101 a 108', value = response1)
-    embed.add_field(name = '109 a 116', value = response2)
-    embed.add_field(name = '117 a 120', value = response3, inline = False)
+    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
+    embed.add_field(name = '101 a 108', value = grid_1)
+    embed.add_field(name = '109 a 116', value = grid_2)
+    embed.add_field(name = '117 a 120', value = grid_3, inline = False)
     
     await interaction.followup.send(embed = embed, file = file)
 
@@ -112,11 +111,10 @@ async def cosmo(interaction: discord.Interaction, usuario: app_commands.Choice[s
         color = 0x0099ff
     )
 
-    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
-
     file = discord.File("static/cosmo.png", filename = "image.png")
     embed.set_thumbnail(url = "attachment://image.png")
-    
+
+    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
     embed.add_field(name = 'Have', value = response_bot)
     
     await interaction.followup.send(embed = embed, file = file)

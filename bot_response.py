@@ -3,16 +3,16 @@ from utils.commands_strings import commands_idols
 def criar_resposta_discord(lista):
     return '\n'.join(map(str, lista))
 
-def resposta_buscar_objekts_integrante(lista_objekts1, lista_objekts2, lista_objekts3):
+def response_bot_search_idol_objekts(grid_1, grid_2, grid_3):
     resposta_grid1 = []
     resposta_grid2 = []
     resposta_grid3 = []
 
-    if len(lista_objekts1) > 0:
-        for ind in lista_objekts1.index:
-            memberName = lista_objekts1['memberName'][ind]
-            collection = lista_objekts1['collection'][ind]
-            owner  = lista_objekts1['owner'][ind]
+    if len(grid_1) > 0:
+        for ind in grid_1.index:
+            memberName = grid_1['memberName'][ind]
+            collection = grid_1['collection'][ind]
+            owner  = grid_1['owner'][ind]
 
             info = f'{memberName} {collection}: {owner}'
 
@@ -22,11 +22,11 @@ def resposta_buscar_objekts_integrante(lista_objekts1, lista_objekts2, lista_obj
     else:
         resposta_grid1 = '   -   '
 
-    if len(lista_objekts2) > 0:
-        for ind in lista_objekts2.index:
-            memberName = lista_objekts2['memberName'][ind]
-            collection = lista_objekts2['collection'][ind]
-            owner  = lista_objekts2['owner'][ind]
+    if len(grid_2) > 0:
+        for ind in grid_2.index:
+            memberName = grid_2['memberName'][ind]
+            collection = grid_2['collection'][ind]
+            owner  = grid_2['owner'][ind]
             
             info = f'{memberName} {collection}: {owner}'
 
@@ -36,11 +36,11 @@ def resposta_buscar_objekts_integrante(lista_objekts1, lista_objekts2, lista_obj
     else:
         resposta_grid2 = '   -   '
 
-    if len(lista_objekts3) > 0:
-        for ind in lista_objekts3.index:
-            memberName = lista_objekts3['memberName'][ind]
-            collection = lista_objekts3['collection'][ind]
-            owner  = lista_objekts3['owner'][ind]
+    if len(grid_3) > 0:
+        for ind in grid_3.index:
+            memberName = grid_3['memberName'][ind]
+            collection = grid_3['collection'][ind]
+            owner  = grid_3['owner'][ind]
             
             info = f'{memberName} {collection}: {owner}'
 
