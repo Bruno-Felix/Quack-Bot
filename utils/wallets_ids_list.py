@@ -22,4 +22,5 @@ wallet_ids_list = {
     'panchicao':   '0x47C0D8336d659199926c5ee8eb3e2E6537BC9Bb7',
     'henry':       '0xE732670F1A0c5795e4823d978B4f3284c7E89746',
     'chagas':      '0x7D26d9A4448B6d334D142AECEcb720674346e8bF',
+    'aspas':       '0xD27597e7D0Ff575213aaB6A1E47BcAc02bF57A23',
 }
