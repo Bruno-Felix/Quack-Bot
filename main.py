@@ -1,5 +1,6 @@
 import os
 import discord
+from random import randint
 from os.path import join, dirname
 from dotenv import load_dotenv
 from discord.ext import commands
@@ -31,7 +32,27 @@ async def on_ready():
         print(error)
 
 
+# --------
+
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+            return
+    
+    gif_number = randint(1,5)
+    
+    if 'quack' in (str(message.content).lower()):
+        await message.channel.send('QUACK Yeonji mencionada!!')
+        await message.channel.send(file=discord.File(f'static/quack_{1}.gif'))
+
+    if 'maluca' in (str(message.content).lower()):
+        await message.channel.send('MALUCA mencionada!!')
+        await message.channel.send(file=discord.File(f'static/chaeyeon_{gif_number}.gif'))
+
+
 # --------------
+
 
 """ @app_commands.describe(
     id_cosmo = "Passe seu id no aplicativo do Cosmo",
@@ -42,7 +63,9 @@ async def insert_wallet(interaction: discord.Interaction, id_cosmo: str, wallet_
     await interaction.response.send_message(f'{interaction.user.mention}{id_cosmo}{wallet_address}')
     # 1122561669210587157 """
 
+
 # --------------
+
 
 idol_options = []
 for index, a in enumerate(commands_idols):
@@ -87,7 +110,9 @@ async def cosmo(interaction: discord.Interaction, idol: app_commands.Choice[str]
     
     await interaction.followup.send(embed = embed, file = file)
 
+
 # --------------
+
 
 wallet_options = []
 for index, wallet in enumerate(commands_wallets):
@@ -120,10 +145,5 @@ async def cosmo(interaction: discord.Interaction, usuario: app_commands.Choice[s
     
     await interaction.followup.send(embed = embed, file = file)
 
-# --------
-
-async def on_message(self, message):
-    if 'quack' in (str(message.content).lower()):
-        await message.channel.send('QUACK Yeonji mencionada!!')
 
 bot.run(DISCORD_TOKEN)
