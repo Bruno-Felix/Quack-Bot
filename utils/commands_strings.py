@@ -25,7 +25,7 @@ commands_wallets = {
     'aspas':       'aspas',
 }
 
-commands_idols = {
+tripleS_idols = {
     'SeoYeon': 'SeoYeon',
     'HyeRin': 'HyeRin',
     'JiWoo': 'JiWoo',
@@ -40,15 +40,25 @@ commands_idols = {
     'YeonJi': 'YeonJi',
     'Nien': 'nien',
     'SoHyun': 'SoHyun',
-    'Xinyu': 'Xinyu',
+    'Xinyu': 'Xinyu'
+}
+    
+artms_idols = {
     'Choerry': 'Choerry',
     'KimLip': 'KimLip',
     'JinSoul': 'JinSoul',
     'HeeJin': 'HeeJin',
-    'HaSeul': 'HaSeul'
+    'HaSeul': 'HaSeul',
 }
 
-season = {
-    'Atom01': 'Atom01',
-    'Binary01': 'Binary01'
+commands_idols = {**tripleS_idols, **artms_idols}
+
+season_cosmo_list = [
+    'Atom01',
+    'Binary01',
+]
+
+current_season_dict = {
+    'tripleS': season_cosmo_list[1],
+    'artms': season_cosmo_list[0]
 }

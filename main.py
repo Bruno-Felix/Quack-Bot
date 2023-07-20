@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
 
-from utils.commands_strings import commands_idols, commands_wallets, season
+from utils.commands_strings import commands_idols, tripleS_idols, commands_wallets, season_cosmo_list, current_season_dict
 
 from idol import search_idol_on_objekts_list, separate_idol_objekts_list_by_grids, separate_idol_objekts_list_by_idol
 from wallets import get_all_wallets, get_one_wallet
@@ -18,7 +18,7 @@ DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+bot = commands.Bot(command_prefix = "!", intents=discord.Intents.all())
 
 @bot.event
 async def on_ready():
@@ -49,7 +49,7 @@ for index, a in enumerate(commands_idols):
     idol_options.append(app_commands.Choice(name = f"{a}", value = f"{index + 1}"))
 
 season_options = []
-for index, a in enumerate(season):
+for index, a in enumerate(season_cosmo_list):
     season_options.append(app_commands.Choice(name = f"{a}", value = f"{index + 1}"))
 
 @app_commands.describe(
@@ -62,10 +62,11 @@ async def cosmo(interaction: discord.Interaction, idol: app_commands.Choice[str]
     await interaction.response.defer()
 
     # --- code ---
-    season = temporada.name if temporada else 'Binary01'
+    season = current_season_dict['tripleS'] if idol.name in tripleS_idols else current_season_dict['artms']
+    season = temporada.name if temporada else season
 
     objekts_list = get_all_wallets()
-    idol_objekts_list = search_idol_on_objekts_list(objekts_list, idol.name, season=season)
+    idol_objekts_list = search_idol_on_objekts_list(objekts_list, idol.name, season = season)
 
     grid_1, grid_2, grid_3 = separate_idol_objekts_list_by_grids(idol_objekts_list)
     grid_1, grid_2, grid_3 = response_bot_search_idol_objekts(grid_1, grid_2, grid_3)
