@@ -40,7 +40,8 @@ tripleS_idols = {
     'YeonJi': 'YeonJi',
     'Nien': 'nien',
     'SoHyun': 'SoHyun',
-    'Xinyu': 'Xinyu'
+    'Xinyu': 'Xinyu',
+    'Mayu': 'Mayu',
 }
     
 artms_idols = {
