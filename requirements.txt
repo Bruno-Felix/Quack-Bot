@@ -2,4 +2,4 @@ discord.py
 requests
 pyshorteners
 python-dotenv
-pandas
+pandas==2.0.3
