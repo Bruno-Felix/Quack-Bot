@@ -40,13 +40,13 @@ async def on_message(message):
     if message.author == bot.user:
             return
     
-    gif_number = randint(1,5)
-    
     if 'quack' in (str(message.content).lower()):
         await message.channel.send('QUACK Yeonji mencionada!!')
         await message.channel.send(file=discord.File(f'static/quack_{1}.gif'))
 
     if 'maluca' in (str(message.content).lower()):
+        gif_number = randint(1,5)
+
         await message.channel.send('MALUCA mencionada!!')
         await message.channel.send(file=discord.File(f'static/chaeyeon_{gif_number}.gif'))
 
