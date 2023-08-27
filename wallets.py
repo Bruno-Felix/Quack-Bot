@@ -46,7 +46,8 @@ def __get_rest_of_wallet(wallet: object, wallet_owner: int) -> list:
     rest_of_wallet_objekts_list = []
 
     count_requests_wallet = 1
-    while int(wallet['totalCount']) > count_requests_wallet * 100:
+    aux_count = int(wallet['totalCount']) if wallet['totalCount'] else 100
+    while aux_count > count_requests_wallet * 100:
         wallet_response = get_wallet(wallet_ids_list[wallet_owner], wallet['pageKey'])
 
         final_wallet = __repair_wallet_objekts(wallet_response['objekts'], wallet_owner)
