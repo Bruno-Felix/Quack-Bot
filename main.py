@@ -7,9 +7,10 @@ from discord.ext import commands
 from discord import app_commands
 
 from utils.commands_strings import commands_idols, tripleS_idols, commands_wallets, season_cosmo_list, current_season_dict
+from utils.objekts import special_price, double_price, first_price
 
 from idol import search_idol_on_objekts_list, separate_idol_objekts_list_by_grids, separate_idol_objekts_list_by_idol
-from wallets import get_all_wallets, get_one_wallet
+from wallets import get_all_wallets, get_one_wallet, read_wallet_price
 from bot_response import response_bot_search_idol_objekts, response_bot_wallet_by_idol
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -139,6 +140,44 @@ async def cosmo(interaction: discord.Interaction, usuario: app_commands.Choice[s
     embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
     embed.add_field(name = 'Have', value = response_bot)
     
+    await interaction.followup.send(embed = embed, file = file)
+
+
+# --------------
+
+
+wallet_options = []
+for index, wallet in enumerate(commands_wallets):
+    wallet_options.append(app_commands.Choice(name = f"{wallet}", value = f"{index + 1}"))
+
+@app_commands.describe(
+    usuario = "Selecione o usuario que deseja ver o preço da carteira",
+)
+@app_commands.choices(usuario = wallet_options)
+@bot.tree.command(name = 'preco', description = 'Veja o preço da carteira')
+async def preco(interaction: discord.Interaction, usuario: app_commands.Choice[str]):
+    await interaction.response.defer()
+
+    # --- code ---
+    price, special_objekt_count, double_objekt_count, first_objekt_count =  read_wallet_price(usuario.name)
+    # --- code ---
+
+    embed = discord.Embed(
+        title = usuario.name,
+        color = 0x0099ff
+    )
+
+    file = discord.File("static/cosmo.png", filename = "image.png")
+    embed.set_thumbnail(url = "attachment://image.png")
+
+    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
+
+    embed.add_field(name = f'Special ({special_price} reais)', value = special_objekt_count)
+    embed.add_field(name = f'Double ({double_price} reais)', value = double_objekt_count)
+    embed.add_field(name = f'First ({first_price}) reais', value = first_objekt_count)
+
+    embed.add_field(name = 'Preço', value = f'{price} reais')
+
     await interaction.followup.send(embed = embed, file = file)
 
 

@@ -3,6 +3,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from endpoint_requests import get_wallet
 from utils.wallets_ids_list import wallet_ids_list
+from utils.objekts import special_price, double_price, first_price
 
 def get_all_wallets() -> list:
     all_objekts_list = []
@@ -34,6 +35,32 @@ def get_one_wallet(wallet_owner: str) -> list:
     wallet_objekts_list.extend(__get_rest_of_wallet(wallet_response, wallet_owner))
 
     return pd.DataFrame(wallet_objekts_list)
+
+def read_wallet_price(wallet_owner: str) -> str:
+    wallet_objekts_list = get_one_wallet(wallet_owner)
+
+    price = 0
+    special = 0
+    double = 0
+    first = 0
+
+    for objekt in wallet_objekts_list.index:
+        objekt_class = wallet_objekts_list['className'][objekt]
+        objekt_is_transferable = wallet_objekts_list['transferable'][objekt]
+
+        if objekt_is_transferable:
+            if objekt_class == 'Special':
+                price += special_price
+                special += 1
+            if objekt_class == 'Double':
+                price += double_price
+                double += 1
+            if objekt_class == 'First':
+                price += first_price
+                first += 1
+
+    print(special, double, first)
+    return str(price), special, double, first
 
 def __repair_wallet_objekts(wallet: list, wallet_owner: str):
     for objekt in wallet:
