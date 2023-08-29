@@ -56,6 +56,9 @@ async def on_message(message):
         await message.channel.send('MEDICA mencionada!!')
         await message.channel.send(file=discord.File(f'static/medica_{gif_number}.gif'))
 
+    # if 'show do Twice' in (str(message.content).lower()):
+    #    await message.channel.send('06/02 ELAS VIRÃO!!')
+    #    await message.channel.send(file=discord.File(f'static/twice.gif'))
 
 # --------------
 
