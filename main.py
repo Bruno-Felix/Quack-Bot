@@ -39,7 +39,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot.user:
             return
-    
+
     if 'quack' in (str(message.content).lower()):
         await message.channel.send('QUACK Yeonji mencionada!!')
         await message.channel.send(file=discord.File(f'static/quack_{1}.gif'))
@@ -59,19 +59,6 @@ async def on_message(message):
     #if 'show do Twice' in (str(message.content).lower()):
     #    await message.channel.send('06/02 ELAS VIRÃO!!')
     #    await message.channel.send(file=discord.File(f'static/twice.gif'))
-
-# --------------
-
-
-""" @app_commands.describe(
-    id_cosmo = "Passe seu id no aplicativo do Cosmo",
-    wallet_address = "Passe seu wallet address para entrar na lista. (App Cosmo -> My -> Copy the wallet address)",
-)
-@bot.tree.command(name = "inscrever", description = "Peça pra se inscrever na lista das carteiras do xet")
-async def insert_wallet(interaction: discord.Interaction, id_cosmo: str, wallet_address: str):
-    await interaction.response.send_message(f'{interaction.user.mention}{id_cosmo}{wallet_address}')
-    # 1122561669210587157 """
-
 
 # --------------
 
