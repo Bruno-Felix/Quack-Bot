@@ -174,7 +174,7 @@ async def preco(interaction: discord.Interaction, usuario: app_commands.Choice[s
 
     embed.add_field(name = f'Special ({special_price} reais)', value = special_objekt_count)
     embed.add_field(name = f'Double ({double_price} reais)', value = double_objekt_count)
-    embed.add_field(name = f'First ({first_price}) reais', value = first_objekt_count)
+    embed.add_field(name = f'First ({first_price} reais)', value = first_objekt_count)
 
     embed.add_field(name = 'Preço', value = f'{price} reais')
 
