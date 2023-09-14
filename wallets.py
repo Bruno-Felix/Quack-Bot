@@ -15,6 +15,9 @@ def get_all_wallets() -> list:
             for future, wallet_owner in zip(futures, wallet_ids_list):
                 wallet_response = future.result()
 
+                if len(wallet_response['objekts']) == 0:
+                    wallet_response = get_wallet(wallet_ids_list[wallet_owner])
+
                 final_wallet = __repair_wallet_objekts(wallet_response['objekts'], wallet_owner)
 
                 all_objekts_list.extend(final_wallet)
