@@ -8,6 +8,7 @@ def get_wallet(wallet_id, page_key = None):
         resposta = requests.get(f'{url}{url_page_key}')
 
         if resposta.status_code != 200:
+            return {'objekts': []}
             raise Exception(f'Error on search wallet: {resposta.content}')
             
         return resposta.json()
