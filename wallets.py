@@ -9,22 +9,20 @@ def get_all_wallets() -> list:
     all_objekts_list = []
 
     try:
-        with ThreadPoolExecutor() as executor:
-            print('get_all_wallets')
-            futures = [executor.submit(get_wallet, wallet_ids_list[wallet_owner]) for wallet_owner in wallet_ids_list]
+        print('get_all_wallets')
 
-            for future, wallet_owner in zip(futures, wallet_ids_list):
-                wallet_response = future.result()
+        for wallet_owner in wallet_ids_list:
+            wallet_response = get_wallet(wallet_ids_list[wallet_owner])
 
-                print(len(wallet_ids_list[wallet_owner]), wallet_owner)
+            print(len(wallet_response['objekts']), wallet_owner)
 
-                if len(wallet_response['objekts']) == 0:
-                    wallet_response = get_wallet(wallet_ids_list[wallet_owner])
+            if len(wallet_response['objekts']) == 0:
+                wallet_response = get_wallet(wallet_ids_list[wallet_owner])
 
-                final_wallet = __repair_wallet_objekts(wallet_response['objekts'], wallet_owner)
+            final_wallet = __repair_wallet_objekts(wallet_response['objekts'], wallet_owner)
 
-                all_objekts_list.extend(final_wallet)
-                all_objekts_list.extend(__get_rest_of_wallet(wallet_response, wallet_owner))
+            all_objekts_list.extend(final_wallet)
+            all_objekts_list.extend(__get_rest_of_wallet(wallet_response, wallet_owner))
 
         return pd.DataFrame(all_objekts_list)
     except Exception as error:
