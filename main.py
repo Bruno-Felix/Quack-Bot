@@ -86,8 +86,10 @@ async def cosmo(interaction: discord.Interaction, idol: app_commands.Choice[str]
     season = temporada.name if temporada else season
 
     objekts_list = get_all_wallets()
+    print('search_idol_on_objekts_list')
     idol_objekts_list = search_idol_on_objekts_list(objekts_list, idol.name, season = season)
 
+    print('separate_idol_objekts_list_by_grids')
     grid_1, grid_2, grid_3 = separate_idol_objekts_list_by_grids(idol_objekts_list)
     grid_1, grid_2, grid_3 = response_bot_search_idol_objekts(grid_1, grid_2, grid_3)
     # --- code ---

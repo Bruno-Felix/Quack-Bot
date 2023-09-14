@@ -10,10 +10,13 @@ def get_all_wallets() -> list:
 
     try:
         with ThreadPoolExecutor() as executor:
+            print('get_all_wallets')
             futures = [executor.submit(get_wallet, wallet_ids_list[wallet_owner]) for wallet_owner in wallet_ids_list]
 
             for future, wallet_owner in zip(futures, wallet_ids_list):
                 wallet_response = future.result()
+
+                print(len(wallet_ids_list[wallet_owner]), wallet_owner)
 
                 if len(wallet_response['objekts']) == 0:
                     wallet_response = get_wallet(wallet_ids_list[wallet_owner])
