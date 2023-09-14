@@ -49,13 +49,13 @@ async def on_message(message):
         gif_number = randint(1,5)
 
         await message.channel.send('MALUCA mencionada!!')
-        await message.channel.send(file=discord.File(f'static/chaeyeon_{gif_number}.gif'))
+        await message.channel.send(file=discord.File(f'static/chaeyeon_{1}.gif'))
 
     if 'medica' in (str(message.content).lower()):
         gif_number = randint(1,5)
 
         await message.channel.send('MEDICA mencionada!!')
-        await message.channel.send(file=discord.File(f'static/medica_{gif_number}.gif'))
+        await message.channel.send(file=discord.File(f'static/medica_{1}.gif'))
 
     #if 'show do Twice' in (str(message.content).lower()):
     #    await message.channel.send('06/02 ELAS VIRÃO!!')
