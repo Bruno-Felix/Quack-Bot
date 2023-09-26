@@ -10,6 +10,6 @@ class grid_3:
     start = '117'
     end   = '120'
 
-special_price = 40
-double_price = 30
+special_price = 35
+double_price = 20
 first_price = 15
