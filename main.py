@@ -1,3 +1,4 @@
+import json
 import os
 import discord
 from random import randint
@@ -42,16 +43,19 @@ async def on_message(message):
             return
 
     if 'quack' in (str(message.content).lower()):
+        num_gif = randint(1,5)
         await message.channel.send('QUACK Yeonji mencionada!!')
-        await message.channel.send(file=discord.File(f'static/quack_{1}.gif'))
+        await message.channel.send(file=discord.File(f'static/quack_{num_gif}.gif'))
 
     if 'maluca' in (str(message.content).lower()):
+        num_gif = randint(1,5)
         await message.channel.send('MALUCA mencionada!! (F gif pq o Xet quebrou o comando)')
-        #await message.channel.send(file=discord.File(f'static/chaeyeon_{1}.gif'))
+        await message.channel.send(file=discord.File(f'static/chaeyeon_{num_gif}.gif'))
 
     if 'medica' in (str(message.content).lower()):
+        num_gif = randint(1,5)
         await message.channel.send('MEDICA mencionada!! (F gif pq o Xet quebrou o comando)')
-        #await message.channel.send(file=discord.File(f'static/medica_{1}.gif'))
+        await message.channel.send(file=discord.File(f'static/medica_{num_gif}.gif'))
 
     #if 'show do Twice' in (str(message.content).lower()):
     #    await message.channel.send('06/02 ELAS VIRÃO!!')
