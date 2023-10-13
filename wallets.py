@@ -1,11 +1,12 @@
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed  # Importe 'as_completed' para lidar com os resultados das threads
 
 from endpoint_requests import get_wallet
 from utils.wallets_ids_list import wallet_ids_list
 from utils.objekts import special_price, double_price, first_price
 
-def get_all_wallets() -> list:
+""" def get_all_wallets() -> list:
     all_objekts_list = []
 
     try:
@@ -26,7 +27,7 @@ def get_all_wallets() -> list:
 
         return pd.DataFrame(all_objekts_list)
     except Exception as error:
-        raise Exception(f'Error on get all wallets: {error}')
+        raise Exception(f'Error on get all wallets: {error}') """
 
 def get_one_wallet(wallet_owner: str) -> list:
     wallet_objekts_list = []
@@ -39,6 +40,28 @@ def get_one_wallet(wallet_owner: str) -> list:
     wallet_objekts_list.extend(__get_rest_of_wallet(wallet_response, wallet_owner))
 
     return pd.DataFrame(wallet_objekts_list)
+
+def get_all_wallets() -> pd.DataFrame:
+    all_objekts_list = []
+
+    try:
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(get_wallet, wallet_ids_list[wallet_owner]) for wallet_owner in wallet_ids_list]
+
+            for future, wallet_owner in zip(futures, wallet_ids_list):
+                wallet_response = future.result()
+
+                if len(wallet_response['objekts']) == 0:
+                    wallet_response = get_wallet(wallet_ids_list[wallet_owner])
+
+                final_wallet = __repair_wallet_objekts(wallet_response['objekts'], wallet_owner)
+
+                all_objekts_list.extend(final_wallet)
+                all_objekts_list.extend(__get_rest_of_wallet(wallet_response, wallet_owner))
+
+        return pd.DataFrame(all_objekts_list)
+    except Exception as error:
+        raise Exception(f'Error on get all wallets: {error}')
 
 def read_wallet_price(wallet_owner: str) -> str:
     wallet_objekts_list = get_one_wallet(wallet_owner)

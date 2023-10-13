@@ -57,6 +57,7 @@ commands_idols = {**tripleS_idols, **artms_idols}
 season_cosmo_list = [
     'Atom01',
     'Binary01',
+    'Cream01',
 ]
 
 current_season_dict = {
