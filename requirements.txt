@@ -3,3 +3,4 @@ requests
 pyshorteners
 python-dotenv
 pandas
+notion_client
