@@ -17,15 +17,17 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+
 @bot.event
 async def on_ready():
     try:
         synced = await bot.tree.sync()
         
-        print(f'Bot pronto!! Estou conectado como {bot.user}')
-        print(f'Synced {len(synced)} commands')
+        print(f'Quack Bot pronta!! Conectado como {bot.user}')
+        print(f'{len(synced)} comandos sincronizados')
     except Exception as error:
         print(error)
+
 
 # --------------
 
@@ -62,12 +64,6 @@ async def on_message(message):
 
 # --------------
 
-    
-# --------------
-
-""" @app_commands.describe(
-    data = "Pesquise os lançamentos de um dia em específico",
-) """
 @bot.tree.command(name = 'hoje', description = 'Veja os lançamentos de kpop do dia')
 async def cosmo(interaction: discord.Interaction):
     await interaction.response.defer()
