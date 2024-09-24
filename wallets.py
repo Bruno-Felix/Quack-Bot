@@ -1,7 +1,7 @@
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor
 
-from endpoint_requests import get_wallet
+from utils.endpoint_requests import get_wallet
 from utils.wallets_ids_list import wallet_ids_list
 
 def get_all_wallets() -> list:

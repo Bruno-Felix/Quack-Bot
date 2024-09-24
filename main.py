@@ -5,12 +5,17 @@ from os.path import join, dirname
 from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
+from datetime import date
 
 from utils.commands_strings import commands_idols, tripleS_idols, commands_wallets, season_cosmo_list, current_season_dict
 
 from idol import search_idol_on_objekts_list, separate_idol_objekts_list_by_grids, separate_idol_objekts_list_by_idol
-from wallets import get_all_wallets, get_one_wallet
-from bot_response import response_bot_search_idol_objekts, response_bot_wallet_by_idol
+from wallets import get_all_wallets
+from utils.bot_response import response_bot_search_idol_objekts, response_bot_wallet_by_idol, criar_resposta_discord, criar_resposta_discord_musicas
+
+from new_wallets import get_one_wallet
+
+from music import buscar_lancamentos
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -49,6 +54,16 @@ async def on_message(message):
 
         await message.channel.send('MALUCA mencionada!!')
         await message.channel.send(file=discord.File(f'static/chaeyeon_{gif_number}.gif'))
+
+    if 'medica' in (str(message.content).lower()):
+        gif_number = randint(1,5)
+
+        await message.channel.send('MEDICA mencionada!!')
+        #await message.channel.send(file=discord.File(f'static/medica_{gif_number}.gif'))
+
+    if 'tohrlive' in (str(message.content).lower()):
+        await message.channel.send('Vamo Trabalhar Tohr!!')
+        await message.channel.send(file=discord.File(f'static/tohrjob.gif'))
 
 
 # --------------
@@ -145,5 +160,35 @@ async def cosmo(interaction: discord.Interaction, usuario: app_commands.Choice[s
     
     await interaction.followup.send(embed = embed, file = file)
 
+
+# --------------
+    
+""" @app_commands.describe(
+    data = "Pesquise os lançamentos de um dia em específico",
+) """
+@bot.tree.command(name = 'daily', description = 'Veja os lançamentos de kpop do dia')
+async def cosmo(interaction: discord.Interaction):
+    await interaction.response.defer()
+
+    # --- code ---
+    #hoje = date.today()
+    hoje = date(2024, 9, 2)
+    
+    lista = buscar_lancamentos(hoje)
+    lista = criar_resposta_discord_musicas(lista)
+    # --- code ---
+
+    embed = discord.Embed(
+        title = 'Lançamentos do dia',
+        color = 0x0099ff
+    )
+
+    dia = str(hoje.day).zfill(2)  # Adiciona um zero se o dia for menor que 10
+    mes = str(hoje.month).zfill(2)
+
+    embed.set_author(name = interaction.user.name, icon_url = interaction.user.avatar)
+    embed.add_field(name = f'{dia}/{mes}', value = lista)
+
+    await interaction.followup.send(embed = embed)
 
 bot.run(DISCORD_TOKEN)

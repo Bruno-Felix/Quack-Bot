@@ -1,28 +1,16 @@
 commands_wallets = {
     'xiaorina':    'xiaorina',
     'helmets':     'helmets',
-    'tohr':        'tohr',
     'imshoyou':    'imshoyou',
     'tenma':       'tenma',
     'srdonabenta': 'srdonabenta',
-    'jinx':        'jinx',
     'renatin':     'renatin',
     'daniel':      'daniel',
     'luke':        'luke',
-    'dahyundo':    'dahyundo',
-    'ybo':         'ybo',
     'ducker':      'ducker',
     'turma':       'turma',
-    'bely':        'bely',
-    'loverlorful': 'loverlorful',
-    'larine':      'larine',
     'fantasia':    'fantasia',
-    'powech':      'powech',
-    'arca':        'arca',
-    'panchicao':   'panchicao',
     'henry':       'henry',
-    'chagas':      'chagas',
-    'aspas':       'aspas',
 }
 
 tripleS_idols = {
@@ -42,6 +30,10 @@ tripleS_idols = {
     'SoHyun': 'SoHyun',
     'Xinyu': 'Xinyu',
     'Mayu': 'Mayu',
+    'Lynn': 'Lynn',
+    'JooBin': 'JooBin',
+    'HaYeon': 'HaYeon',
+    'ShiOn': 'ShiOn',
 }
     
 artms_idols = {
@@ -57,9 +49,10 @@ commands_idols = {**tripleS_idols, **artms_idols}
 season_cosmo_list = [
     'Atom01',
     'Binary01',
+    'Cream01'
 ]
 
 current_season_dict = {
-    'tripleS': season_cosmo_list[1],
+    'tripleS': season_cosmo_list[2],
     'artms': season_cosmo_list[0]
 }

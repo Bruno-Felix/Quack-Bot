@@ -34,13 +34,13 @@ def separate_idol_objekts_list_by_grids(idol_objekts_list: list):
 
 def separate_idol_objekts_list_by_idol(idol_objekts_list: list):
     array_idols = {}
+    print('eefpfewnp')
 
-    idol_objekts_list = pd.DataFrame(idol_objekts_list).sort_values('collection')
 
     for idol in commands_idols:
-        array_idols[idol] = idol_objekts_list[(idol_objekts_list['memberName'] == idol) &
-                                              (idol_objekts_list['transferable'] == True) &
-                                              (idol_objekts_list['className'] == 'First')]
+        array_idols[idol] = idol_objekts_list[(idol_objekts_list['member'] == idol)]
+
+    print(array_idols)
 
     return array_idols
 
