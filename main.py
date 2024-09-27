@@ -5,11 +5,10 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from datetime import date
 from random import randint
-from PIL import Image
 
 from src.music import calendar
 from src.cartola import cartola
-from src.images import images
+from src.images import image_generator
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -165,21 +164,36 @@ async def mercado(interaction: discord.Interaction):
 
 # --------------
 
-@bot.tree.command(name='tohrcarteira', description='Ola')
-#async def jypespera(interaction: discord.Interaction, member: Optional[discord.Member] = None):
+templates = {
+    "tohr_carteira": {
+        "filename": "tohr_carteira.png",
+        "coords": [[[87, 96], [300, 99], [81, 406], [294, 411]]] 
+    },
+    "jyp_espera": {
+        "filename": "jyp_espera.png",
+        "coords": [[18, 138], [254, 118], [58, 360], [270, 272]]
+    }
+}
+
+@bot.tree.command(name='tohrcarteira', description='Tohr dando carteirada.')
 async def tohrcarteira(interaction: discord.Interaction, image_attachment: discord.Attachment):
     await interaction.response.defer()
 
-    images.download_image(image_attachment, 'teste.png')
+    image_generator.make_image(templates['tohr_carteira'], image_attachment)
 
-    images.make_image()
-    # teste = Image.open(image_attachment)
+    await interaction.followup.send(file=discord.File('result.png'))
 
-    # teste.save()
-    
-    member = interaction.user
+    image_generator.delete_images()
 
-    await interaction.followup.send(file=discord.File('nseinsei.png'))
+@bot.tree.command(name='jypespera', description='O que será que o JYP está esperando?')
+async def jypespera(interaction: discord.Interaction, image_attachment: discord.Attachment):
+    await interaction.response.defer()
+
+    image_generator.make_image(templates['jyp_espera'], image_attachment)
+
+    await interaction.followup.send(file=discord.File('result.png'))
+
+    image_generator.delete_images()
 
 
 bot.run(DISCORD_TOKEN)

@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from PIL import Image
 from io import BytesIO
-
+import os
 
 def download_image(url, save_path):
     try:
@@ -14,20 +14,17 @@ def download_image(url, save_path):
         
         image.save(save_path)
 
-        print(f'Imagem baixada e salva como {save_path}')
-
     except requests.exceptions.RequestException as e:
         print(f'Erro ao baixar a imagem: {e}')
     except IOError as e:
         print(f'Erro ao salvar a imagem: {e}')
 
 
-def perspectiveImage(image_bg_cv, image_sm_cv):
+def perspectiveImage(image_bg_cv, image_sm_cv, coords):
     points_orig = np.float32([[0, 0], [image_sm_cv.shape[1], 0], [0, image_sm_cv.shape[0]], [image_sm_cv.shape[1], image_sm_cv.shape[0]]])
 
-    #points_dest = np.float32([[18, 138], [254, 118], [58, 360], [270, 272]]) # jyp
-    points_dest = np.float32([[87, 96], [300, 99], [81, 406], [294, 411]])
-    
+    points_dest = np.float32(coords)
+
     matrix = cv2.getPerspectiveTransform(points_orig, points_dest)
 
     image_sm_transformed = cv2.warpPerspective(image_sm_cv, matrix, (image_bg_cv.shape[1], image_bg_cv.shape[0]))
@@ -36,17 +33,28 @@ def perspectiveImage(image_bg_cv, image_sm_cv):
 
     return result_pil
 
-def make_image():
-    caminho_cabeca = "teste.png"  
-    caminho_monitor = "tohr_carteira.png" 
+def make_image(template, image_attachment):
+    image_path = 'image.png'  
+    background_path = f'static/template/{template["filename"]}'
 
-    imagem_monitor = Image.open(caminho_monitor)
+    download_image(image_attachment, 'image.png')
 
-    image_bg_cv = cv2.imread(caminho_monitor)
-    image_sm_cv = cv2.imread(caminho_cabeca)
+    imagem_monitor = Image.open(background_path)
 
-    resultado = perspectiveImage(image_bg_cv, image_sm_cv)
+    image_bg_cv = cv2.imread(background_path)
+    image_sm_cv = cv2.imread(image_path)
+
+    resultado = perspectiveImage(image_bg_cv, image_sm_cv, template['coords'])
 
     resultado.paste(imagem_monitor, (0,0), imagem_monitor)
 
-    resultado.save('nseinsei.png')
+    resultado.save('result.png')
+
+def delete_images():
+    delete_image('image.png')
+    delete_image('result.png')
+
+def delete_image(image_path):
+    if os.path.exists(image_path):
+        os.remove(image_path)
+
