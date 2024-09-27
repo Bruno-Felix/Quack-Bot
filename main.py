@@ -7,6 +7,7 @@ from datetime import date
 from random import randint
 
 from src.music import calendar
+from src.cartola import cartola
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -112,7 +113,6 @@ async def cosmo(interaction: discord.Interaction):
 
 # --------------
 
-
 @bot.tree.command(name='semana', description='Veja os lançamentos de kpop da semana')
 async def cosmo(interaction: discord.Interaction):
     await interaction.response.defer()
@@ -140,4 +140,27 @@ async def cosmo(interaction: discord.Interaction):
 
 # --------------
 
+@bot.tree.command(name='mercado', description='Veja quando o mercado irá fechar')
+async def mercado(interaction: discord.Interaction):
+    await interaction.response.defer()
+
+    rodada_atual, fechamento, status_mercado, diferenca = await cartola.market_close_date()
+
+    embed = discord.Embed(
+        title=f'Mercado da {rodada_atual}ª rodada',
+        color=0xccff66
+    )
+
+    embed.set_author(name=interaction.user.name,
+                     icon_url=interaction.user.avatar)
+    
+    status_mercado_str = 'Aberto ✅' if status_mercado == 'Aberto' else 'Fechado ❌'
+
+    embed.add_field(name='Status:', value=f'Mercado {status_mercado_str}', inline=False)
+    embed.add_field(name='Fechamento:', value=f'{fechamento}\n\nFaltam: {diferenca}', inline=False)
+
+    await interaction.followup.send(embed=embed)
+
+# --------------
+ 
 bot.run(DISCORD_TOKEN)

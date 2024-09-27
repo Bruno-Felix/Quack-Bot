@@ -1,4 +1,5 @@
 import os
+import requests
 from notion_client import Client
 from dotenv import load_dotenv
 
@@ -25,3 +26,11 @@ async def request_daily_kpop_calendar(search_date):
     results = notion.databases.query(**query)
 
     return results
+
+async def request_market_close_date():
+    results = requests.api.get('https://api.cartola.globo.com/mercado/status')
+    results = results.json()
+
+    status_mercado = 'Aberto' if results['status_mercado'] else 'Fechado'
+
+    return results['rodada_atual'], results['fechamento'], status_mercado

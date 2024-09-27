@@ -1,7 +1,6 @@
 from datetime import timedelta
 
-from ..requests import request_daily_kpop_calendar
-
+from ..endpoint_requests import request_daily_kpop_calendar
 
 async def get_daily_kpop_calendar(search_date):
     results = await request_daily_kpop_calendar(search_date)
