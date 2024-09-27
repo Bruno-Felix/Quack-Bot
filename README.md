@@ -16,9 +16,11 @@
 pip install -r requirements.txt
 ```
 
-#### Rodar o arquivo main na raiz do repositório
+#### Rodar o Bot
+Para isso é necessário criar um App para teste:
+[criar_e_rodar_bot_discord.pdf](https://github.com/user-attachments/files/17167829/criar_e_rodar_bot_discord.pdf)
+
 ```
 python main.py
 ```
-*É necessário que tenha o arquivo .env para rodar perfeitamente o bot. Peça um desenvolvedor o arquivo.*
 ![image](https://github.com/user-attachments/assets/fbcfd87c-039b-4a59-ac6b-ad354fcaf987)
