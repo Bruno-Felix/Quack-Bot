@@ -41,16 +41,22 @@ async def on_message(message):
         await message.channel.send(file=discord.File(f'static/quack_{1}.gif'))
 
     if 'maluca' in (str(message.content).lower()):
-        await message.add_reaction('<:tohrn1S4:1104808399343996938>')
+        try:
+            await message.add_reaction('<:tohrn1S4:1104808399343996938>')
+        except Exception:
+            pass
         if 'maluca' == (str(message.content).lower()):
             gif_number = randint(1, 5)
 
             await message.channel.send('MALUCA mencionada!!')
             await message.channel.send(file=discord.File(f'static/chaeyeon_{gif_number}.gif'))
 
-    if 'medica' in (str(message.content).lower()):
-        await message.add_reaction('<:tohrn1OK:1158268768779239544>')
-        if 'medica' == (str(message.content).lower()):
+    if 'medica' in (str(message.content).lower()) or 'médica' in (str(message.content).lower()):
+        try:
+            await message.add_reaction('<:tohrn1OK:1158268768779239544>')
+        except Exception:
+            pass
+        if 'medica' == (str(message.content).lower()) or 'médica' == (str(message.content).lower()):
             gif_number = randint(1, 5)
 
             await message.channel.send('MEDICA mencionada!!')
@@ -58,6 +64,17 @@ async def on_message(message):
 
     if 'kaede' in (str(message.content).lower()) or 'kaebeça' in (str(message.content).lower()):
         await message.add_reaction('<:kaebeca:1234954376158773308>')
+
+    if 'fleeky' in (str(message.content).lower()) or 'gang' in (str(message.content).lower()):
+        await message.add_reaction('<:fleekabeca:1269741063946375188>')
+
+    if 'r6' in (str(message.content).lower()):
+        await message.add_reaction('<:peepoEvil:914947766386581504>')
+
+    if 'fifinha' in (str(message.content).lower()):
+        await message.add_reaction('⚽')
+        if "?" in (str(message.content).lower()):
+            await message.add_reaction('❓')
 
     if '!fifa' == (str(message.content).lower()):
         user_ids = [701955314161025086, 321389614940028929, 1028533279802011688, 406686196581007361,
