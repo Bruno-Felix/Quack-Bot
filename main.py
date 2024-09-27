@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from datetime import date
 from random import randint
+from PIL import Image
 
 from src.music import calendar
 from src.cartola import cartola
+from src.images import images
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -162,5 +164,22 @@ async def mercado(interaction: discord.Interaction):
     await interaction.followup.send(embed=embed)
 
 # --------------
- 
+
+@bot.tree.command(name='tohrcarteira', description='Ola')
+#async def jypespera(interaction: discord.Interaction, member: Optional[discord.Member] = None):
+async def tohrcarteira(interaction: discord.Interaction, image_attachment: discord.Attachment):
+    await interaction.response.defer()
+
+    images.download_image(image_attachment, 'teste.png')
+
+    images.make_image()
+    # teste = Image.open(image_attachment)
+
+    # teste.save()
+    
+    member = interaction.user
+
+    await interaction.followup.send(file=discord.File('nseinsei.png'))
+
+
 bot.run(DISCORD_TOKEN)

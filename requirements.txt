@@ -4,3 +4,6 @@ pyshorteners
 python-dotenv
 pandas
 notion_client
+Pillow
+numpy
+opencv-python
