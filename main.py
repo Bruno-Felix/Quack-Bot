@@ -157,7 +157,9 @@ async def mercado(interaction: discord.Interaction):
     status_mercado_str = 'Aberto ✅' if status_mercado == 'Aberto' else 'Fechado ❌'
 
     embed.add_field(name='Status:', value=f'Mercado {status_mercado_str}', inline=False)
-    embed.add_field(name='Fechamento:', value=f'{fechamento}\n\nFaltam: {diferenca}', inline=False)
+    
+    if status_mercado == 'Aberto':
+        embed.add_field(name='Fechamento:', value=f'{fechamento}\n\nFalta: {diferenca}', inline=False)
 
     await interaction.followup.send(embed=embed)
 
