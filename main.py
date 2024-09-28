@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -169,43 +170,57 @@ async def mercado(interaction: discord.Interaction):
 
 
 @bot.tree.command(name='tohrcarteira', description='Tohr dando carteirada.')
-async def tohrcarteira(interaction: discord.Interaction, image_attachment: discord.Attachment):
+async def tohrcarteira(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()
-
-    if(not image_generator.is_image(image_attachment.filename)):
-        await interaction.followup.send("Envie apenas imagens!")
+    
+    image = None
+    if member and member.avatar:
+        image = member.avatar
+    elif image_attachment and image_generator.is_image(image_attachment.filename):
+        image = image_attachment
+    else:
+        await interaction.followup.send("Forneça alguma imagem!")
         return
 
-    image_generator.make_image(templates['tohr_carteira'], image_attachment)
+    image_generator.make_image(templates['tohr_carteira'], image)
 
     await interaction.followup.send(file=discord.File('result.png'))
 
     image_generator.delete_images()
 
 @bot.tree.command(name='jypespera', description='O que será que o JYP está esperando?')
-async def jypespera(interaction: discord.Interaction, image_attachment: discord.Attachment):
+async def jypespera(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()
 
-    if(not image_generator.is_image(image_attachment.filename)):
-        await interaction.followup.send("Envie apenas imagens!")
+    image = None
+    if member and member.avatar:
+        image = member.avatar
+    elif image_attachment and image_generator.is_image(image_attachment.filename):
+        image = image_attachment
+    else:
+        await interaction.followup.send("Forneça alguma imagem!")
         return
 
-    image_generator.make_image(templates['jyp_espera'], image_attachment)
+    image_generator.make_image(templates['jyp_espera'], image)
 
     await interaction.followup.send(file=discord.File('result.png'))
 
     image_generator.delete_images()
 
 @bot.tree.command(name='tohrreage', description='Tohr vai reagir')
-async def tohrreage(interaction: discord.Interaction, image_attachment: discord.Attachment):
+async def tohrreage(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()
 
-    if(not image_generator.is_image(image_attachment.filename)):
-        await interaction.followup.send("Envie apenas imagens!")
+    image = None
+    if member and image_generator.is_image(member.avatar.url, False):
+        image = member.avatar
+    elif image_attachment and image_generator.is_image(image_attachment.filename, False):
+        image = image_attachment
+    else:
+        await interaction.followup.send("Forneça alguma imagem!")
         return
-    
 
-    image_generator.make_react_image(image_attachment)
+    image_generator.make_react_image(image)
 
     await interaction.followup.send(file=discord.File('result.png'))
 

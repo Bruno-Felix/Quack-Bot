@@ -78,11 +78,13 @@ def make_react_image(image_attachment):
 
     background_resize.save('result.png')
 
-def is_image(url):
+def is_image(url, accept_gif = True):
     parsed_url = urlparse(url)
     path = parsed_url.path
     
-    image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp']
+    image_extensions = ['.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.webp']
+    if(accept_gif):
+        image_extensions.append('.gif')
     
     file_extension = os.path.splitext(path)[1].lower()
     
