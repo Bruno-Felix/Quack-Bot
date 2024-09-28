@@ -4,6 +4,8 @@ import numpy as np
 from PIL import Image
 from io import BytesIO
 import os
+from random import randint
+from urllib.parse import urlparse, parse_qs
 
 def download_image(url, save_path):
     try:
@@ -20,7 +22,7 @@ def download_image(url, save_path):
         print(f'Erro ao salvar a imagem: {e}')
 
 
-def perspectiveImage(image_bg_cv, image_sm_cv, coords):
+def perspective_image(image_bg_cv, image_sm_cv, coords):
     points_orig = np.float32([[0, 0], [image_sm_cv.shape[1], 0], [0, image_sm_cv.shape[0]], [image_sm_cv.shape[1], image_sm_cv.shape[0]]])
 
     points_dest = np.float32(coords)
@@ -44,7 +46,7 @@ def make_image(template, image_attachment):
     image_bg_cv = cv2.imread(background_path)
     image_sm_cv = cv2.imread(image_path)
 
-    resultado = perspectiveImage(image_bg_cv, image_sm_cv, template['coords'])
+    resultado = perspective_image(image_bg_cv, image_sm_cv, template['coords'])
 
     resultado.paste(background_image, (0,0), background_image)
 
@@ -57,4 +59,40 @@ def delete_images():
 def delete_image(image_path):
     if os.path.exists(image_path):
         os.remove(image_path)
+
+
+def make_react_image(image_attachment):
+    image_path = 'image.png' 
+    tohr_reage_path = f'static/template/reacts/tohr_reage_{randint(1, 3)}.png'
+
+    download_image(image_attachment, image_path)
+
+
+    image_background = Image.open(image_path)
+    tohr = Image.open(tohr_reage_path)
+   
+    tohr_resize = tohr.resize((960, 540))
+    background_resize = image_background.resize((960, 540))
+
+    background_resize.paste(tohr_resize, (0,0), tohr_resize)
+
+    background_resize.save('result.png')
+
+def is_image(url):
+    parsed_url = urlparse(url)
+    path = parsed_url.path
+    
+    image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.webp']
+    
+    file_extension = os.path.splitext(path)[1].lower()
+    
+    if file_extension in image_extensions:
+        return True
+    else:
+        return False
+
+
+
+
+
 

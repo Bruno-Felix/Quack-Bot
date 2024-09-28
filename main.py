@@ -172,6 +172,10 @@ async def mercado(interaction: discord.Interaction):
 async def tohrcarteira(interaction: discord.Interaction, image_attachment: discord.Attachment):
     await interaction.response.defer()
 
+    if(not image_generator.is_image(image_attachment.filename)):
+        await interaction.followup.send("Envie apenas imagens!")
+        return
+
     image_generator.make_image(templates['tohr_carteira'], image_attachment)
 
     await interaction.followup.send(file=discord.File('result.png'))
@@ -182,7 +186,26 @@ async def tohrcarteira(interaction: discord.Interaction, image_attachment: disco
 async def jypespera(interaction: discord.Interaction, image_attachment: discord.Attachment):
     await interaction.response.defer()
 
+    if(not image_generator.is_image(image_attachment.filename)):
+        await interaction.followup.send("Envie apenas imagens!")
+        return
+
     image_generator.make_image(templates['jyp_espera'], image_attachment)
+
+    await interaction.followup.send(file=discord.File('result.png'))
+
+    image_generator.delete_images()
+
+@bot.tree.command(name='tohrreage', description='Tohr vai reagir')
+async def tohrreage(interaction: discord.Interaction, image_attachment: discord.Attachment):
+    await interaction.response.defer()
+
+    if(not image_generator.is_image(image_attachment.filename)):
+        await interaction.followup.send("Envie apenas imagens!")
+        return
+    
+
+    image_generator.make_react_image(image_attachment)
 
     await interaction.followup.send(file=discord.File('result.png'))
 
