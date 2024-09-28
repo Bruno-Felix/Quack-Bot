@@ -9,6 +9,7 @@ from random import randint
 from src.music import calendar
 from src.cartola import cartola
 from src.images import image_generator
+from src.data.templates import templates
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -166,16 +167,6 @@ async def mercado(interaction: discord.Interaction):
 
 # --------------
 
-templates = {
-    "tohr_carteira": {
-        "filename": "tohr_carteira.png",
-        "coords": [[[87, 96], [300, 99], [81, 406], [294, 411]]] 
-    },
-    "jyp_espera": {
-        "filename": "jyp_espera.png",
-        "coords": [[18, 138], [254, 118], [58, 360], [270, 272]]
-    }
-}
 
 @bot.tree.command(name='tohrcarteira', description='Tohr dando carteirada.')
 async def tohrcarteira(interaction: discord.Interaction, image_attachment: discord.Attachment):

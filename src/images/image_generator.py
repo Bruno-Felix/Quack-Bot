@@ -39,14 +39,14 @@ def make_image(template, image_attachment):
 
     download_image(image_attachment, 'image.png')
 
-    imagem_monitor = Image.open(background_path)
+    background_image = Image.open(background_path)
 
     image_bg_cv = cv2.imread(background_path)
     image_sm_cv = cv2.imread(image_path)
 
     resultado = perspectiveImage(image_bg_cv, image_sm_cv, template['coords'])
 
-    resultado.paste(imagem_monitor, (0,0), imagem_monitor)
+    resultado.paste(background_image, (0,0), background_image)
 
     resultado.save('result.png')
 
