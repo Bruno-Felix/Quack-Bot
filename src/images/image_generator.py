@@ -82,7 +82,7 @@ def is_image(url, accept_gif = True):
     parsed_url = urlparse(url)
     path = parsed_url.path
     
-    image_extensions = ['.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.webp']
+    image_extensions = ['.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.webp', '.jfif']
     if(accept_gif):
         image_extensions.append('.gif')
     
