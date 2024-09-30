@@ -6,20 +6,17 @@ from io import BytesIO
 import os
 from urllib.parse import urlparse
 
-def download_image(url, save_path):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
+def download_image(url):
+    response = requests.get(url)
+    image_data = response.content
 
-        image = Image.open(BytesIO(response.content))
-        
-        image.save(save_path)
+    image_buffer = BytesIO(image_data)
 
-    except requests.exceptions.RequestException as e:
-        print(f'Erro ao baixar a imagem: {e}')
-    except IOError as e:
-        print(f'Erro ao salvar a imagem: {e}')
+    image_array = np.frombuffer(image_buffer.getvalue(), dtype=np.uint8)
 
+    image_buffer.close()
+
+    return image_array
 
 def perspective_image(image_bg_cv, image_sm_cv, coords):
     points_orig = np.float32([[0, 0], [image_sm_cv.shape[1], 0], [0, image_sm_cv.shape[0]], [image_sm_cv.shape[1], image_sm_cv.shape[0]]])
@@ -34,30 +31,22 @@ def perspective_image(image_bg_cv, image_sm_cv, coords):
 
     return result_pil
 
-def make_image(template, image_attachment, time_request):
-    image_path = f'image-{time_request}.png'  
+def make_image(template, image_attachment):
     background_path = f'static/template/{template["filename"]}'
 
-    download_image(image_attachment, image_path)
+    image_array = download_image(image_attachment)
 
     background_image = Image.open(background_path)
 
     image_bg_cv = cv2.imread(background_path)
-    image_sm_cv = cv2.imread(image_path)
+
+    image_sm_cv = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
 
     resultado = perspective_image(image_bg_cv, image_sm_cv, template['coords'])
 
     resultado.paste(background_image, (0,0), background_image)
 
-    resultado.save(f'result-{time_request}.png')
-
-def delete_images(time_request):
-    delete_image(f'image-{time_request}.png')
-    delete_image(f'result-{time_request}.png')
-
-def delete_image(image_path):
-    if os.path.exists(image_path):
-        os.remove(image_path)
+    return resultado
 
 def is_image(url, accept_gif = True):
     parsed_url = urlparse(url)
