@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Literal, Optional
 import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -221,6 +221,27 @@ async def tohrreage(interaction: discord.Interaction, member: Optional[discord.M
         return
 
     image_generator.make_react_image(image)
+
+    await interaction.followup.send(file=discord.File('result.png'))
+
+    image_generator.delete_images()
+
+
+idols = Literal['bangchan', 'karina', 'chuu', 'chaeryeong', 'momo', 'nayeon', 'chaeyeon', 'shuhua', 'gowon']
+@bot.tree.command(name='idols', description='O que o idol está segurando?')
+async def idols(interaction: discord.Interaction, idol: idols, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
+    await interaction.response.defer()  
+    
+    image = None
+    if member and member.avatar:
+        image = member.avatar
+    elif image_attachment and image_generator.is_image(image_attachment.filename):
+        image = image_attachment
+    else:
+        await interaction.followup.send("Forneça alguma imagem!")
+        return
+
+    image_generator.make_image(templates['idols'][idol], image)
 
     await interaction.followup.send(file=discord.File('result.png'))
 
