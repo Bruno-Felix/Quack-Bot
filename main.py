@@ -172,12 +172,12 @@ async def mercado(interaction: discord.Interaction):
 
 
 @bot.tree.command(name='tohrcarteira', description='Tohr dando carteirada.')
-@app_commands.describe(member='Foto de perfil do usuário')
-@app_commands.describe(image_attachment='Anexo da imagem')
-async def tohrcarteira(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
+@app_commands.describe(usuario='Foto de perfil do usuário')
+@app_commands.describe(imagem='Anexo da imagem')
+async def tohrcarteira(interaction: discord.Interaction, usuario: Optional[discord.Member] = None, imagem: Optional[discord.Attachment] = None):
     await interaction.response.defer()
     
-    image = await image_utils.get_image(interaction=interaction, member=member, image_attachment=image_attachment)
+    image = await image_utils.get_image(interaction=interaction, member=usuario, image_attachment=imagem)
 
     if not image:
         await interaction.followup.send("Forneça uma imagem válida!")
@@ -188,12 +188,12 @@ async def tohrcarteira(interaction: discord.Interaction, member: Optional[discor
     await image_utils.reply_image(interaction=interaction, template=template, image=image)
 
 @bot.tree.command(name='tohrreage', description='Tohr vai reagir')
-@app_commands.describe(member='Foto de perfil do usuário')
-@app_commands.describe(image_attachment='Anexo da imagem')
-async def tohrreage(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
+@app_commands.describe(usuario='Foto de perfil do usuário')
+@app_commands.describe(imagem='Anexo da imagem')
+async def tohrreage(interaction: discord.Interaction, usuario: Optional[discord.Member] = None, imagem: Optional[discord.Attachment] = None):
     await interaction.response.defer()
 
-    image = await image_utils.get_image(interaction=interaction, member=member, image_attachment=image_attachment)
+    image = await image_utils.get_image(interaction=interaction, member=usuario, image_attachment=imagem)
 
     if not image:
         await interaction.followup.send("Forneça uma imagem válida!")
@@ -207,12 +207,12 @@ async def tohrreage(interaction: discord.Interaction, member: Optional[discord.M
 
 @bot.tree.command(name='idols', description='O que o idol está mostrando?')
 @app_commands.describe(idol='Foto do idol')
-@app_commands.describe(member='Foto de perfil do usuário')
-@app_commands.describe(image_attachment='Anexo da imagem')
-async def idols(interaction: discord.Interaction, idol: idolList, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
+@app_commands.describe(usuario='Foto de perfil do usuário')
+@app_commands.describe(imagem='Anexo da imagem')
+async def idols(interaction: discord.Interaction, idol: idolList, usuario: Optional[discord.Member] = None, imagem: Optional[discord.Attachment] = None):
     await interaction.response.defer()  
     
-    image = await image_utils.get_image(interaction=interaction, member=member, image_attachment=image_attachment)
+    image = await image_utils.get_image(interaction=interaction, member=usuario, image_attachment=imagem)
 
     if not image:
         await interaction.followup.send("Forneça uma imagem válida!")
