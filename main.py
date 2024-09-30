@@ -1,5 +1,5 @@
 import os
-from typing import Literal, Optional
+from typing import Optional
 import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
@@ -11,6 +11,7 @@ from src.music import calendar
 from src.cartola import cartola
 from src.images import image_generator
 from src.data.templates import templates
+from src.data.idols import idolList
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -208,9 +209,9 @@ async def tohrreage(interaction: discord.Interaction, member: Optional[discord.M
     image_generator.delete_images()
 
 
-idols = Literal['bangchan', 'karina', 'chuu', 'chaeryeong', 'momo', 'nayeon', 'chaeyeon', 'shuhua', 'gowon', 'jyp']
+
 @bot.tree.command(name='idols', description='O que o idol está mostrando?')
-async def idols(interaction: discord.Interaction, idol: idols, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
+async def idols(interaction: discord.Interaction, idol: idolList, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()  
     
     image = None
