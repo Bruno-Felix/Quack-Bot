@@ -3,10 +3,6 @@ templates = {
         "filename": "tohr_carteira.png",
         "coords": [[[87, 96], [300, 99], [81, 406], [294, 411]]] 
     },
-    "jyp_espera": {
-        "filename": "jyp_espera.png",
-        "coords": [[18, 138], [254, 118], [58, 360], [270, 272]]
-    },
     'idols': {
         'chuu': {
             'filename': 'idols/chuu.png',
@@ -43,6 +39,10 @@ templates = {
         'gowon': {
             'filename': 'idols/gowon.png',
             'coords': [[782, 852], [1937, 609], [948, 1678], [2104,1439]]
+        },
+        'jyp': {
+            'filename': 'jyp_espera.png',
+            'coords': [[18, 138], [254, 118], [58, 360], [270, 272]]
         }
     }
 }
