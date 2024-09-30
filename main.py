@@ -181,7 +181,7 @@ async def tohrcarteira(interaction: discord.Interaction, member: Optional[discor
     elif image_attachment and image_generator.is_image(image_attachment.filename):
         image = image_attachment
     else:
-        await interaction.followup.send("Forneça alguma imagem!")
+        await interaction.followup.send("Forneça uma imagem válida!")
         return
     
     time_request = time.time()
@@ -202,12 +202,12 @@ async def tohrreage(interaction: discord.Interaction, member: Optional[discord.M
     elif image_attachment and image_generator.is_image(image_attachment.filename):
         image = image_attachment
     else:
-        await interaction.followup.send("Forneça alguma imagem!")
+        await interaction.followup.send("Forneça uma imagem válida!")
         return
 
     time_request = time.time()
 
-    image_generator.make_image(templates['reacts'][randint(1, 3)], image, time_request)
+    image_generator.make_image(templates['reacts'][randint(1, 4)], image, time_request)
 
     await interaction.followup.send(file=discord.File(f'result-{time_request}.png'))
 
@@ -225,7 +225,7 @@ async def idols(interaction: discord.Interaction, idol: idolList, member: Option
     elif image_attachment and image_generator.is_image(image_attachment.filename):
         image = image_attachment
     else:
-        await interaction.followup.send("Forneça alguma imagem!")
+        await interaction.followup.send("Forneça uma imagem válida!")
         return
     
     time_request = time.time()

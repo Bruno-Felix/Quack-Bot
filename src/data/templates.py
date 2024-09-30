@@ -11,6 +11,10 @@ templates = {
         3: {
             'filename': 'reacts/tohr_reage_3.png',
             'coords': [[0, 0], [1920, 0], [0, 1080], [1920, 1080]]
+        },
+        4: {
+            'filename': 'reacts/tohr_reage_4.png',
+            'coords': [[0, 0], [1920, 0], [0, 1080], [1920, 1080]]
         }
     },
     "tohr_carteira": {
