@@ -1,4 +1,5 @@
 import os
+import time
 from typing import Optional
 import discord
 from os.path import join, dirname
@@ -182,31 +183,35 @@ async def tohrcarteira(interaction: discord.Interaction, member: Optional[discor
     else:
         await interaction.followup.send("Forneça alguma imagem!")
         return
+    
+    time_request = time.time()
 
-    image_generator.make_image(templates['tohr_carteira'], image)
+    image_generator.make_image(templates['tohr_carteira'], image, time_request)
 
-    await interaction.followup.send(file=discord.File('result.png'))
+    await interaction.followup.send(file=discord.File(f'result-{time_request}.png'))
 
-    image_generator.delete_images()
+    image_generator.delete_images(time_request)
 
 @bot.tree.command(name='tohrreage', description='Tohr vai reagir')
 async def tohrreage(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()
 
     image = None
-    if member and image_generator.is_image(member.avatar.url, False):
+    if member and member.avatar:
         image = member.avatar
-    elif image_attachment and image_generator.is_image(image_attachment.filename, False):
+    elif image_attachment and image_generator.is_image(image_attachment.filename):
         image = image_attachment
     else:
         await interaction.followup.send("Forneça alguma imagem!")
         return
 
-    image_generator.make_react_image(image)
+    time_request = time.time()
 
-    await interaction.followup.send(file=discord.File('result.png'))
+    image_generator.make_image(templates['reacts'][randint(1, 3)], image, time_request)
 
-    image_generator.delete_images()
+    await interaction.followup.send(file=discord.File(f'result-{time_request}.png'))
+
+    image_generator.delete_images(time_request)
 
 
 
@@ -222,12 +227,14 @@ async def idols(interaction: discord.Interaction, idol: idolList, member: Option
     else:
         await interaction.followup.send("Forneça alguma imagem!")
         return
+    
+    time_request = time.time()
 
-    image_generator.make_image(templates['idols'][idol], image)
+    image_generator.make_image(templates['idols'][idol], image, time_request)
 
-    await interaction.followup.send(file=discord.File('result.png'))
+    await interaction.followup.send(file=discord.File(f'result-{time_request}.png'))
 
-    image_generator.delete_images()
+    image_generator.delete_images(time_request)
 
 
 bot.run(DISCORD_TOKEN)

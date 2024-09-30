@@ -1,7 +1,21 @@
 templates = {
+    'reacts': {
+        1: {
+            'filename': 'reacts/tohr_reage_1.png',
+            'coords': [[0, 0], [1920, 0], [0, 1080], [1920, 1080]]
+        },
+        2: {
+            'filename': 'reacts/tohr_reage_2.png',
+            'coords': [[0, 0], [1920, 0], [0, 1080], [1920, 1080]]
+        },
+        3: {
+            'filename': 'reacts/tohr_reage_3.png',
+            'coords': [[0, 0], [1920, 0], [0, 1080], [1920, 1080]]
+        }
+    },
     "tohr_carteira": {
         "filename": "tohr_carteira.png",
-        "coords": [[[87, 96], [300, 99], [81, 406], [294, 411]]] 
+        "coords": [[87, 96], [300, 99], [81, 406], [294, 411]]
     },
     'idols': {
         'Chuu': {
