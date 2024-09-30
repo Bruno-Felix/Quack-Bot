@@ -10,7 +10,7 @@ from random import randint
 
 from src.music import calendar
 from src.cartola import cartola
-from src.images import image_generator
+from src.images import image_utils
 from src.data.templates import templates
 from src.data.idols import idolList
 
@@ -175,43 +175,29 @@ async def mercado(interaction: discord.Interaction):
 async def tohrcarteira(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()
     
-    image = None
-    if member and member.avatar:
-        image = member.avatar
-    elif image_attachment and image_generator.is_image(image_attachment.filename):
-        image = image_attachment
-    else:
+    image = await image_utils.get_image(interaction=interaction, member=member, image_attachment=image_attachment)
+
+    if not image:
         await interaction.followup.send("Forneça uma imagem válida!")
         return
 
-    result = image_generator.make_image(templates['tohr_carteira'], image)
+    template = templates['tohr_carteira']
 
-    with io.BytesIO() as image_binary:
-        result.save(image_binary, 'PNG')
-        image_binary.seek(0)
-        await interaction.followup.send(file=discord.File(fp=image_binary, filename='image.png'))
-        image_binary.close()
+    await image_utils.reply_image(interaction=interaction, template=template, image=image)
 
 @bot.tree.command(name='tohrreage', description='Tohr vai reagir')
 async def tohrreage(interaction: discord.Interaction, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()
 
-    image = None
-    if member and member.avatar:
-        image = member.avatar
-    elif image_attachment and image_generator.is_image(image_attachment.filename):
-        image = image_attachment
-    else:
+    image = await image_utils.get_image(interaction=interaction, member=member, image_attachment=image_attachment)
+
+    if not image:
         await interaction.followup.send("Forneça uma imagem válida!")
         return
 
-    result = image_generator.make_image(templates['reacts'][randint(1, 4)], image)
+    template = templates['reacts'][randint(1, 4)]
 
-    with io.BytesIO() as image_binary:
-        result.save(image_binary, 'PNG')
-        image_binary.seek(0)
-        await interaction.followup.send(file=discord.File(fp=image_binary, filename='image.png'))
-        image_binary.close()
+    await image_utils.reply_image(interaction=interaction, template=template, image=image)
 
 
 
@@ -219,21 +205,14 @@ async def tohrreage(interaction: discord.Interaction, member: Optional[discord.M
 async def idols(interaction: discord.Interaction, idol: idolList, member: Optional[discord.Member] = None, image_attachment: Optional[discord.Attachment] = None):
     await interaction.response.defer()  
     
-    image = None
-    if member and member.avatar:
-        image = member.avatar
-    elif image_attachment and image_generator.is_image(image_attachment.filename):
-        image = image_attachment
-    else:
+    image = await image_utils.get_image(interaction=interaction, member=member, image_attachment=image_attachment)
+
+    if not image:
         await interaction.followup.send("Forneça uma imagem válida!")
         return
 
-    result = image_generator.make_image(templates['idols'][idol], image)
+    template = templates['idols'][idol]
 
-    with io.BytesIO() as image_binary:
-        result.save(image_binary, 'PNG')
-        image_binary.seek(0)
-        await interaction.followup.send(file=discord.File(fp=image_binary, filename='image.png'))
-        image_binary.close()
+    await image_utils.reply_image(interaction=interaction, template=template, image=image)
 
 bot.run(DISCORD_TOKEN)
