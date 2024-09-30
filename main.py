@@ -1,13 +1,18 @@
 import os
+from typing import Optional
 import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
 from discord.ext import commands
+from discord import app_commands
 from datetime import date
 from random import randint
 
 from src.music import calendar
 from src.cartola import cartola
+from src.images import image_utils
+from src.data.templates import templates
+from src.data.idols import idolList
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -157,10 +162,64 @@ async def mercado(interaction: discord.Interaction):
     status_mercado_str = 'Aberto ✅' if status_mercado == 'Aberto' else 'Fechado ❌'
 
     embed.add_field(name='Status:', value=f'Mercado {status_mercado_str}', inline=False)
-    embed.add_field(name='Fechamento:', value=f'{fechamento}\n\nFaltam: {diferenca}', inline=False)
+    
+    if status_mercado == 'Aberto':
+        embed.add_field(name='Fechamento:', value=f'{fechamento}\n\nFalta: {diferenca}', inline=False)
 
     await interaction.followup.send(embed=embed)
 
 # --------------
- 
+
+
+@bot.tree.command(name='tohrcarteira', description='Tohr dando carteirada.')
+@app_commands.describe(usuario='Foto de perfil do usuário')
+@app_commands.describe(imagem='Anexo da imagem')
+async def tohrcarteira(interaction: discord.Interaction, usuario: Optional[discord.Member] = None, imagem: Optional[discord.Attachment] = None):
+    await interaction.response.defer()
+    
+    image = await image_utils.get_image(interaction=interaction, member=usuario, image_attachment=imagem)
+
+    if not image:
+        await interaction.followup.send("Forneça uma imagem válida!")
+        return
+
+    template = templates['tohr_carteira']
+
+    await image_utils.reply_image(interaction=interaction, template=template, image=image)
+
+@bot.tree.command(name='tohrreage', description='Tohr vai reagir')
+@app_commands.describe(usuario='Foto de perfil do usuário')
+@app_commands.describe(imagem='Anexo da imagem')
+async def tohrreage(interaction: discord.Interaction, usuario: Optional[discord.Member] = None, imagem: Optional[discord.Attachment] = None):
+    await interaction.response.defer()
+
+    image = await image_utils.get_image(interaction=interaction, member=usuario, image_attachment=imagem)
+
+    if not image:
+        await interaction.followup.send("Forneça uma imagem válida!")
+        return
+
+    template = templates['reacts'][randint(1, 4)]
+
+    await image_utils.reply_image(interaction=interaction, template=template, image=image)
+
+
+
+@bot.tree.command(name='idols', description='O que o idol está mostrando?')
+@app_commands.describe(idol='Foto do idol')
+@app_commands.describe(usuario='Foto de perfil do usuário')
+@app_commands.describe(imagem='Anexo da imagem')
+async def idols(interaction: discord.Interaction, idol: idolList, usuario: Optional[discord.Member] = None, imagem: Optional[discord.Attachment] = None):
+    await interaction.response.defer()  
+    
+    image = await image_utils.get_image(interaction=interaction, member=usuario, image_attachment=imagem)
+
+    if not image:
+        await interaction.followup.send("Forneça uma imagem válida!")
+        return
+
+    template = templates['idols'][idol]
+
+    await image_utils.reply_image(interaction=interaction, template=template, image=image)
+
 bot.run(DISCORD_TOKEN)
