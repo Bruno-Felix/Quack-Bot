@@ -159,11 +159,11 @@ async def mercado(interaction: discord.Interaction):
     embed.set_author(name=interaction.user.name,
                      icon_url=interaction.user.avatar)
     
-    status_mercado_str = 'Aberto ✅' if status_mercado == 'Aberto' else 'Fechado ❌'
+    status_mercado_str = 'Aberto ✅' if status_mercado else 'Fechado ❌'
 
     embed.add_field(name='Status:', value=f'Mercado {status_mercado_str}', inline=False)
     
-    if status_mercado == 'Aberto':
+    if status_mercado:
         embed.add_field(name='Fechamento:', value=f'{fechamento}\n\nFalta: {diferenca}', inline=False)
 
     await interaction.followup.send(embed=embed)

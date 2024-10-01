@@ -31,6 +31,4 @@ async def request_market_close_date():
     results = requests.api.get('https://api.cartola.globo.com/mercado/status')
     results = results.json()
 
-    status_mercado = 'Aberto' if results['status_mercado'] else 'Fechado'
-
-    return results['rodada_atual'], results['fechamento'], status_mercado
+    return results['rodada_atual'], results['fechamento']
