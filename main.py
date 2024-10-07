@@ -75,6 +75,28 @@ async def on_message(message):
         if "?" in (str(message.content).lower()):
             await message.add_reaction('❓')
 
+    if 'textointro' in (str(message.content).lower()):
+        view = MyView()
+
+        embed = discord.Embed(
+            title='Lançamentos!!',
+            description='Todos os lançamentos de hoje\n',
+            color=0xccff66
+        )
+        
+        await message.channel.send(embed=embed, view=view)
+
+# --------------
+
+class MyView(discord.ui.View):
+    @discord.ui.button(label="Button 1", style=discord.ButtonStyle.primary, custom_id="button_1")
+    async def button1(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message("Você clicou no botão 1!", ephemeral=True)
+
+    @discord.ui.button(label="Button 2", style=discord.ButtonStyle.secondary, custom_id="button_2")
+    async def button2(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message("Você clicou no botão 2!", ephemeral=True)
+
 # --------------
 
     if '!fifa' == (str(message.content).lower()):
@@ -170,7 +192,6 @@ async def mercado(interaction: discord.Interaction):
 
 # --------------
 
-
 @bot.tree.command(name='tohrcarteira', description='Tohr dando carteirada.')
 @app_commands.describe(usuario='Foto de perfil do usuário')
 @app_commands.describe(imagem='Anexo da imagem')
@@ -186,6 +207,8 @@ async def tohrcarteira(interaction: discord.Interaction, usuario: Optional[disco
     template = templates['tohr_carteira']
 
     await image_utils.reply_image(interaction=interaction, template=template, image=image)
+
+# --------------
 
 @bot.tree.command(name='tohrreage', description='Tohr vai reagir')
 @app_commands.describe(usuario='Foto de perfil do usuário')
@@ -203,7 +226,7 @@ async def tohrreage(interaction: discord.Interaction, usuario: Optional[discord.
 
     await image_utils.reply_image(interaction=interaction, template=template, image=image)
 
-
+# --------------
 
 @bot.tree.command(name='idols', description='O que o idol está mostrando?')
 @app_commands.describe(idol='Foto do idol')
@@ -221,5 +244,7 @@ async def idols(interaction: discord.Interaction, idol: idolList, usuario: Optio
     template = templates['idols'][idol]
 
     await image_utils.reply_image(interaction=interaction, template=template, image=image)
+
+# --------------
 
 bot.run(DISCORD_TOKEN)
