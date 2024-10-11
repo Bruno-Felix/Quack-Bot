@@ -221,5 +221,12 @@ async def idols(interaction: discord.Interaction, idol: idolList, usuario: Optio
     template = templates['idols'][idol]
 
     await image_utils.reply_image(interaction=interaction, template=template, image=image)
+    
+@bot.tree.command(name='cafe', description='Café para quem?')
+@app_commands.describe(idol='Nome do idol')
+async def cafe(interaction: discord.Interaction, idol: str):
+    res = f"CADÊ MEU CAFÉ???? tá aqui sra. {idol}, do jeitinho que a senhora pediu, bota na mesa. Tá frio, vá buscar outro agora, sim senhora {idol}."
+
+    await interaction.response.send_message(res)
 
 bot.run(DISCORD_TOKEN)
