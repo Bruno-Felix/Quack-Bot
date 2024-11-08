@@ -36,12 +36,55 @@ async def on_ready():
 
 
 # --------------
+import re
+
+xtwitter_pattern = r'https?://x\.com/[^\s]+'
+twitter_pattern = r'https?://twitter\.com/[^\s]+'
+xtwitter  = "x.com"
+twitter = "twitter.com"
+fxtwitter = "fxtwitter.com"
+
+tiktok_pattern = r'https?://(www\.tiktok\.com|vm\.tiktok\.com)/[^\s]+'
+tiktok = "tiktok.com"
+tnktok = "tnktok.com"
+
+instagram_pattern = r'https?://(www\.)?instagram\.com/[^\s]+'
+instagram = "instagram.com"
+ddinstagram = "ddinstagram.com"
+
+def transform_social_media_link(sentence, pattern, old_link, new_link):
+    def replace_link(match):
+        link = match.group(0)
+        print(old_link, new_link)
+        return link.replace(old_link, new_link).split('?')[0]
+
+    return re.sub(pattern, replace_link, sentence)
 
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
         return
 
+    match = re.search(xtwitter_pattern, message.content)
+    if match:
+        transformed_link = transform_social_media_link(match.group(0), xtwitter_pattern, xtwitter, fxtwitter)
+        await message.reply(f"{transformed_link}")
+
+    match1 = re.search(tiktok_pattern, message.content)
+    if match1:
+        transformed_link = transform_social_media_link(match1.group(0), tiktok_pattern, tiktok, tnktok)
+        await message.reply(f"{transformed_link}")
+
+    match2 = re.search(instagram_pattern, message.content)
+    if match2:
+        transformed_link = transform_social_media_link(match2.group(0), instagram_pattern, instagram, ddinstagram)
+        await message.reply(f"{transformed_link}")
+
+    match3 = re.search(twitter_pattern, message.content)
+    if match3:
+        transformed_link = transform_social_media_link(match3.group(0), twitter_pattern, twitter, fxtwitter)
+        await message.reply(f"{transformed_link}")
+    
     if 'quack' == (str(message.content).lower()):
         gif_number = randint(1, 2)
 
