@@ -34,20 +34,6 @@ class Message(commands.Cog):
             await message.channel.send('MEDICA mencionada!!')
             await message.channel.send(file=discord.File(f'static/medica{gif_number}.gif'))
 
-        if 'kaede' in (str(message.content).lower()) or 'kaebeça' in (str(message.content).lower()):
-            await message.add_reaction('<:kaebeca:1234954376158773308>')
-
-        if 'fleeky' in (str(message.content).lower()) or 'gang' == (str(message.content).lower()):
-            await message.add_reaction('<:fleekabeca:1269741063946375188>')
-
-        ## if 'r6' in (str(message.content).lower()):
-        ##    await message.add_reaction('<:peepoEvil:914947766386581504>')
-
-        if 'fifinha' in (str(message.content).lower()):
-            await message.add_reaction('⚽')
-
-            if "?" in (str(message.content).lower()):
-                await message.add_reaction('❓')
 
 # --------------
 
