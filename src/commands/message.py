@@ -16,6 +16,9 @@ class Message(commands.Cog):
         if message.embeds or message.attachments:
             return
         
+        if '/malu' == str(message.content).lower():
+            await message.channel.send(file=discord.File(f'static/malu_gowon.gif'))
+        
         if 'quack' in (str(message.content).lower()):
             gif_number = randint(1, 2)
 
