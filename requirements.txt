@@ -7,3 +7,4 @@ notion_client
 Pillow
 numpy
 opencv-python
+google-api-python-client

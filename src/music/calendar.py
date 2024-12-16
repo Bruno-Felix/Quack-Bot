@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from ..endpoint_requests import request_daily_kpop_calendar
+from .search_youtube import search_youtube
 
 async def get_daily_kpop_calendar(search_date):
     results = await request_daily_kpop_calendar(search_date)
@@ -8,8 +9,22 @@ async def get_daily_kpop_calendar(search_date):
 
     if not musics:
         return 'Sem lançamentos hoje!!'
+
+    musics_with_urls = []
+
+    for music in musics:
+        try:
+            video_url = await search_youtube(music)
+
+            if video_url:
+                musics_with_urls.append(f"{music}\n{video_url}")
+            else:
+                musics_with_urls.append(music)
+        except Exception as e:
+            print(f"Erro ao buscar URL para '{music}': {e}")
+            musics_with_urls.append(music)
     
-    daily_musics = '\n\n'.join(map(str, musics))
+    daily_musics = '\n\n'.join(map(str, musics_with_urls))
 
     return daily_musics
 
