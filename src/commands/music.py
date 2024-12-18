@@ -1,9 +1,12 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from datetime import date
+from datetime import date, datetime
+from zoneinfo import ZoneInfo
 
 from src.music import calendar
+
+brasilia_tz = ZoneInfo("America/Sao_Paulo")
 
 class Music(commands.Cog):
     def __init__(self, bot):
@@ -21,14 +24,16 @@ class Music(commands.Cog):
             color=0xccff66
         )
 
-        search_date = date.today().strftime("%Y-%m-%d")
-        # search_date = date(2024, 9, 19).strftime("%Y-%m-%d")
+        search_date = str(datetime.now(brasilia_tz).date())
+        # search_date = date(2024, 12, 18).strftime("%Y-%m-%d")
 
         results = await calendar.get_daily_kpop_calendar(search_date)
 
         embed.set_author(name=interaction.user.name,
                         icon_url=interaction.user.avatar)
-        embed.add_field(name='Hoje temos:', value=results)
+
+        for result in results:
+            embed.add_field(name="\u200b", value=result, inline=False)
 
         await interaction.followup.send(embed=embed)
 

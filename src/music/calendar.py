@@ -24,9 +24,7 @@ async def get_daily_kpop_calendar(search_date):
             print(f"Erro ao buscar URL para '{music}': {e}")
             musics_with_urls.append(music)
     
-    daily_musics = '\n\n'.join(map(str, musics_with_urls))
-
-    return daily_musics
+    return musics_with_urls
 
 async def get_weekly_kpop_calendar(search_start_date):
     weekly_musics = {}
