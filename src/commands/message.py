@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from random import randint
+from static.roles import rules
 
 class Message(commands.Cog):
     def __init__(self, bot):
@@ -40,6 +41,7 @@ class Message(commands.Cog):
 
 # --------------
 
+
         if '!fifa' == (str(message.content).lower()):
             user_ids = [321389614940028929, 406686196581007361, 358470646549839874, 182935000046370816, 183630868114309120]
 
@@ -50,6 +52,22 @@ class Message(commands.Cog):
 
         if "!live" == (str(message.content).lower()):
             await message.channel.send(file=discord.File('static/tohrjob.gif'))
+
+        if message.content.lower().startswith('!regra'):
+            try:
+                embed = discord.Embed(
+                    title=f'Regras',
+                    color=0xccff66
+                )
+
+                role_number = int(message.content[6:])
+                rule = rules[role_number - 1]
+                
+                embed.add_field(name=rule['title'], value=rule['body'], inline=False)
+                
+                await message.channel.send(embed=embed)
+            except:
+                None
 
 
 # --------------
