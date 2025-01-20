@@ -1,7 +1,9 @@
 import discord
 from discord.ext import commands
 from random import randint
+
 from static.roles import rules
+from static.triples_colors import get_sort_triples_color
 
 class Message(commands.Cog):
     def __init__(self, bot):
@@ -56,8 +58,7 @@ class Message(commands.Cog):
         if message.content.lower().startswith('!regra'):
             try:
                 embed = discord.Embed(
-                    title=f'Regras',
-                    color=0xccff66
+                    color=get_sort_triples_color()
                 )
 
                 role_number = int(message.content[6:])

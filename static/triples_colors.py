@@ -1,0 +1,31 @@
+from random import randint
+
+triples_hex_colors = [
+    0x22afff,
+    0x9200ff,
+    0xfbf600,
+    0x98c64a,
+    0xd90a76,
+    0xff7ea4,
+    0x729ba1,
+    0xf9e4df,
+    0xfec830,
+    0xfe9ad6,
+    0xfcd702,
+    0x4169e2,
+    0xff953d,
+    0x010080,
+    0xd61415,
+    0xff8d75,
+    0xab62d4,
+    0xd7f54a,
+    0x52d9bb,
+    0xff428a,
+    0xc7a3e0,
+    0x7bba8d,
+    0xcff3ff,
+    0xffab62,
+]
+
+def get_sort_triples_color():
+    return triples_hex_colors[randint(0, 23)]

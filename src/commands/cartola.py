@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 
+from static.triples_colors import get_sort_triples_color
 from src.cartola import cartola
 
 class Cartola(commands.Cog):
@@ -18,7 +19,7 @@ class Cartola(commands.Cog):
 
         embed = discord.Embed(
             title=f'Mercado da {rodada_atual}ª rodada',
-            color=0xccff66
+            color=get_sort_triples_color()
         )
 
         embed.set_author(name=interaction.user.name,

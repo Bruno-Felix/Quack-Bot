@@ -4,6 +4,7 @@ from discord import app_commands
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+from static.triples_colors import get_sort_triples_color
 from src.music import calendar
 
 brasilia_tz = ZoneInfo("America/Sao_Paulo")
@@ -21,7 +22,7 @@ class Music(commands.Cog):
         embed = discord.Embed(
             title='Lançamentos!!',
             description='Todos os lançamentos de hoje\n',
-            color=0xccff66
+            color=get_sort_triples_color()
         )
 
         search_date = str(datetime.now(brasilia_tz).date())
@@ -44,7 +45,7 @@ class Music(commands.Cog):
         embed = discord.Embed(
             title='Lançamentos!!',
             description='Todos os lançamentos dessa proxima semana\n',
-            color=0xccff66
+            color=get_sort_triples_color()
         )
 
         search_start_date = date.today()
