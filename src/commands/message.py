@@ -53,6 +53,15 @@ class Message(commands.Cog):
             await message.channel.send(f'{mentions}')
             await message.channel.send(file=discord.File('static/fifa.gif'))
 
+        if '!cs' == (str(message.content).lower()):
+            user_ids = [1028533279802011688, 964663688546115594, 638221514004627456, 262714841154715649, 
+                        622263252801421343, 330886381075169284, 358470646549839874, 362799630205059082]
+    
+            mentions = " ".join([f"<@{user_id}>" for user_id in user_ids])
+
+            await message.channel.send(f'{mentions}')
+            await message.channel.send(file=discord.File('static/cs.gif'))
+
         if "!live" == (str(message.content).lower()):
             await message.channel.send(file=discord.File('static/tohrjob.gif'))
 
