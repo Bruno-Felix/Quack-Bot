@@ -8,3 +8,4 @@ Pillow
 numpy
 opencv-python
 google-api-python-client
+bs4
