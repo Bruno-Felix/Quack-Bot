@@ -1,4 +1,7 @@
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+
+brasilia_tz = ZoneInfo("America/Sao_Paulo")
 
 from ..endpoint_requests import request_daily_kpop_calendar
 from .search_youtube import search_youtube
@@ -16,7 +19,7 @@ async def get_daily_kpop_calendar(search_date):
         try:
             music_str = music
 
-            if datetime.now().hour >= 8:
+            if datetime.now(brasilia_tz).hour >= 8:
                 video_url = await search_youtube(music)
                 music_str = f"{music}\n{video_url}"
 
