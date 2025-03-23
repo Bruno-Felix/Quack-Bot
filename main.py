@@ -30,7 +30,7 @@ async def schedule_loop():
     print('schedule sincronizado')
     music_cog = bot.get_cog("Music")
 
-    schedule.every().day.at("08:00").do(lambda: asyncio.create_task(music_cog.hoje_diario()))
+    schedule.every().day.at("11:00").do(lambda: asyncio.create_task(music_cog.hoje_diario()))
 
     while True:
         schedule.run_pending()

@@ -11,7 +11,7 @@ async def get_daily_kpop_calendar(search_date):
     musics = extract_music_names(results)
 
     if not musics:
-        return 'Sem lançamentos hoje!!'
+        return None
 
     musics_with_urls = []
 

@@ -60,8 +60,11 @@ class Music(commands.Cog):
         embed.set_author(name=interaction.user.name,
                         icon_url=interaction.user.avatar)
 
-        for result in results:
-            embed.add_field(name="\u200b", value=result, inline=False)
+        if results:
+            for result in results:
+                embed.add_field(name="\u200b", value=result, inline=False)
+        else:
+            embed.add_field(name="\u200b", value='Sem lançamentos hoje!!', inline=False)
 
         await interaction.followup.send(embed=embed)
 
