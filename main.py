@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 
 from src.commands.music import Music
+from src.schedule import schedule_today_musics
 
 dotenv_path = join(dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
@@ -26,17 +27,6 @@ async def load_commands():
             await bot.load_extension(f'src.commands.{arquivo[:-3]}')
 
 
-async def schedule_loop():
-    print('schedule sincronizado')
-    music_cog = bot.get_cog("Music")
-
-    schedule.every().day.at("11:00").do(lambda: asyncio.create_task(music_cog.hoje_diario()))
-
-    while True:
-        schedule.run_pending()
-        await asyncio.sleep(60)
-
-
 @bot.event
 async def on_ready():
     try:
@@ -47,7 +37,7 @@ async def on_ready():
         print(f'\nQuack Bot pronta!! Conectado como {bot.user}')
         print(f'{len(synced)} comandos sincronizados')
 
-        await bot.loop.create_task(schedule_loop())
+        await bot.loop.create_task(schedule_today_musics(bot))
     except Exception as error:
         print(error)
 
