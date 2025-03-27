@@ -40,9 +40,16 @@ class Guess(commands.Cog):
 
         super().__init__()
 
+    def get_random_idol_id():
+        return randint(0, len(guess_idols_list) - 1)
+
     def get_random_idol():
-        idol_of_the_day_id = randint(0, len(guess_idols_list) - 1)
-        return get_idol_guess_for_id(idol_of_the_day_id)
+        idol = get_idol_guess_for_id(Guess.get_random_idol_id())
+
+        if idol['type'] == 'Boy':
+            return get_idol_guess_for_id(Guess.get_random_idol_id())
+
+        return idol
 
     async def select_idol_guess_for_today(self):
         Guess.idol_of_the_day = Guess.get_random_idol()
