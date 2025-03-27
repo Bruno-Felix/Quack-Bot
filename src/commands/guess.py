@@ -1,7 +1,11 @@
 import discord
+import asyncio
+import time
 from random import randint
 from discord.ext import commands
 from discord import app_commands
+
+from static.triples_colors import get_sort_triples_color
 
 from ..guess.guess_idols import get_idol_guess_for_id, get_idol_guess_for_name, guess_idols_list
 from ..guess.users import setup_users_database, daily_guess_reset
@@ -35,9 +39,12 @@ class Guess(commands.Cog):
 
         super().__init__()
 
-    async def select_idol_guess_for_today(self):
+    def get_random_idol():
         idol_of_the_day_id = randint(0, len(guess_idols_list) - 1)
-        Guess.idol_of_the_day = get_idol_guess_for_id(idol_of_the_day_id)
+        return get_idol_guess_for_id(idol_of_the_day_id)
+
+    async def select_idol_guess_for_today(self):
+        Guess.idol_of_the_day = Guess.get_random_idol()
 
         daily_guess_reset()
 
@@ -60,6 +67,68 @@ class Guess(commands.Cog):
         view.add_item(button)
         
         await ctx.send("Tente adivinhar o idol do dia:", view=view)
+
+    @commands.command(name="gs")
+    async def guess_row(self, ctx):
+        bot = self.bot
+        inicio = time.time()
+
+        tempo_total = 60
+        aviso_faltando = 20
+
+        idol = Guess.get_random_idol()
+        
+        print(idol)
+
+        altura = idol['height']
+        ano_nascimento = idol['birthYear']
+        type_idol = 'Homen' if idol['type'] == 'Boy' else 'Mulher'
+        company = idol['company']
+
+        embed = discord.Embed(
+            title=f'Quack - Adivinhe o Idol',
+            description='Você tem 1 minuto para acertar',
+            color=get_sort_triples_color()
+        )
+
+        embed.add_field(name='Altura',value=f'{altura}', inline=True)
+        embed.add_field(name='Nascimento',value=f'{ano_nascimento}', inline=True)
+        # embed.add_field(name='Tipo',value=f'{type_idol}', inline=True)
+        embed.add_field(name='Empresa', value=f'{company}', inline=True)
+        
+        await ctx.send(embed=embed)
+
+        def check(m):
+            return m.channel == ctx.channel
+
+        aviso_task = asyncio.create_task(aviso_de_tempo(ctx, aviso_faltando, tempo_total))
+
+        try:
+            while True:
+                tempo_passado = time.time() - inicio
+                tempo_restante = tempo_total - tempo_passado
+
+                if tempo_restante <= 0:
+                    raise asyncio.TimeoutError
+                
+                mensagem = await bot.wait_for("message", timeout=tempo_restante, check=check)
+
+                if mensagem.content.lower() == idol['name'].lower():
+                    await ctx.send(f"Parabéns {mensagem.author.mention}, você acertou!! 🎉\nA resposta correta era **{idol['name']} - {idol['group']}**")
+                    
+                    aviso_task.cancel()
+                    
+                    break
+                else:
+                    if mensagem.author != bot.user:
+                        await mensagem.add_reaction("❌")
+
+        except asyncio.TimeoutError:
+            await ctx.send(f"Tempo acabou!! 🥺\nA resposta era **{idol['name']} - {idol['group']}**")
+
+async def aviso_de_tempo(ctx, aviso_faltando, tempo_total):
+    await asyncio.sleep(tempo_total - aviso_faltando)
+    await ctx.send(f"Faltam apenas {aviso_faltando} segundos!")
 
 
 # --------------
