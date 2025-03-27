@@ -27,8 +27,9 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
         await interaction.response.send_message(f"{interaction.user.mention}\n{response}")
 
 class Guess(commands.Cog):
+    have_guess_game_open = False
     idol_of_the_day = None
-    max_attempts_in_a_day = 20
+    max_attempts_in_a_day = 15
 
     def __init__(self, bot):
         self.bot = bot
@@ -76,6 +77,10 @@ class Guess(commands.Cog):
         tempo_total = 60
         aviso_faltando = 20
 
+        if Guess.have_guess_game_open == True:
+            await ctx.send(f"Já tem um jogo aberto, {ctx.author.mention}.")
+            return
+
         idol = Guess.get_random_idol()
         
         print(idol)
@@ -108,6 +113,8 @@ class Guess(commands.Cog):
 
         try:
             while True:
+                Guess.have_guess_game_open = True
+
                 tempo_passado = time.time() - inicio
                 tempo_restante = tempo_total - tempo_passado
 
@@ -117,16 +124,19 @@ class Guess(commands.Cog):
                 mensagem = await bot.wait_for("message", timeout=tempo_restante, check=check)
 
                 if mensagem.content.lower() == idol['name'].lower():
+                    Guess.have_guess_game_open = False
+
                     await ctx.send(f"Parabéns {mensagem.author.mention}, você acertou!! 🎉\nA resposta correta era **{idol['name']} - {idol['group']}**")
                     
                     aviso_task.cancel()
-                    
                     break
                 else:
                     if mensagem.author != bot.user:
                         await mensagem.add_reaction("❌")
 
         except asyncio.TimeoutError:
+            Guess.have_guess_game_open = False
+
             await ctx.send(f"Tempo acabou!! 🥺\nA resposta era **{idol['name']} - {idol['group']}**")
 
 async def aviso_de_tempo(ctx, aviso_faltando, tempo_total):
