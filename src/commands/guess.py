@@ -83,6 +83,7 @@ class Guess(commands.Cog):
         altura = idol['height']
         ano_nascimento = idol['birthYear']
         type_idol = 'Homen' if idol['type'] == 'Boy' else 'Mulher'
+        nacionalidade = idol['nationality']
         company = idol['company']
 
         embed = discord.Embed(
@@ -91,8 +92,10 @@ class Guess(commands.Cog):
             color=get_sort_triples_color()
         )
 
-        embed.add_field(name='Altura',value=f'{altura}', inline=True)
-        embed.add_field(name='Nascimento',value=f'{ano_nascimento}', inline=True)
+        embed.add_field(name='Altura', value=f'{altura}', inline=True)
+        embed.add_field(name='Nascimento', value=f'{ano_nascimento}', inline=True)
+        if idol['type'] == 'Boy':
+            embed.add_field(name='Nacionalidade', value=f'{nacionalidade}', inline=True)
         # embed.add_field(name='Tipo',value=f'{type_idol}', inline=True)
         embed.add_field(name='Empresa', value=f'{company}', inline=True)
         
