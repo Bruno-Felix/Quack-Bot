@@ -43,8 +43,8 @@ class Guess(commands.Cog):
 
         print(Guess.idol_of_the_day)
     
-    @app_commands.command(name="guess", description="Adivinhe o idol do dia!")
-    async def guess(self, interaction: discord.Interaction):
+    @app_commands.command(name="guess_idol", description="Adivinhe o idol do dia!")
+    async def guess_idol(self, interaction: discord.Interaction):
         """Abre um pop-up para o usuário digitar a resposta"""
         await interaction.response.send_modal(GuessModal())
 
@@ -59,7 +59,7 @@ class Guess(commands.Cog):
         view = discord.ui.View()
         view.add_item(button)
         
-        await ctx.send("Clique no botão para tentar adivinhar:", view=view)
+        await ctx.send("Tente adivinhar o idol do dia:", view=view)
 
 
 # --------------
