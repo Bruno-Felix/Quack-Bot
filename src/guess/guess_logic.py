@@ -32,7 +32,7 @@ def check_guess(user_data, idol_tried_name):
 
     user_data = get_user(user_data[0])
 
-    hints.append(f"Você ainda tem {10 - user_data[4]} tentativas.\n")
+    hints.append(f"Você ainda tem {Guess.max_attempts_in_a_day - user_data[4]} tentativas.\n")
 
     idol_tried = get_idol_guess_for_name(idol_tried_name)
 
