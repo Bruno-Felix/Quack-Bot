@@ -1,5 +1,55 @@
 guess_idols_list = [
   {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Heejin",
+    "group": "ARTMS",
+    "company": "Modhaus",
+    "nationality": "Korea",
+    "height": 161,
+    "birthYear": 2000,
+    "type": "Girl"
+  },
+  {
+    "_id": "7ecf239454ce4194afca6222",
+    "name": "Haseul",
+    "group": "ARTMS",
+    "company": "Modhaus",
+    "nationality": "Korea",
+    "height": 159,
+    "birthYear": 1998,
+    "type": "Girl"
+  },
+  {
+    "_id": "64fcfc7a86ac435987a10092",
+    "name": "Kim Lip",
+    "group": "ARTMS",
+    "company": "Modhaus",
+    "nationality": "Korea",
+    "height": 163,
+    "birthYear": 1999,
+    "type": "Girl"
+  },
+  {
+    "_id": "3efeb25b44104880b33d422d",
+    "name": "Jinsol",
+    "group": "ARTMS",
+    "company": "Modhaus",
+    "nationality": "Korea",
+    "height": 165,
+    "birthYear": 1997,
+    "type": "Girl"
+  },
+  {
+    "_id": "869e8f47b67f42358950763f",
+    "name": "Choerry",
+    "group": "ARTMS",
+    "company": "Modhaus",
+    "nationality": "Korea",
+    "height": 161,
+    "birthYear": 2001,
+    "type": "Girl"
+  },
+  {
     "_id": "5440a3801010409da740ff2d",
     "name": "Seoyeon",
     "group": "TripleS",
