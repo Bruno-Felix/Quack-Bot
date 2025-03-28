@@ -92,7 +92,7 @@ class Guess(commands.Cog):
         
         print(idol)
 
-        altura = idol['height']
+        altura = idol['height'] if idol['height'] else 'Sem altura declarada'
         ano_nascimento = idol['birthYear']
         type_idol = 'Homen' if idol['type'] == 'Boy' else 'Mulher'
         nacionalidade = idol['nationality']
@@ -104,9 +104,9 @@ class Guess(commands.Cog):
             color=get_sort_triples_color()
         )
 
-        embed.add_field(name='Altura', value=f'{altura}', inline=True)
+        embed.add_field(name='Altura', value=f'{altura} cm', inline=True)
         embed.add_field(name='Nascimento', value=f'{ano_nascimento}', inline=True)
-        if idol['type'] == 'Boy':
+        if idol['type'] == 'Boy' or not idol['height']:
             embed.add_field(name='Nacionalidade', value=f'{nacionalidade}', inline=True)
         # embed.add_field(name='Tipo',value=f'{type_idol}', inline=True)
         embed.add_field(name='Empresa', value=f'{company}', inline=True)

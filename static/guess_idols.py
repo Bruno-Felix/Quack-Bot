@@ -60,7 +60,7 @@ guess_idols_list = [
     "type": "Boy"
   },
   {
-    "_id": "cd6714b9e7f84439aae4ef67",
+    "_id": "8b34c70cbbc94253a00bc5c7",
     "name": "Donghyeon",
     "group": "KickFlip",
     "company": "JYP",
