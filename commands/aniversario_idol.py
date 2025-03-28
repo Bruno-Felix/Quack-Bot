@@ -4,7 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from ..aniversario.request_birthday import aniversario_scraping
+from src.aniversario.idols_birthday import aniversario_scraping
 
 
 class AniversarioIdol(commands.Cog):
@@ -23,6 +23,8 @@ class AniversarioIdol(commands.Cog):
             mes = date.today().month
             res = await aniversario_scraping(dia, mes)
             data_title = "de hoje!"
+
+            print(res)
 
             embed = discord.Embed(
                 title=f'Aniversariantes {data_title}',

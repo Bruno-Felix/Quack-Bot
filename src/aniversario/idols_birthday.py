@@ -1,35 +1,23 @@
-import aiohttp
 from bs4 import BeautifulSoup
 
+from .endpoints_idols_birthday import get_page_content
 
 async def aniversario_scraping(dia, mes):
+    res = ""
 
     if dia:
         dia = str(dia).zfill(2)
     mes = str(mes).zfill(2)
 
-    res = ""
-
-    url = f'https://kpopping.com/calendar/2024-{mes}/category-Birthday'
-
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            if response.status == 200:
-                html = await response.text()
-            else:
-                return "Erro ao buscar os dados."
+    html = await get_page_content(mes)
 
     soup = BeautifulSoup(html, 'html.parser')
-
     days = soup.find_all('div', class_='day')
 
-
     for day in days:
-
         elements = day.find_all(['h2', 'a', 'span'])
 
         for n2, event in enumerate(elements):
-
             if n2 == 0:
                 dia_aniversario = event.text.split(",")[0][3:].strip().zfill(2)
                 if dia == "":
@@ -55,4 +43,5 @@ async def aniversario_scraping(dia, mes):
                     res += f'**{idol}** ({idade} anos) - {grupo}\n'
                 elif dia == dia_aniversario:
                     res += f'**{idol}** ({idade} anos) - {grupo}\n'
+
     return res if res else "Nenhum aniversário encontrado."

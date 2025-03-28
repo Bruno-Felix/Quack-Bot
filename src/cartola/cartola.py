@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from ..endpoint_requests import request_market_close_date
+from .endpoints_cartola import request_market_close_date
 
 async def market_close_date():
     rodada_atual, fechamento = await request_market_close_date()

@@ -1,9 +1,5 @@
 import asyncio
 import schedule
-from random import randint
-
-from src.commands.guess import Guess
-from src.guess.users import daily_guess_reset
 
 
 async def schedule_today_musics(bot):

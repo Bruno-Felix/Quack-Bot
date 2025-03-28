@@ -1251,7 +1251,7 @@ guess_idols_list = [
   },
   {
     "_id": "64d81b2808e851f097560506",
-    "name": "Joohoney",
+    "name": "Jooheon",
     "group": "MONSTA X",
     "company": "Starship",
     "nationality": "Korea",

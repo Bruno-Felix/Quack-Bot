@@ -7,9 +7,9 @@ from discord import app_commands
 
 from static.triples_colors import get_sort_triples_color
 
-from ..guess.guess_idols import get_idol_guess_for_id, get_idol_guess_for_name, guess_idols_list
-from ..guess.users import setup_users_database, daily_guess_reset
-from ..guess.guess_logic import user_guess_action
+from src.guess.guess_idols import get_idol_guess_for_id, get_idol_guess_for_name, guess_idols_list
+from src.guess.users import setup_users_database, daily_guess_reset
+from src.guess.guess_logic import user_guess_action
 
 class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
     idol_name = discord.ui.TextInput(

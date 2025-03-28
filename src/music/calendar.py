@@ -3,8 +3,7 @@ from zoneinfo import ZoneInfo
 
 brasilia_tz = ZoneInfo("America/Sao_Paulo")
 
-from ..endpoint_requests import request_daily_kpop_calendar
-from .search_youtube import search_youtube
+from .endpoints_music import request_daily_kpop_calendar, search_youtube
 
 async def get_daily_kpop_calendar(search_date):
     results = await request_daily_kpop_calendar(search_date)

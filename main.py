@@ -1,15 +1,12 @@
 import os
 import discord
-import asyncio
-import schedule
 from os.path import join, dirname
 from dotenv import load_dotenv
 from discord.ext import commands
 
-from src.commands.music import Music
 from src.schedule import schedule_today_musics, schedule_change_idol_guess_for_today
 
-dotenv_path = join(dirname(__file__), '../.env')
+dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 DISCORD_TOKEN = os.environ.get('DISCORD_TOKEN')
@@ -20,11 +17,14 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 
 async def load_commands():
-    for arquivo in os.listdir('src/commands'):
+    print('----------------------------')
+    print('Comandos sincronizados:')
+    for arquivo in os.listdir('commands'):
         if arquivo.endswith('.py'):
-            print(f'commands.{arquivo[:-3]}')
+            print(f'- {arquivo[:-3]}')
 
-            await bot.load_extension(f'src.commands.{arquivo[:-3]}')
+            await bot.load_extension(f'commands.{arquivo[:-3]}')
+    print('----------------------------')
 
 
 @bot.event
