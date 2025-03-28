@@ -1,6 +1,56 @@
 guess_idols_list = [
   {
     "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Jiyu",
+    "group": "KiiiKiii",
+    "company": "Starship",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Kya",
+    "group": "KiiiKiii",
+    "company": "Starship",
+    "nationality": "Japan",
+    "height": 000,
+    "birthYear": 2010,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Haum",
+    "group": "KiiiKiii",
+    "company": "Starship",
+    "nationality": "Japan",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Leesol",
+    "group": "KiiiKiii",
+    "company": "Starship",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2005,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Sui",
+    "group": "KiiiKiii",
+    "company": "Starship",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
     "name": "May",
     "group": "izna",
     "company": "WAKEONE",
