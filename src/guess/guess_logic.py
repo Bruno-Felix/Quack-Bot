@@ -1,5 +1,17 @@
 from .users import get_user, create_user, update_new_is_correct_today, increase_attempts_the_day, increase_total_attempts
-from static.guess_idols import get_idol_guess_for_name
+from static.guess_idols import guess_idols_list, idols_dict_list
+
+def get_idol_guess_for_id(id_list):
+    idol = guess_idols_list[id_list]
+
+    if idol:
+        return idol
+
+def get_idol_guess_for_name(name):
+    name = name.lower()
+    idol = next((idol for idol_name, idol in idols_dict_list.items() if idol_name.lower() == name), None)
+    
+    return idol
 
 def user_guess_action(user_id, idol_tried_name):
     user_data = get_user(user_id)

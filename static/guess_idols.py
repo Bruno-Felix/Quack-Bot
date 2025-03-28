@@ -3362,16 +3362,3 @@ guess_idols_list = [
 ]
 
 idols_dict_list = {idol["name"]: idol for idol in guess_idols_list}
-
-def get_idol_guess_for_id(id_list):
-    idol = guess_idols_list[id_list]
-
-    if idol:
-        return idol
-
-def get_idol_guess_for_name(name):
-    name = name.lower()
-    idol = next((idol for idol_name, idol in idols_dict_list.items() if idol_name.lower() == name), None)
-    
-    return idol
-    
