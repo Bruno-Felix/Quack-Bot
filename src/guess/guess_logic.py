@@ -1,5 +1,5 @@
 from .users import get_user, create_user, update_new_is_correct_today, increase_attempts_the_day, increase_total_attempts
-from .guess_idols import get_idol_guess_for_name
+from static.guess_idols import get_idol_guess_for_name
 
 def user_guess_action(user_id, idol_tried_name):
     user_data = get_user(user_id)
@@ -15,7 +15,8 @@ def user_guess_action(user_id, idol_tried_name):
         if new_attempts_the_day:
             return check_guess(user_data, idol_tried_name)
         else:
-            from src.commands.guess import Guess
+            from commands.guess import Guess
+            
             hints = []
 
             hints.append("Você já usou todas as suas tentativas hoje!")
@@ -26,7 +27,7 @@ def user_guess_action(user_id, idol_tried_name):
         return "🎉 Você já acertou hoje!"
 
 def check_guess(user_data, idol_tried_name):
-    from src.commands.guess import Guess
+    from commands.guess import Guess
 
     hints = []
 

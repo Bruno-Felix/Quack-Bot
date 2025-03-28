@@ -1,6 +1,76 @@
 guess_idols_list = [
   {
     "_id": "787349609e0e45c39fdaa8eb",
+    "name": "May",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Japan",
+    "height": 167,
+    "birthYear": 2004,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Jeemin",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Korea",
+    "height": 173,
+    "birthYear": 2005,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Jiyeon",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Korea",
+    "height": 166,
+    "birthYear": 2005,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Koko",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Japan",
+    "height": 174,
+    "birthYear": 2006,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Sarang",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Korea",
+    "height": 162,
+    "birthYear": 2007,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Jungeun",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Korea",
+    "height": 170,
+    "birthYear": 2007,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
+    "name": "Saebi",
+    "group": "izna",
+    "company": "WAKEONE",
+    "nationality": "Korea",
+    "height": 173,
+    "birthYear": 2008,
+    "type": "Girl"
+  },
+  {
+    "_id": "787349609e0e45c39fdaa8eb",
     "name": "Heejin",
     "group": "ARTMS",
     "company": "Modhaus",

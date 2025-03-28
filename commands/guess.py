@@ -7,7 +7,7 @@ from discord import app_commands
 
 from static.triples_colors import get_sort_triples_color
 
-from src.guess.guess_idols import get_idol_guess_for_id, get_idol_guess_for_name, guess_idols_list
+from static.guess_idols import get_idol_guess_for_id, guess_idols_list
 from src.guess.users import setup_users_database, daily_guess_reset
 from src.guess.guess_logic import user_guess_action
 
