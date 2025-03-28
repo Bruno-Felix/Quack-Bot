@@ -1194,7 +1194,7 @@ guess_idols_list = [
     "name": "Giselle",
     "group": "aespa",
     "company": "SM",
-    "nationality": "Korea",
+    "nationality": "Japan",
     "type": "Girl",
     "height": 164,
     "birthYear": 2000
