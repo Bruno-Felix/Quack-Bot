@@ -1,5 +1,75 @@
 guess_idols_list = [
   {
+    "_id": "5d03bbb74ed94357a684871a",
+    "name": "Kyehoon",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2004,
+    "type": "Boy"
+  },
+  {
+    "_id": "1d7ee260dfa0414eb0cf2ce8",
+    "name": "Amaru",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Japan",
+    "height": 000,
+    "birthYear": 2005,
+    "type": "Boy"
+  },
+  {
+    "_id": "11afbacea6cd4a4da05ab645",
+    "name": "Donghwa",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Boy"
+  },
+  {
+    "_id": "c40d4aae156c4df0b0101453",
+    "name": "Juwang",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Boy"
+  },
+  {
+    "_id": "41ef5f8539d7415eb0ce4822",
+    "name": "Minje",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Boy"
+  },
+  {
+    "_id": "cd6714b9e7f84439aae4ef67",
+    "name": "Keiju",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Japan",
+    "height": 000,
+    "birthYear": 2006,
+    "type": "Boy"
+  },
+  {
+    "_id": "cd6714b9e7f84439aae4ef67",
+    "name": "Donghyeon",
+    "group": "KickFlip",
+    "company": "JYP",
+    "nationality": "Korea",
+    "height": 000,
+    "birthYear": 2007,
+    "type": "Boy"
+  },
+  {
     "_id": "70c01d4e716b453796b7330f",
     "name": "Jiwoo",
     "group": "Hearts2Hearts",
