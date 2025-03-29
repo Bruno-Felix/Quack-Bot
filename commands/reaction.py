@@ -33,7 +33,7 @@ class Reaction(commands.Cog):
         embed.add_field(name="", value=reaction_message)
 
         allowed_emojis = {reaction['emoji'] for reaction in reactions}
-        
+
         if message_id:
             message = await channel.fetch_message(int(message_id))
 
@@ -54,4 +54,6 @@ class Reaction(commands.Cog):
             await message.add_reaction(reaction['emoji'])
     
 async def setup(bot):
-    await bot.add_cog(Reaction(bot))
+    reaction_cog = Reaction(bot)
+    await bot.add_cog(reaction_cog)
+    await reaction_cog.setup_reactions()
