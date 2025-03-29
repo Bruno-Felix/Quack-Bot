@@ -120,7 +120,7 @@ class Guess(commands.Cog):
 
         embed = discord.Embed(
             title=f'Quack - Adivinhe o Idol',
-            description='Tem **1 minuto** para acertar\n\nEscreva no chat **nome** do idol que acredita ser\n**Faça seu palpite** 😆',
+            description='Tem **1 minuto** para acertar\n\nEscreva no chat o **nome** do idol que acredita ser\n**Faça seu palpite** 😆',
             color=get_sort_triples_color()
         )
 
