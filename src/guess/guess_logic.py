@@ -45,7 +45,7 @@ def check_guess(user_data, idol_tried_name):
 
     user_data = get_user(user_data[0])
 
-    hints.append(f"Você errou, mas ainda tem {Guess.max_attempts_in_a_day - user_data[4]} tentativas.\n")
+    hints.append(f"Você errou, mas ainda tem **{Guess.max_attempts_in_a_day - user_data[4]} tentativas**.")
 
     idol_tried = get_idol_guess_for_name(idol_tried_name)
 
@@ -55,37 +55,39 @@ def check_guess(user_data, idol_tried_name):
 
     print(user_data, idol_tried['name'].lower(), Guess.idol_of_the_day['name'].lower())
 
+    hints.append(f"Tentou **{idol_tried['name']}**, mas o idol do dia é:\n")
+
     if idol_tried['name'].lower() != Guess.idol_of_the_day['name'].lower():
         if idol_tried['height'] == 0:
-            hints.append(f"📏 Idol ainda sem altura declarada ✅")
+            hints.append(f"📏\tIdol ainda sem altura declarada ✅")
         if idol_tried['height'] > Guess.idol_of_the_day['height']:
-            hints.append(f"📏 Mais baixo que {idol_tried['height']} cm ❌")
+            hints.append(f"📏\tMais baixo que {idol_tried['height']} cm ❌")
         elif idol_tried['height'] < Guess.idol_of_the_day['height']:
-            hints.append(f"📏 Mais alto que {idol_tried['height']} cm ❌")
+            hints.append(f"📏\tMais alto que {idol_tried['height']} cm ❌")
         else:
-            hints.append("📏 Tem a mesma altura ✅")
+            hints.append("📏\tTem a mesma altura ✅")
 
         if idol_tried['birthYear'] > Guess.idol_of_the_day['birthYear']:
-            hints.append(f"🎂 Nasceu antes de {idol_tried['birthYear']} ❌")
+            hints.append(f"🎂\tNasceu antes de {idol_tried['birthYear']} ❌")
         elif idol_tried['birthYear'] < Guess.idol_of_the_day['birthYear']:
-            hints.append(f"🎂 Nasceu depois de {idol_tried['birthYear']} ❌")
+            hints.append(f"🎂\tNasceu depois de {idol_tried['birthYear']} ❌")
         else:
-            hints.append("🎂 Tem a mesma idade ✅")
+            hints.append("🎂\tTem a mesma idade ✅")
 
         if idol_tried['nationality'] == Guess.idol_of_the_day['nationality']:
-            hints.append(f"🌍 Nacionalidade é {idol_tried['nationality']} ✅")
+            hints.append(f"🌍\tNacionalidade é {idol_tried['nationality']} ✅")
         else:
-            hints.append(f"🌍 Nacionalidade não é {idol_tried['nationality']} ❌")
+            hints.append(f"🌍\tNacionalidade não é {idol_tried['nationality']} ❌")
 
         if idol_tried['group'] == Guess.idol_of_the_day['group']:
-            hints.append(f"🎤 É do grupo {idol_tried['group']} ✅")
+            hints.append(f"👥\tÉ do grupo {idol_tried['group']} ✅")
         else:
-            hints.append(f"🎤 Não é do grupo {idol_tried['group']} ❌")
+            hints.append(f"👥\tNão é do grupo {idol_tried['group']} ❌")
 
         if idol_tried['company'] == Guess.idol_of_the_day['company']:
-            hints.append(f"🏢 É da empresa {idol_tried['company']} ✅")
+            hints.append(f"🏢\tÉ da empresa {idol_tried['company']} ✅")
         else:
-            hints.append(f"🏢 Não é da empresa {idol_tried['company']} ❌")
+            hints.append(f"🏢\tNão é da empresa {idol_tried['company']} ❌")
 
         return "\n".join(hints)
     else:

@@ -27,9 +27,18 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
         if response == 1:
             await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Você já acertou hoje!!")
         elif response == 2:
-            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Parabéns! Você acertou!!")
+            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Parabéns, **você acertou**!!")
         else:
-            await interaction.response.send_message(f"{interaction.user.mention}\n{response}", ephemeral=True)
+            button = discord.ui.Button(label="Tentar outra vez", style=discord.ButtonStyle.primary)
+
+            async def button_callback(interaction: discord.Interaction):
+                await interaction.response.send_modal(GuessModal())
+        
+            button.callback = button_callback
+            view = discord.ui.View()
+            view.add_item(button)
+
+            await interaction.response.send_message(f"{interaction.user.mention}\n{response}", ephemeral=True, view=view)
 
 class Guess(commands.Cog):
     have_guess_game_open = False
@@ -79,7 +88,13 @@ class Guess(commands.Cog):
         view = discord.ui.View()
         view.add_item(button)
         
-        await ctx.send("Tente adivinhar o idol do dia:", view=view)
+        embed = discord.Embed(
+            title=f'Quack - Adivinhe o Idol do Dia',
+            description=f'Tente adivinhar o **idol do dia**!!\n\nInsira o **nome** do idol que acredita ser\nVocê tem {Guess.max_attempts_in_a_day} tentativas, **Faça seu palpite** 😆',
+            color=get_sort_triples_color()
+        )
+
+        await ctx.send(embed=embed, view=view)
 
     @commands.command(name="gs")
     async def guess_row(self, ctx):
