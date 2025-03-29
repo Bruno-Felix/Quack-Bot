@@ -23,8 +23,13 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
         idol_name = self.idol_name.value
         
         response = user_guess_action(str(user_id), idol_name)
-        
-        await interaction.response.send_message(f"{interaction.user.mention}\n{response}")
+
+        if response == 1:
+            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Você já acertou hoje!!")
+        elif response == 2:
+            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Parabéns! Você acertou!!")
+        else:
+            await interaction.response.send_message(f"{interaction.user.mention}\n{response}", ephemeral=True)
 
 class Guess(commands.Cog):
     have_guess_game_open = False
@@ -92,7 +97,7 @@ class Guess(commands.Cog):
         
         print(idol)
 
-        altura = f'{idol['height']} cm' if idol['height'] else 'Sem altura declarada'
+        altura = f"{idol['height']} cm" if idol['height'] else 'Sem altura declarada'
         ano_nascimento = idol['birthYear']
         type_idol = 'Homen' if idol['type'] == 'Boy' else 'Mulher'
         nacionalidade = idol['nationality']
