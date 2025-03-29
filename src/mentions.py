@@ -1,6 +1,12 @@
+import os
+from dotenv import load_dotenv
+
+dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
+
 async def get_users_by_reaction(self, emoji: str):
-    channel_id = 1289335963138523197 # id do canal que ficará a mensagem para reagir
-    message_id = 1355408693545402470 # id da mensagem
+    channel_id = int(os.getenv('REACTIONS_CHANNEL_ID'))
+    message_id = int(os.getenv('REACTIONS_MESSAGE_ID'))
 
     channel = self.bot.get_channel(channel_id) or await self.bot.fetch_channel(channel_id)
     msg = await channel.fetch_message(message_id)
