@@ -67,7 +67,7 @@ def increase_total_attempts(user_data):
     conn.close()
 
 def increase_attempts_the_day(user_data):
-    from src.commands.guess import Guess
+    from commands.guess import Guess
 
     if user_data[4] < Guess.max_attempts_in_a_day:
         conn, cursor = get_db_connection()

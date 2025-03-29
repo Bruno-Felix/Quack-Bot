@@ -23,8 +23,22 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
         idol_name = self.idol_name.value
         
         response = user_guess_action(str(user_id), idol_name)
+
+        if response == 1:
+            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Você já acertou hoje!!")
+        elif response == 2:
+            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Parabéns, **você acertou**!!")
+        else:
+            button = discord.ui.Button(label="Tentar outra vez", style=discord.ButtonStyle.primary)
+
+            async def button_callback(interaction: discord.Interaction):
+                await interaction.response.send_modal(GuessModal())
         
-        await interaction.response.send_message(f"{interaction.user.mention}\n{response}")
+            button.callback = button_callback
+            view = discord.ui.View()
+            view.add_item(button)
+
+            await interaction.response.send_message(f"{interaction.user.mention}\n{response}", ephemeral=True, view=view)
 
 class Guess(commands.Cog):
     have_guess_game_open = False
@@ -74,7 +88,13 @@ class Guess(commands.Cog):
         view = discord.ui.View()
         view.add_item(button)
         
-        await ctx.send("Tente adivinhar o idol do dia:", view=view)
+        embed = discord.Embed(
+            title=f'Quack - Adivinhe o Idol do Dia',
+            description=f'Tente adivinhar o **idol do dia**!!\n\nInsira o **nome** do idol que acredita ser\nVocê tem {Guess.max_attempts_in_a_day} tentativas, **Faça seu palpite** 😆',
+            color=get_sort_triples_color()
+        )
+
+        await ctx.send(embed=embed, view=view)
 
     @commands.command(name="gs")
     async def guess_row(self, ctx):
@@ -92,7 +112,7 @@ class Guess(commands.Cog):
         
         print(idol)
 
-        altura = f'{idol['height']} cm' if idol['height'] else 'Sem altura declarada'
+        altura = f"{idol['height']} cm" if idol['height'] else 'Sem altura declarada'
         ano_nascimento = idol['birthYear']
         type_idol = 'Homen' if idol['type'] == 'Boy' else 'Mulher'
         nacionalidade = idol['nationality']
@@ -100,7 +120,7 @@ class Guess(commands.Cog):
 
         embed = discord.Embed(
             title=f'Quack - Adivinhe o Idol',
-            description='Você tem 1 minuto para acertar',
+            description='Tem **1 minuto** para acertar\n\nEscreva no chat o **nome** do idol que acredita ser\n**Faça seu palpite** 😆',
             color=get_sort_triples_color()
         )
 
