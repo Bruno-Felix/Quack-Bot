@@ -3,7 +3,6 @@ import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
 from discord.ext import commands
-from static.reactions import reactions
 
 from src.schedule import schedule_today_musics, schedule_change_idol_guess_for_today
 
@@ -43,15 +42,5 @@ async def on_ready():
     except Exception as error:
         print(error)
 
-@bot.command()
-async def reagir(ctx):
-    reaction_message = "Reaja para ser marcado!\n"
-    for reaction in reactions:
-        reaction_message += f"{reaction['emoji']} para {reaction['description']}\n\n"
-
-    msg = await ctx.send(reaction_message)
-
-    for reaction in reactions:
-        await msg.add_reaction(reaction['emoji'])
 
 bot.run(DISCORD_TOKEN)
