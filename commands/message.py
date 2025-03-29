@@ -5,6 +5,9 @@ from random import randint
 from static.roles import rules
 from static.triples_colors import get_sort_triples_color
 
+from src.mentions import get_users_by_reaction
+from static.reactions import reactions
+
 class Message(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -62,6 +65,17 @@ class Message(commands.Cog):
 
             await message.channel.send(f'{mentions}')
             await message.channel.send(file=discord.File('static/cs.gif'))
+
+        for reaction in reactions:
+            if f"!{reaction['command']}" == (str(message.content).lower()):
+                mentions = await get_users_by_reaction(self, reaction['emoji'])
+
+                if mentions:
+                    await message.channel.send(f'{mentions}')
+                    if 'gif' in reaction:
+                       await message.channel.send(file=discord.File(reaction['gif'])) 
+                else:
+                    await message.channel.send(f"Ninguém reagiu para {reaction['description']}")
 
         if "!live" == (str(message.content).lower()):
             await message.channel.send(file=discord.File('static/tohrjob.gif'))
