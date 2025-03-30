@@ -1,15 +1,13 @@
 import discord
 import asyncio
 import time
-from random import randint
 from discord.ext import commands
 from discord import app_commands
 
 from static.triples_colors import get_sort_triples_color
 
-from static.guess_idols import guess_idols_list
-from src.guess.users import setup_users_database, daily_guess_reset
-from src.guess.guess_logic import user_guess_action, get_idol_guess_for_id
+from src.guess.users import setup_users_database
+from src.guess.guess_logic import user_guess_action, select_idol_guess_for_today, get_random_idol
 
 class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
     idol_name = discord.ui.TextInput(
@@ -50,27 +48,10 @@ class Guess(commands.Cog):
 
         setup_users_database()
 
-        bot.loop.create_task(self.select_idol_guess_for_today())
+        bot.loop.create_task(select_idol_guess_for_today())
 
         super().__init__()
 
-    def get_random_idol_id():
-        return randint(0, len(guess_idols_list) - 1)
-
-    def get_random_idol():
-        idol = get_idol_guess_for_id(Guess.get_random_idol_id())
-
-        if idol['type'] == 'Boy':
-            return get_idol_guess_for_id(Guess.get_random_idol_id())
-
-        return idol
-
-    async def select_idol_guess_for_today(self):
-        Guess.idol_of_the_day = Guess.get_random_idol()
-
-        daily_guess_reset()
-
-        print(Guess.idol_of_the_day)
     
     @app_commands.command(name="guess_idol", description="Adivinhe o idol do dia!")
     async def guess_idol(self, interaction: discord.Interaction):
@@ -108,9 +89,7 @@ class Guess(commands.Cog):
             await ctx.send(f"Já tem um jogo aberto, {ctx.author.mention}.")
             return
 
-        idol = Guess.get_random_idol()
-        
-        print(idol)
+        idol = get_random_idol()
 
         altura = f"{idol['height']} cm" if idol['height'] else 'Sem altura declarada'
         ano_nascimento = idol['birthYear']
@@ -153,6 +132,7 @@ class Guess(commands.Cog):
                 if mensagem.content.lower() == idol['name'].lower():
                     Guess.have_guess_game_open = False
 
+                    await mensagem.add_reaction("✅")
                     await ctx.send(f"Parabéns {mensagem.author.mention}, você acertou!! 🎉\nA resposta correta era **{idol['name']} - {idol['group']}**")
                     
                     aviso_task.cancel()

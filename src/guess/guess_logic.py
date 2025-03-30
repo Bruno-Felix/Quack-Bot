@@ -1,5 +1,26 @@
-from .users import get_user, create_user, update_new_is_correct_today, increase_attempts_the_day, increase_total_attempts
+from random import randint
+
+from .users import get_user, create_user, update_new_is_correct_today, increase_attempts_the_day, increase_total_attempts, daily_guess_reset
 from static.guess_idols import guess_idols_list, idols_dict_list
+
+def get_random_idol_id():
+    return randint(0, len(guess_idols_list) - 1)
+
+def get_random_idol():
+    idol = get_idol_guess_for_id(get_random_idol_id())
+
+    if idol['type'] == 'Boy':
+        idol = get_idol_guess_for_id(get_random_idol_id())
+    
+    print(idol)
+
+    return idol
+
+async def select_idol_guess_for_today():
+    from commands.guess import Guess
+
+    Guess.idol_of_the_day = get_random_idol()
+    daily_guess_reset()
 
 def get_idol_guess_for_id(id_list):
     idol = guess_idols_list[id_list]
@@ -60,7 +81,7 @@ def check_guess(user_data, idol_tried_name):
     if idol_tried['name'].lower() != Guess.idol_of_the_day['name'].lower():
         if idol_tried['height'] == 0:
             hints.append(f"📏\tIdol ainda sem altura declarada ✅")
-        if idol_tried['height'] > Guess.idol_of_the_day['height']:
+        elif idol_tried['height'] > Guess.idol_of_the_day['height']:
             hints.append(f"📏\tMais baixo que {idol_tried['height']} cm ❌")
         elif idol_tried['height'] < Guess.idol_of_the_day['height']:
             hints.append(f"📏\tMais alto que {idol_tried['height']} cm ❌")
