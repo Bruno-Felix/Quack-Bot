@@ -7,7 +7,7 @@ from discord import app_commands
 from static.triples_colors import get_sort_triples_color
 
 from src.guess.users import setup_users_database
-from src.guess.guess_logic import user_guess_action, select_idol_guess_for_today, get_random_idol
+from src.guess.guess_logic import user_guess_action, select_idol_guess_for_today, get_random_idol, get_groups_by_company
 
 class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
     idol_name = discord.ui.TextInput(
@@ -33,20 +33,30 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
         elif response == 2:
             embed_correct = discord.Embed(
                 title=f"Você Acertou!!",
-                description=f"Parabéns {interaction.user.mention} 🎉",
+                description=f"Parabéns {interaction.user.mention} 🎉\nVocê cravou o idol do dia",
                 color=get_sort_triples_color()
             )
 
             await interaction.response.send_message(embed=embed_correct)
         else:
             button = discord.ui.Button(label="Tentar outra vez", style=discord.ButtonStyle.primary)
+            button_list_groups = discord.ui.Button(label="Ver lista de grupos", style=discord.ButtonStyle.secondary)
 
             async def button_callback(interaction: discord.Interaction):
                 await interaction.response.send_modal(GuessModal())
         
+            async def button_list_callback(interaction: discord.Interaction):
+                group_data = get_groups_by_company()
+                group_list_message = "\n".join([f"**{company}** - " + ", ".join(groups) for company, groups in group_data.items()])
+
+                await interaction.response.send_message(f"Lista de Grupos:\n\n{group_list_message}", ephemeral=True)
+        
             button.callback = button_callback
+            button_list_groups.callback = button_list_callback
+            
             view = discord.ui.View()
             view.add_item(button)
+            view.add_item(button_list_groups)
 
             await interaction.response.send_message(f"{interaction.user.mention}\n{response}", ephemeral=True, view=view)
 

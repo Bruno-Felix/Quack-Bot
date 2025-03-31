@@ -3,6 +3,20 @@ from random import randint
 from .users import get_user, create_user, update_new_is_correct_today, increase_attempts_the_day, increase_total_attempts, daily_guess_reset
 from static.guess_idols import guess_idols_list, idols_dict_list
 
+def get_groups_by_company():
+    groups_list = {}
+
+    for idol in guess_idols_list:
+        company = idol["company"]
+        group = idol["group"]
+
+        if idol['company'] not in groups_list:
+            groups_list[company] = set()
+
+        groups_list[company].add(group)
+    
+    return {company: groups for company, groups in groups_list.items()}
+
 def get_random_idol_id():
     return randint(0, len(guess_idols_list) - 1)
 
