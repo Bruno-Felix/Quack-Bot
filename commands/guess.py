@@ -172,7 +172,12 @@ class Guess(commands.Cog):
         except asyncio.TimeoutError:
             Guess.have_guess_game_open = False
 
-            await ctx.send(f"Tempo acabou!! 🥺\nA resposta era **{idol['name']} - {idol['group']}**")
+            embed_wrong = discord.Embed(
+                title=f"Tempo acabou!!",
+                description=f"A resposta era **{idol['name']} - {idol['group']}**",
+                color=get_sort_triples_color()
+            )
+            await ctx.send(embed=embed_wrong)
 
 async def aviso_de_tempo(ctx, aviso_faltando, tempo_total):
     await asyncio.sleep(tempo_total - aviso_faltando)
