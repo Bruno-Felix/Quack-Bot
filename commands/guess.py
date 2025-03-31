@@ -23,9 +23,21 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
         response = user_guess_action(str(user_id), idol_name)
 
         if response == 1:
-            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Você já acertou hoje!!")
+            embed_correct = discord.Embed(
+                title=f"Parabéns!!",
+                description=f"Você já acertou hoje 🎉",
+                color=get_sort_triples_color()
+            )
+
+            await interaction.response.send_message(embed=embed_correct)
         elif response == 2:
-            await interaction.response.send_message(f"{interaction.user.mention}\n🎉 Parabéns, **você acertou**!!")
+            embed_correct = discord.Embed(
+                title=f"Você Acertou!!",
+                description=f"Parabéns {interaction.user.mention} 🎉",
+                color=get_sort_triples_color()
+            )
+
+            await interaction.response.send_message(embed=embed_correct)
         else:
             button = discord.ui.Button(label="Tentar outra vez", style=discord.ButtonStyle.primary)
 
@@ -133,7 +145,13 @@ class Guess(commands.Cog):
                     Guess.have_guess_game_open = False
 
                     await mensagem.add_reaction("✅")
-                    await ctx.send(f"Parabéns {mensagem.author.mention}, você acertou!! 🎉\nA resposta correta era **{idol['name']} - {idol['group']}**")
+
+                    embed_correct = discord.Embed(
+                        title=f"Você Acertou!!",
+                        description=f"Parabéns {mensagem.author.mention}\nA resposta correta era **{idol['name']} - {idol['group']}**",
+                        color=get_sort_triples_color()
+                    )
+                    await ctx.send(embed=embed_correct)
                     
                     aviso_task.cancel()
                     break
