@@ -111,7 +111,7 @@ guess_idols_list = [
   },
   {
     "_id": "07fcd9e9363b4170a0420ab4",
-    "name": "Yuun",
+    "name": "Juun",
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
