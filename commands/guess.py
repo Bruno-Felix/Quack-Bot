@@ -63,6 +63,7 @@ class GuessModal(discord.ui.Modal, title="Adivinhe o Idol!"):
 class Guess(commands.Cog):
     have_guess_game_open = False
     idol_of_the_day = None
+    streak_ranking = {}
     max_attempts_in_a_day = 15
 
     def __init__(self, bot):
@@ -102,82 +103,103 @@ class Guess(commands.Cog):
     @commands.command(name="gs")
     async def guess_row(self, ctx):
         bot = self.bot
-        inicio = time.time()
-
         tempo_total = 60
         aviso_faltando = 20
+        tempo_espera = 10
 
-        if Guess.have_guess_game_open == True:
+        if Guess.have_guess_game_open:
             await ctx.send(f"Já tem um jogo aberto, {ctx.author.mention}.")
             return
 
-        idol = get_random_idol()
+        Guess.have_guess_game_open = True
 
-        altura = f"{idol['height']} cm" if idol['height'] else 'Sem altura declarada'
-        ano_nascimento = idol['birthYear']
-        type_idol = 'Homen' if idol['type'] == 'Boy' else 'Mulher'
-        nacionalidade = idol['nationality']
-        company = idol['company']
+        while True:
+            inicio = time.time()
+            alguem_tentou = False
 
-        embed = discord.Embed(
-            title=f'Quack - Adivinhe o Idol',
-            description='Tem **1 minuto** para acertar\n\nEscreva no chat o **nome** do idol que acredita ser\n**Faça seu palpite** 😆',
-            color=get_sort_triples_color()
-        )
+            idol = get_random_idol()
 
-        embed.add_field(name='Altura', value=f'{altura}', inline=True)
-        embed.add_field(name='Nascimento', value=f'{ano_nascimento}', inline=True)
-        if idol['type'] == 'Boy' or not idol['height']:
-            embed.add_field(name='Nacionalidade', value=f'{nacionalidade}', inline=True)
-        # embed.add_field(name='Tipo',value=f'{type_idol}', inline=True)
-        embed.add_field(name='Empresa', value=f'{company}', inline=True)
-        
-        await ctx.send(embed=embed)
+            altura = f"{idol['height']} cm" if idol['height'] else 'Sem altura declarada'
+            ano_nascimento = idol['birthYear']
+            nacionalidade = idol['nationality']
+            company = idol['company']
 
-        def check(m):
-            return m.channel == ctx.channel
-
-        aviso_task = asyncio.create_task(aviso_de_tempo(ctx, aviso_faltando, tempo_total))
-
-        try:
-            while True:
-                Guess.have_guess_game_open = True
-
-                tempo_passado = time.time() - inicio
-                tempo_restante = tempo_total - tempo_passado
-
-                if tempo_restante <= 0:
-                    raise asyncio.TimeoutError
-                
-                mensagem = await bot.wait_for("message", timeout=tempo_restante, check=check)
-
-                if mensagem.content.lower() == idol['name'].lower():
-                    Guess.have_guess_game_open = False
-
-                    await mensagem.add_reaction("✅")
-
-                    embed_correct = discord.Embed(
-                        title=f"Você Acertou!!",
-                        description=f"Parabéns {mensagem.author.mention}\nA resposta correta era **{idol['name']} - {idol['group']}**",
-                        color=get_sort_triples_color()
-                    )
-                    await ctx.send(embed=embed_correct)
-                    
-                    aviso_task.cancel()
-                    break
-                else:
-                    if mensagem.author != bot.user:
-                        await mensagem.add_reaction("❌")
-
-        except asyncio.TimeoutError:
-            Guess.have_guess_game_open = False
-
-            embed_wrong = discord.Embed(
-                title=f"Tempo acabou!!",
-                description=f"A resposta era **{idol['name']} - {idol['group']}**",
+            embed = discord.Embed(
+                title=f'Quack - Adivinhe o Idol',
+                description='Tem **1 minuto** para acertar\n\nEscreva no chat o **nome** do idol que acredita ser\n**Faça seu palpite** 😆',
                 color=get_sort_triples_color()
             )
-            await ctx.send(embed=embed_wrong)
+
+            embed.add_field(name='Altura', value=f'{altura}', inline=True)
+            embed.add_field(name='Nascimento', value=f'{ano_nascimento}', inline=True)
+            embed.add_field(name='Nacionalidade', value=f'{nacionalidade}', inline=True)
+            embed.add_field(name='Empresa', value=f'{company}', inline=True)
+            
+            await ctx.send(embed=embed)
+
+            def check(m):
+                return m.channel == ctx.channel
+
+            aviso_task = asyncio.create_task(aviso_de_tempo(ctx, aviso_faltando, tempo_total))
+
+            try:
+                while True:
+                    tempo_passado = time.time() - inicio
+                    tempo_restante = tempo_total - tempo_passado
+
+                    if tempo_restante <= 0:
+                        raise asyncio.TimeoutError
+                    
+                    mensagem = await bot.wait_for("message", timeout=tempo_restante, check=check)
+
+                    if mensagem.author != bot.user:
+                        alguem_tentou = True
+                    
+                    if mensagem.content.lower() == idol['name'].lower():
+                        await mensagem.add_reaction("✅")
+
+                        Guess.streak_ranking[mensagem.author] = Guess.streak_ranking.get(mensagem.author, 0) + 1
+                        
+                        embed_correct = discord.Embed(
+                            title=f"Você Acertou!!",
+                            description=f"Parabéns {mensagem.author.mention}\nA resposta correta era **{idol['name']} - {idol['group']}**",
+                            color=get_sort_triples_color()
+                        )
+                        
+                        await ctx.send(embed=embed_correct)
+                        
+                        aviso_task.cancel()
+                        break
+                    else:
+                        if mensagem.author != bot.user:
+                            await mensagem.add_reaction("❌")
+            except asyncio.TimeoutError:
+                embed_wrong = discord.Embed(
+                    title=f"Tempo acabou!!",
+                    description=f"A resposta era **{idol['name']} - {idol['group']}**",
+                    color=get_sort_triples_color()
+                )
+                await ctx.send(embed=embed_wrong)
+
+            if Guess.streak_ranking:
+                ranking_embed = discord.Embed(
+                    title="Streak 🏆",
+                    description="Uma nova rodada comecará em breve..." if alguem_tentou else "Resultado final",
+                    color=get_sort_triples_color()
+                )
+
+                for user, acertos in sorted(Guess.streak_ranking.items(), key=lambda x: x[1], reverse=True):
+                    ranking_embed.add_field(name=user.name, value=f"{acertos} acertos", inline=False)
+                
+                await ctx.send(embed=ranking_embed)
+            
+            await asyncio.sleep(tempo_espera) # Esperar antes de reiniciar
+            
+            if not alguem_tentou:
+                Guess.streak_ranking.clear()
+                Guess.have_guess_game_open = False
+                
+                break
 
 async def aviso_de_tempo(ctx, aviso_faltando, tempo_total):
     await asyncio.sleep(tempo_total - aviso_faltando)
