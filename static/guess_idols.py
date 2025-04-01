@@ -221,7 +221,7 @@ guess_idols_list = [
   },
   {
     "_id": "5b1a343633a644939720c354",
-    "name": "Jiyeon",
+    "name": "Jiyoon",
     "group": "izna",
     "company": "WAKEONE",
     "nationality": "Korea",
@@ -2951,7 +2951,7 @@ guess_idols_list = [
   },
   {
     "_id": "65236a7ded77d2d520d1c840",
-    "name": "Gahyeon",
+    "name": "Gahyun",
     "group": "Dreamcatcher",
     "company": "Dreamcatcher Company",
     "nationality": "Korea",
