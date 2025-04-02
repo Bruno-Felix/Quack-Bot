@@ -4,7 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from src.aniversario.idols_birthday import aniversario_scraping
+from src.idol_aniversario.idols_birthday import aniversario_scraping
 
 
 class AniversarioIdol(commands.Cog):
