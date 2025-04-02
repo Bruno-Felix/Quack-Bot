@@ -47,24 +47,8 @@ class Message(commands.Cog):
 # --------------
 
 
-        if '!fifa' == (str(message.content).lower()):
-            user_ids = [701955314161025086, 1028533279802011688, 321389614940028929, 406686196581007361,
-                        358470646549839874, 182935000046370816, 183630868114309120, 133033000114847744,
-                        330886381075169284, 281536719424323584]
-
-            mentions = " ".join([f"<@{user_id}>" for user_id in user_ids])
-
-            await message.channel.send(f'{mentions}')
-            await message.channel.send(file=discord.File('static/fifa.gif'))
-
-        if '!cs' == (str(message.content).lower()):
-            user_ids = [1028533279802011688, 964663688546115594, 638221514004627456, 262714841154715649, 
-                        622263252801421343, 330886381075169284, 358470646549839874, 362799630205059082]
-    
-            mentions = " ".join([f"<@{user_id}>" for user_id in user_ids])
-
-            await message.channel.send(f'{mentions}')
-            await message.channel.send(file=discord.File('static/cs.gif'))
+        if "!live" == (str(message.content).lower()):
+            await message.channel.send(file=discord.File('static/tohrjob.gif'))
 
         for reaction in reactions:
             if f"!{reaction['command']}" == (str(message.content).lower()):
@@ -76,9 +60,6 @@ class Message(commands.Cog):
                        await message.channel.send(file=discord.File(reaction['gif'])) 
                 else:
                     await message.channel.send(f"Ninguém reagiu para {reaction['description']}")
-
-        if "!live" == (str(message.content).lower()):
-            await message.channel.send(file=discord.File('static/tohrjob.gif'))
 
         if message.content.lower().startswith('!regra'):
             try:
@@ -94,6 +75,21 @@ class Message(commands.Cog):
                 await message.channel.send(embed=embed)
             except:
                 None
+
+    @commands.command(name="reagir")
+    async def reagir_msg(self, ctx):
+        embed = discord.Embed(
+            title='Escolha os jogos que queira ser notificado!!',
+            description='Reaja a esta mensagem com o emoji respectivo do jogo para ser marcado na proxima jogatina:',
+        )
+
+        for reaction in reactions:
+            embed.add_field(name=f"{reaction['emoji']}", value=f"{reaction['description']}", inline=True)
+
+        msg = await ctx.send(embed=embed)
+
+        for reaction in reactions:
+            await msg.add_reaction(reaction['emoji'])
 
 
 # --------------

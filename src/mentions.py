@@ -1,12 +1,18 @@
-async def get_users_by_reaction(self, emoji: str):
-    channel_id = 1289335963138523197 # id do canal que ficará a mensagem para reagir
-    message_id = 1355408693545402470 # id da mensagem
+import os
+from dotenv import load_dotenv
 
-    channel = self.bot.get_channel(channel_id) or await self.bot.fetch_channel(channel_id)
-    msg = await channel.fetch_message(message_id)
+dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
+load_dotenv(dotenv_path)
+
+async def get_users_by_reaction(self, emoji: str):
+    channel_id = os.getenv('REACTIONS_CHANNEL_ID')
+    message_id = os.getenv('REACTIONS_MESSAGE_ID')
+
+    channel = await self.bot.fetch_channel(int(channel_id))
+    message = await channel.fetch_message(int(message_id))
     
     mentions = ""
-    for reaction in msg.reactions:
+    for reaction in message.reactions:
         if(str(reaction.emoji) == emoji):
             users = [user async for user in reaction.users() if not user.bot]    
         
