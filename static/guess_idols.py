@@ -91,7 +91,7 @@ guess_idols_list = [
   },
   {
     "_id": "e8cbe9be26664ddbb9b53fae",
-    "name": "Yuna",
+    "name": "Yuha",
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",

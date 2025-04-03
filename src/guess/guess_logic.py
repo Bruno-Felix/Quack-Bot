@@ -94,7 +94,7 @@ def check_guess(user_data, idol_tried_name):
 
     if idol_tried['name'].lower() != Guess.idol_of_the_day['name'].lower():
         if idol_tried['height'] == 0:
-            hints.append(f"📏\tIdol ainda sem altura declarada ✅")
+            hints.append(f"📏\tIdol ainda sem altura declarada ⚠️")
         elif idol_tried['height'] > Guess.idol_of_the_day['height']:
             hints.append(f"📏\tMais baixo que {idol_tried['height']} cm ❌")
         elif idol_tried['height'] < Guess.idol_of_the_day['height']:

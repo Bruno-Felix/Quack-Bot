@@ -80,7 +80,8 @@ class Message(commands.Cog):
     async def reagir_msg(self, ctx):
         embed = discord.Embed(
             title='Escolha os jogos que queira ser notificado!!',
-            description='Reaja a esta mensagem com o emoji respectivo do jogo para ser marcado na proxima jogatina:',
+            description='Reaja a esta mensagem com o emoji do respectivo jogo para lhe mencionar na proxima jogatina:',
+            color=get_sort_triples_color()
         )
 
         for reaction in reactions:

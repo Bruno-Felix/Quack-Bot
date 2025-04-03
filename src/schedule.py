@@ -1,6 +1,7 @@
 import asyncio
 import schedule
 
+from src.guess.guess_logic import select_idol_guess_for_today
 
 async def schedule_today_musics(bot):
     print('schedule sincronizado today_musics')
@@ -14,9 +15,10 @@ async def schedule_today_musics(bot):
 
 async def schedule_change_idol_guess_for_today(bot):
     print('schedule sincronizado change_idol')
-    guess_cog = bot.get_cog("Guess")
 
-    schedule.every().day.at("03:00").do(lambda: asyncio.create_task(guess_cog.select_idol_guess_for_today()))
+    schedule.every().day.at("03:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
+    schedule.every().day.at("15:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
+    schedule.every().day.at("21:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
 
     while True:
         schedule.run_pending()
