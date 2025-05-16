@@ -10,8 +10,8 @@ from src.mentions import get_users_by_reaction
 dotenv_path = os.path.join(os.path.dirname(__file__), '../../.env')
 load_dotenv(dotenv_path)
 
+ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')
 CARTOLA_REACTIONS_MESSAGE_ID = os.getenv('CARTOLA_REACTIONS_MESSAGE_ID')
-QUACK_BOT_CHANNEL_ID = os.getenv('QUACK_BOT_CHANNEL_ID')
 
 class Cartola(commands.Cog):
     def __init__(self, bot):
@@ -44,7 +44,7 @@ class Cartola(commands.Cog):
 
     async def call_rodada_cartola(self):
         guild = self.bot.guilds[0]
-        channel = guild.get_channel(int(QUACK_BOT_CHANNEL_ID))
+        channel = guild.get_channel(int(ESPORTES_CHANNEL_ID))
 
         _, _, status_mercado, _, diferenca_date_time = await cartola.market_close_date()
         
@@ -53,7 +53,7 @@ class Cartola(commands.Cog):
             print(diferenca_horas)
             
             if diferenca_horas == 2 or diferenca_horas == 24:
-                mentions = await get_users_by_reaction(self, QUACK_BOT_CHANNEL_ID, CARTOLA_REACTIONS_MESSAGE_ID, "🎩")
+                mentions = await get_users_by_reaction(self, ESPORTES_CHANNEL_ID, CARTOLA_REACTIONS_MESSAGE_ID, "🎩")
 
                 message = f'Não deixe de escalar o Cartola!!\n{mentions}'
                 await channel.send(message)

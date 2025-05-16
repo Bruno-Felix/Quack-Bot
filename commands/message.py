@@ -1,4 +1,5 @@
-import discord
+import discord, os
+from dotenv import load_dotenv
 from discord.ext import commands
 from random import randint
 
@@ -7,6 +8,12 @@ from static.triples_colors import get_sort_triples_color
 
 from src.mentions import get_users_by_reaction
 from static.reactions import reactions
+
+dotenv_path = os.path.join(os.path.dirname(__file__), '../../.env')
+load_dotenv(dotenv_path)
+
+JOGOS_CHANNEL_ID = os.getenv('JOGOS_CHANNEL_ID')
+JOGOS_REACTIONS_MESSAGE_ID = os.getenv('JOGOS_REACTIONS_MESSAGE_ID')
 
 class Message(commands.Cog):
     def __init__(self, bot):
@@ -52,7 +59,8 @@ class Message(commands.Cog):
 
         for reaction in reactions:
             if f"!{reaction['command']}" == (str(message.content).lower()):
-                mentions = await get_users_by_reaction(self, reaction['emoji'])
+                mentions = await get_users_by_reaction(self, JOGOS_CHANNEL_ID,
+                                                       JOGOS_REACTIONS_MESSAGE_ID, reaction['emoji'])
 
                 if mentions:
                     await message.channel.send(f'{mentions}')
