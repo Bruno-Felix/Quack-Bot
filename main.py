@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from static.reactions import reactions
 
-from src.schedule import schedule_today_musics, schedule_change_idol_guess_for_today
+from src.schedule import schedule_today_musics, schedule_change_idol_guess_for_today, schedule_rodada_cartola
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -40,6 +40,7 @@ async def on_ready():
 
         bot.loop.create_task(schedule_today_musics(bot))
         bot.loop.create_task(schedule_change_idol_guess_for_today(bot))
+        bot.loop.create_task(schedule_rodada_cartola(bot))
     except Exception as error:
         print(error)
 

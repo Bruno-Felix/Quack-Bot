@@ -4,10 +4,7 @@ from dotenv import load_dotenv
 dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
 load_dotenv(dotenv_path)
 
-async def get_users_by_reaction(self, emoji: str):
-    channel_id = os.getenv('REACTIONS_CHANNEL_ID')
-    message_id = os.getenv('REACTIONS_MESSAGE_ID')
-
+async def get_users_by_reaction(self, channel_id, message_id, emoji: str):
     channel = await self.bot.fetch_channel(int(channel_id))
     message = await channel.fetch_message(int(message_id))
     

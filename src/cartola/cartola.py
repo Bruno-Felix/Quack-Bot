@@ -18,4 +18,4 @@ async def market_close_date():
     diferenca_str = f'{dias} dias, {horas} horas e {minutos} minutos'
     fechamento_str = fechamento.strftime('%d/%m/%Y %H:%M:%S')
 
-    return rodada_atual, fechamento_str, status_mercado, diferenca_str
+    return rodada_atual, fechamento_str, status_mercado, diferenca_str, diferenca

@@ -23,3 +23,13 @@ async def schedule_change_idol_guess_for_today(bot):
     while True:
         schedule.run_pending()
         await asyncio.sleep(1)
+
+async def schedule_rodada_cartola(bot):
+    print('schedule sincronizado rodada_cartola')
+    cartola_cog = bot.get_cog("Cartola")
+
+    schedule.every().hour.do(lambda: asyncio.create_task(cartola_cog.call_rodada_cartola()))
+
+    while True:
+        schedule.run_pending()
+        await asyncio.sleep(60)
