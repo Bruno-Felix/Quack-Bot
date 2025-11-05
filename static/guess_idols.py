@@ -511,7 +511,7 @@ guess_idols_list = [
   },
   {
     "_id": "1fba7b8979e24f8292a8ec09",
-    "name": "Sion",
+    "name": "Shion",
     "group": "TripleS",
     "company": "Modhaus",
     "nationality": "Korea",
