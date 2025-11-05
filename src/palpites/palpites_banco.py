@@ -9,6 +9,11 @@ def setup_rodadas_database():
     conn, cursor = get_db_connection()
 
     cursor.executescript("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id TEXT PRIMARY KEY,
+            pontos INTEGER DEFAULT 0
+        );
+                         
         CREATE TABLE IF NOT EXISTS rodadas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             numero INTEGER,
@@ -23,6 +28,7 @@ def setup_rodadas_database():
             clube_casa TEXT,
             clube_visitante TEXT,
             partida_data TEXT,
+            resultado TEXT,
             message_id TEXT,
             FOREIGN KEY (rodada_id) REFERENCES rodadas (id)
         );
@@ -81,6 +87,26 @@ def fechar_rodada():
 
     rodada_id = rodada[0]
     cursor.execute("UPDATE rodadas SET is_open = 0 WHERE id = ?", (rodada_id,))
+
+    # Pega todos os usuários que fizeram palpites nessa rodada
+    cursor.execute("""
+        SELECT DISTINCT user_id
+        FROM palpites
+        JOIN jogos ON palpites.jogo_id = jogos.id
+        WHERE jogos.rodada_id = ?
+    """, (rodada_id,))
+    usuarios = cursor.fetchall()
+
+    print('--------------------Salvando usuarios', len(usuarios))
+
+    # Garante que cada usuário exista na tabela usuarios
+    for (user_id,) in usuarios:
+        cursor.execute("""
+            INSERT INTO usuarios (id, pontos)
+            VALUES (?, 0)
+            ON CONFLICT(id) DO NOTHING
+        """, (user_id,))
+
     conn.commit()
     conn.close()
     return rodada_id
@@ -119,7 +145,7 @@ def get_jogos_da_rodada(rodada_id):
 def get_palpites_do_usuario(user_id):
     conn, cursor = get_db_connection()
     cursor.execute("""
-        SELECT jogos.clube_casa, jogos.clube_visitante, palpites.palpite
+        SELECT jogos.clube_casa, jogos.clube_visitante, palpites.palpite, jogos.id
         FROM palpites
         JOIN jogos ON palpites.jogo_id = jogos.id
         JOIN rodadas ON jogos.rodada_id = rodadas.id
@@ -152,3 +178,71 @@ def get_palpites_do_jogo(jogo_id):
     palpites = cursor.fetchall()
     conn.close()
     return palpites
+
+def definir_resultado(jogo_id, resultado):
+    conn, cursor = get_db_connection()
+    cursor.execute(
+        "UPDATE jogos SET resultado = ? WHERE id = ?",
+        (resultado, jogo_id)
+    )
+    conn.commit()
+    conn.close()
+
+def get_resultado_jogo(jogo_id):
+    conn, cursor = get_db_connection()
+    cursor.execute("SELECT resultado FROM jogos WHERE id = ?", (jogo_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return row[0] if row and row[0] else None
+
+def atribuir_pontos_rodada(rodada_id):
+    conn, cursor = get_db_connection()
+
+    # Pega todos os jogos da rodada
+    cursor.execute("SELECT id, resultado FROM jogos WHERE rodada_id = ?", (rodada_id,))
+    jogos = cursor.fetchall()
+
+    if not jogos:
+        conn.close()
+        return "Nenhum jogo encontrado para essa rodada."
+
+    # Verifica se todos os jogos têm resultado
+    if any(jogo[1] is None for jogo in jogos):
+        conn.close()
+        return "Nem todos os jogos têm resultado definido."
+
+    # Para cada jogo, verifica os palpites
+    for jogo_id, resultado in jogos:
+        cursor.execute("SELECT user_id, palpite FROM palpites WHERE jogo_id = ?", (jogo_id,))
+        palpites = cursor.fetchall()
+
+        for user_id, palpite in palpites:
+            if palpite == resultado:
+                # Incrementa pontos do usuário
+                cursor.execute("""
+                    INSERT INTO usuarios (id, pontos) VALUES (?, 1)
+                    ON CONFLICT(id) DO UPDATE SET pontos = pontos + 1
+                """, (user_id,))
+
+    conn.commit()
+    conn.close()
+    return "Pontos atribuídos com sucesso!"
+
+
+def get_ranking():
+    conn, cursor = get_db_connection()
+    cursor.execute("SELECT id, pontos FROM usuarios ORDER BY pontos DESC")
+    usuarios = cursor.fetchall()
+    conn.close()
+    return usuarios
+
+def get_ultima_rodada_fechada():
+    """
+    Retorna a última rodada fechada (is_open = 0) como tupla,
+    ou None se não existir.
+    """
+    conn, cursor = get_db_connection()
+    cursor.execute("SELECT id FROM rodadas WHERE is_open = 0 ORDER BY id DESC LIMIT 1")
+    rodada_fechada = cursor.fetchone()
+    conn.close()
+    return rodada_fechada

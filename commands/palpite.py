@@ -96,9 +96,9 @@ class Palpite(commands.Cog):
 
         channel = interaction.channel
 
-        print('Salvar jogos', len(jogos))
+        print('--------------------Salvando jogos', len(jogos))
         for jogo_id, message_id in jogos:
-            print('jogo', jogo_id)
+            print('Jogo -', jogo_id)
             if not message_id:
                 print(f"❌ Jogo {jogo_id} não tem message_id definido, pulando...")
                 continue
@@ -109,6 +109,9 @@ class Palpite(commands.Cog):
                 print(f"Erro ao buscar mensagem {message_id}: {e}")
                 continue
 
+            # Dicionário para contar palpites de cada usuário
+            votos = {}
+
             for reaction in message.reactions:
                 if str(reaction.emoji) not in ["1️⃣", "🇪", "2️⃣"]:
                     continue
@@ -116,14 +119,19 @@ class Palpite(commands.Cog):
                 async for user in reaction.users():
                     if user.bot:
                         continue
+                    if user.id not in votos:
+                        votos[user.id] = []
+                    votos[user.id].append(str(reaction.emoji))
 
-                    palpite = (
-                        "1" if str(reaction.emoji) == "1️⃣"
-                        else "E" if str(reaction.emoji) == "🇪"
-                        else "2"
-                    )
+            # Agora processa os votos
+            for user_id, emojis in votos.items():
+                if len(emojis) != 1:
+                    print(f"Usuário {user_id} reagiu mais de uma vez, ignorando palpites.")
+                    continue
 
-                    palpites_banco.salvar_palpite(str(user.id), jogo_id, palpite)
+                emoji = emojis[0]
+                palpite = "1" if emoji == "1️⃣" else "E" if emoji == "🇪" else "2"
+                palpites_banco.salvar_palpite(str(user_id), jogo_id, palpite)
 
         await interaction.followup.send(f"🔒 Rodada {rodada_id} foi fechada! Todos os palpites foram salvos.", ephemeral=True)
 
@@ -132,23 +140,40 @@ class Palpite(commands.Cog):
     async def meus_palpites(self, interaction: discord.Interaction):
         rodada_aberta = palpites_banco.get_rodada_aberta()
         if rodada_aberta:
-            await interaction.response.send_message("⚠️ Os palpites só podem ser vistos quando a rodada estiver fechada!", ephemeral=True)
+            await interaction.response.send_message(
+                "⚠️ Os palpites só podem ser vistos quando a rodada estiver fechada!", ephemeral=True
+            )
             return
-        
+
         palpites = palpites_banco.get_palpites_do_usuario(str(interaction.user.id))
         if not palpites:
-            await interaction.response.send_message("Você não fez palpites na última rodada.", ephemeral=True)
+            await interaction.response.send_message(
+                "Você não fez palpites na última rodada.", ephemeral=True
+            )
             return
-        
+
         embed = discord.Embed(
             title=f"📋 Seus palpites da rodada anterior",
             color=get_sort_triples_color()
         )
-        for mandante, visitante, palpite in palpites:
+
+        for mandante, visitante, palpite, jogo_id in palpites:  # precisaremos retornar jogo_id também
             simbolo = "🏠" if palpite == "1" else "⚖️" if palpite == "E" else "🚗"
-            embed.add_field(name=f"{mandante} x {visitante}", value=f"Seu palpite: {simbolo} ({palpite})", inline=False)
+
+            # Pega resultado do jogo
+            resultado = palpites_banco.get_resultado_jogo(jogo_id)
+            status = ""
+            if resultado:
+                status = " ✅" if palpite == resultado else " ❌"
+
+            embed.add_field(
+                name=f"{mandante} x {visitante}",
+                value=f"Seu palpite: {simbolo} ({palpite}){status}",
+                inline=False
+            )
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
 
     @app_commands.command(description="📊 Mostra todos os palpites de um jogo")
     async def palpites_jogo(self, interaction: discord.Interaction, jogo_id: int):
@@ -157,18 +182,85 @@ class Palpite(commands.Cog):
             await interaction.response.send_message("⚠️ Nenhum palpite registrado para esse jogo.", ephemeral=True)
             return
 
+        # Busca o resultado do jogo
+        resultado = palpites_banco.get_resultado_jogo(jogo_id)
+
         embed = discord.Embed(
             title=f"📋 Palpites do jogo {jogo_id}",
             color=discord.Color.blue()
         )
+
         for user_id, palpite in palpites:
-            member = await interaction.guild.fetch_member(int(user_id))
-            print(member)
+            try:
+                member = await interaction.guild.fetch_member(int(user_id))
+                nome = member.display_name
+            except:
+                nome = f"User {user_id}"
 
             simbolo = "🏠" if palpite == "1" else "⚖️" if palpite == "E" else "🚗"
-            embed.add_field(name=member.display_name, value=f"{simbolo} ({palpite})", inline=False)
+            status = ""
+            if resultado:  # se já tem resultado
+                status = " ✅" if palpite == resultado else " ❌"
+
+            embed.add_field(name=nome, value=f"{simbolo} ({palpite}){status}", inline=False)
 
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+    @app_commands.command(description="🏆 Define o vencedor de um jogo")
+    @app_commands.describe(jogo_id="ID do jogo", resultado="Resultado: 1 = mandante, E = empate, 2 = visitante")
+    async def resultado_jogo(self, interaction: discord.Interaction, jogo_id: int, resultado: str):
+        if resultado not in ["1", "E", "2"]:
+            await interaction.response.send_message("⚠️ Resultado inválido! Use 1, E ou 2.", ephemeral=True)
+            return
+
+        palpites_banco.definir_resultado(jogo_id, resultado)
+        await interaction.response.send_message(f"✅ Resultado do jogo {jogo_id} registrado como `{resultado}`.", ephemeral=True)
+        
+
+    @app_commands.command(description="🏆 Fecha resultados da rodada e atribui pontos")
+    async def fechar_resultados(self, interaction: discord.Interaction):
+        rodada = palpites_banco.get_rodada_aberta()
+        if rodada:
+            await interaction.response.send_message(
+                "⚠️ Não é possível fechar resultados enquanto a rodada está aberta.", ephemeral=True
+            )
+            return
+
+        # Pega a última rodada fechada
+        rodada_fechada = palpites_banco.get_ultima_rodada_fechada()
+
+        if not rodada_fechada:
+            await interaction.response.send_message("⚠️ Nenhuma rodada para fechar resultados.", ephemeral=True)
+            return
+
+        rodada_id = rodada_fechada[0]
+
+        # Atribui pontos
+        msg = palpites_banco.atribuir_pontos_rodada(rodada_id)
+        await interaction.response.send_message(f"✅ {msg}", ephemeral=True)
+
+
+    @app_commands.command(description="🏆 Mostra o ranking de pontos dos usuários")
+    async def ranking(self, interaction: discord.Interaction):
+        usuarios = palpites_banco.get_ranking()
+
+        if not usuarios:
+            await interaction.response.send_message("⚠️ Nenhum usuário com pontos registrado.", ephemeral=True)
+            return
+
+        embed = discord.Embed(
+            title="🏆 Ranking de Pontos",
+            color=discord.Color.gold()
+        )
+
+        # Monta o ranking com os nomes ou menções
+        for i, (user_id, pontos) in enumerate(usuarios, start=1):
+            member = interaction.guild.get_member(int(user_id))
+            nome = member.display_name if member else f"<@{user_id}>"
+            embed.add_field(name=f"{i}º - {nome}", value=f"{pontos} ponto(s)", inline=False)
+
+        await interaction.response.send_message(embed=embed)
 
 
 async def setup(bot):
