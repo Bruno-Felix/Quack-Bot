@@ -28,7 +28,7 @@ async def schedule_rodada_cartola(bot):
     print('schedule sincronizado rodada_cartola')
     cartola_cog = bot.get_cog("Cartola")
 
-    schedule.every().hour.do(lambda: asyncio.create_task(cartola_cog.call_rodada_cartola()))
+    schedule.every().hour.at(":00").do(lambda: asyncio.create_task(cartola_cog.call_rodada_cartola()))
 
     while True:
         schedule.run_pending()

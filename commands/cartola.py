@@ -46,16 +46,16 @@ class Cartola(commands.Cog):
         guild = self.bot.guilds[0]
         channel = guild.get_channel(int(ESPORTES_CHANNEL_ID))
 
-        _, _, status_mercado, _, diferenca_date_time = await cartola.market_close_date()
+        _, fechamento, status_mercado, _, diferenca_date_time = await cartola.market_close_date()
         
         if status_mercado:
-            diferenca_horas = diferenca_date_time.total_seconds() // 3600
-            print(diferenca_horas)
+            diferenca_horas = (diferenca_date_time.total_seconds() // 3600) + 3
+            print('Cartola:', fechamento, diferenca_horas)
             
             if diferenca_horas == 2 or diferenca_horas == 24:
                 mentions = await get_users_by_reaction(self, ESPORTES_CHANNEL_ID, CARTOLA_REACTIONS_MESSAGE_ID, "🎩")
 
-                message = f'Não deixe de escalar o Cartola!!\n{mentions}'
+                message = f'Não deixe de escalar o Cartola!!\nO mercado fechará {fechamento}.\n{mentions}'
                 await channel.send(message)
 
 
