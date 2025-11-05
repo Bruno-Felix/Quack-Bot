@@ -177,6 +177,8 @@ class Palpite(commands.Cog):
 
     @app_commands.command(description="📊 Mostra todos os palpites de um jogo")
     async def palpites_jogo(self, interaction: discord.Interaction, jogo_id: int):
+        await interaction.response.defer()
+
         palpites = palpites_banco.get_palpites_do_jogo(jogo_id)
         if not palpites:
             await interaction.response.send_message("⚠️ Nenhum palpite registrado para esse jogo.")
