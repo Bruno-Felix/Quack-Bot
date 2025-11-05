@@ -206,7 +206,7 @@ class Palpite(commands.Cog):
 
             embed.add_field(name=nome, value=f"{simbolo} ({palpite}){status}", inline=False)
 
-        await interaction.response.send_message(embed=embed)
+        await interaction.followup.send(embed=embed)
 
 
     @app_commands.command(description="🏆 Define o vencedor de um jogo")
