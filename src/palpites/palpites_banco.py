@@ -45,7 +45,53 @@ def setup_rodadas_database():
     conn.close()
 
 
-# 🔹 Rodada
+def listar_todos_os_jogos():
+    conn, cursor = get_db_connection()
+    cursor.execute("""
+        SELECT 
+            j.id,
+            j.rodada_id,
+            r.numero,
+            j.clube_casa,
+            j.clube_visitante,
+            j.partida_data,
+            j.resultado
+        FROM jogos j
+        JOIN rodadas r ON j.rodada_id = r.id
+        ORDER BY j.rodada_id ASC, j.partida_data ASC
+    """)
+    
+    jogos = cursor.fetchall()
+    conn.close()
+
+    if not jogos:
+        print("Nenhum jogo encontrado.")
+        return []
+
+    print("📘 Todos os jogos cadastrados:\n")
+    for jogo in jogos:
+        jogo_id, rodada_id, numero, casa, visitante, data, resultado = jogo
+        
+        print(
+            f"[Rodada {numero} | ID {rodada_id}] "
+            f"Jogo {jogo_id}: {casa} x {visitante} "
+            f"| Data: {data} "
+            f"| Resultado: {resultado or 'A definir'}"
+        )
+
+    return jogos
+
+def pegar_ultima_rodada():
+    """
+    Retorna a última rodada registrada no banco, pela ordem do ID.
+    Retorna None se não houver rodadas.
+    """
+    conn, cursor = get_db_connection()
+    cursor.execute("SELECT * FROM rodadas ORDER BY id DESC LIMIT 1")
+    rodada = cursor.fetchone()
+    conn.close()
+    return rodada
+
 def get_rodada_aberta():
     conn, cursor = get_db_connection()
     cursor.execute("SELECT * FROM rodadas WHERE is_open = 1 ORDER BY id DESC LIMIT 1")
@@ -55,7 +101,7 @@ def get_rodada_aberta():
 
 def criar_rodada(numero):
     if get_rodada_aberta():
-        return None  # Já existe uma rodada aberta
+        return None
     
     conn, cursor = get_db_connection()
     cursor.execute(
@@ -76,19 +122,45 @@ def salvar_palpite(user_id, jogo_id, palpite):
     conn.commit()
     conn.close()
 
+def listar_rodadas():
+    conn, cursor = get_db_connection()
+    cursor.execute("""
+        SELECT id, numero, is_open, data_inicio, data_fechamento
+        FROM rodadas
+        ORDER BY numero ASC
+    """)
+    rodadas = cursor.fetchall()
+    conn.close()
+
+    if not rodadas:
+        print("Nenhuma rodada encontrada.")
+        return []
+
+    print("Rodadas existentes:")
+    for rodada in rodadas:
+        id, numero, is_open, data_inicio, data_fechamento = rodada
+        status = "Aberta" if is_open else "Fechada"
+        print(
+            f"ID: {id} | Nº: {numero} | Status: {status} | "
+            f"Início: {data_inicio or '-'} | Fechamento: {data_fechamento or '-'}"
+        )
+
+    return rodadas
 
 def fechar_rodada():
     conn, cursor = get_db_connection()
-    cursor.execute("SELECT id FROM rodadas WHERE is_open = 1 ORDER BY id DESC LIMIT 1")
+    cursor.execute("SELECT id, numero FROM rodadas WHERE is_open = 1 ORDER BY id DESC LIMIT 1")
     rodada = cursor.fetchone()
     if not rodada:
         conn.close()
         return None
 
+    print(rodada)
+
     rodada_id = rodada[0]
+    rodada_numero = rodada[1]
     cursor.execute("UPDATE rodadas SET is_open = 0 WHERE id = ?", (rodada_id,))
 
-    # Pega todos os usuários que fizeram palpites nessa rodada
     cursor.execute("""
         SELECT DISTINCT user_id
         FROM palpites
@@ -99,7 +171,6 @@ def fechar_rodada():
 
     print('--------------------Salvando usuarios', len(usuarios))
 
-    # Garante que cada usuário exista na tabela usuarios
     for (user_id,) in usuarios:
         cursor.execute("""
             INSERT INTO usuarios (id, pontos)
@@ -109,10 +180,9 @@ def fechar_rodada():
 
     conn.commit()
     conn.close()
-    return rodada_id
+    return rodada_numero
 
 
-# 🔹 Jogos
 def inserir_jogo(rodada_id, mandante, visitante, partida_data):
     conn, cursor = get_db_connection()
     cursor.execute(
@@ -144,19 +214,26 @@ def get_jogos_da_rodada(rodada_id):
 
 def get_palpites_do_usuario(user_id):
     conn, cursor = get_db_connection()
+    
+    cursor.execute("SELECT numero FROM rodadas ORDER BY id DESC LIMIT 1")
+    ultima_rodada = cursor.fetchone()
+    if not ultima_rodada:
+        conn.close()
+        return []
+    
+    ultima_rodada_numero = ultima_rodada[0]
+
     cursor.execute("""
         SELECT jogos.clube_casa, jogos.clube_visitante, palpites.palpite, jogos.id
         FROM palpites
         JOIN jogos ON palpites.jogo_id = jogos.id
-        JOIN rodadas ON jogos.rodada_id = rodadas.id
-        WHERE palpites.user_id = ? AND rodadas.is_open = 0
-    """, (user_id,))
+        WHERE palpites.user_id = ? AND jogos.rodada_id = ?
+    """, (user_id, ultima_rodada_numero))
+    
     palpites = cursor.fetchall()
     conn.close()
     return palpites
 
-
-# Atualiza o jogo no banco com o message_id
 def atualizar_message_id(jogo_id, message_id):
     print(jogo_id, message_id)
     conn, cursor = get_db_connection()
@@ -167,7 +244,6 @@ def atualizar_message_id(jogo_id, message_id):
     conn.commit()
     conn.close()
 
-# 🔹 Pega todos os palpites de um jogo específico
 def get_palpites_do_jogo(jogo_id):
     conn, cursor = get_db_connection()
     cursor.execute("""
@@ -198,7 +274,6 @@ def get_resultado_jogo(jogo_id):
 def atribuir_pontos_rodada(rodada_id):
     conn, cursor = get_db_connection()
 
-    # Pega todos os jogos da rodada
     cursor.execute("SELECT id, resultado FROM jogos WHERE rodada_id = ?", (rodada_id,))
     jogos = cursor.fetchall()
 
@@ -206,19 +281,16 @@ def atribuir_pontos_rodada(rodada_id):
         conn.close()
         return "Nenhum jogo encontrado para essa rodada."
 
-    # Verifica se todos os jogos têm resultado
     if any(jogo[1] is None for jogo in jogos):
         conn.close()
         return "Nem todos os jogos têm resultado definido."
 
-    # Para cada jogo, verifica os palpites
     for jogo_id, resultado in jogos:
         cursor.execute("SELECT user_id, palpite FROM palpites WHERE jogo_id = ?", (jogo_id,))
         palpites = cursor.fetchall()
 
         for user_id, palpite in palpites:
             if palpite == resultado:
-                # Incrementa pontos do usuário
                 cursor.execute("""
                     INSERT INTO usuarios (id, pontos) VALUES (?, 1)
                     ON CONFLICT(id) DO UPDATE SET pontos = pontos + 1
@@ -236,13 +308,109 @@ def get_ranking():
     conn.close()
     return usuarios
 
+def listar_todos_os_jogos():
+    conn, cursor = get_db_connection()
+    cursor.execute("""
+        SELECT 
+            j.id,
+            j.rodada_id,
+            j.clube_casa,
+            j.clube_visitante,
+            j.partida_data,
+            j.resultado
+        FROM jogos j
+        ORDER BY j.rodada_id ASC, j.partida_data ASC
+    """)
+    
+    jogos = cursor.fetchall()
+    conn.close()
+
+    if not jogos:
+        print("Nenhum jogo encontrado.")
+        return []
+
+    print("Todos os jogos cadastrados:\n")
+    for jogo in jogos:
+        jogo_id, rodada_id, casa, visitante, data, resultado = jogo
+        print(
+            f"ID: {jogo_id} | Rodada: {rodada_id} | "
+            f"{casa} x {visitante} | Data: {data} | Resultado: {resultado or 'A definir'}"
+        )
+
+    return jogos
+  
 def get_ultima_rodada_fechada():
     """
     Retorna a última rodada fechada (is_open = 0) como tupla,
     ou None se não existir.
     """
     conn, cursor = get_db_connection()
-    cursor.execute("SELECT id FROM rodadas WHERE is_open = 0 ORDER BY id DESC LIMIT 1")
+    cursor.execute("SELECT numero FROM rodadas WHERE is_open = 0 ORDER BY id DESC LIMIT 1")
     rodada_fechada = cursor.fetchone()
     conn.close()
     return rodada_fechada
+
+def listar_jogos_por_rodada():
+    rodada_id = 2
+    conn, cursor = get_db_connection()
+    cursor.execute("""
+        SELECT 
+            id,
+            clube_casa,
+            clube_visitante,
+            partida_data,
+            resultado
+        FROM jogos
+        WHERE rodada_id = ?
+        ORDER BY partida_data
+    """, (rodada_id,))
+    
+    jogos = cursor.fetchall()
+    conn.close()
+
+    if not jogos:
+        print(f"Nenhum jogo encontrado para a rodada {rodada_id}.")
+        return []
+
+    print(f"Jogos da Rodada {rodada_id}:\n")
+    for jogo in jogos:
+        jogo_id, casa, visitante, data, resultado = jogo
+        print(f"ID: {jogo_id} | {casa} x {visitante} | Data: {data} | Resultado: {resultado or 'A definir'}")
+
+    return jogos
+
+def listar_palpites_rodada(rodada_id: int):
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT 
+            p.user_id,
+            u.id AS usuario_id,
+            j.clube_casa,
+            j.clube_visitante,
+            p.palpite,
+            j.resultado,
+            j.id AS jogo_id
+        FROM palpites p
+        JOIN jogos j ON p.jogo_id = j.id
+        JOIN rodadas r ON j.rodada_id = r.id
+        LEFT JOIN usuarios u ON p.user_id = u.id
+        WHERE r.id = ?
+        ORDER BY j.id, p.user_id
+    """, (rodada_id,))
+
+    palpites = cursor.fetchall()
+    conn.close()
+
+    if not palpites:
+        print(f"Nenhum palpite registrado para a rodada {rodada_id}.")
+        return []
+
+    print(f"Palpites da Rodada {rodada_id}:\n")
+    for user_id, usuario_id, casa, visitante, palpite, resultado, jogo_id in palpites:
+        print(
+            f"Jogo {jogo_id}: {casa} x {visitante} | Usuário: {user_id} | "
+            f"Palpite: {palpite} | Resultado: {resultado or 'A definir'}"
+        )
+
+    return palpites
