@@ -14,7 +14,7 @@ class AniversarioAlerta(commands.Cog):
     def cog_unload(self):
         self.check_aniversarios.cancel()
 
-    @tasks.loop(time=time(hour=21, minute=51, tzinfo=brasil_tz))  # Executa diariamente às 12:00
+    @tasks.loop(time=time(hour=12, minute=00, tzinfo=brasil_tz))  # Executa diariamente às 12:00
     async def check_aniversarios(self):
         now = datetime.now(brasil_tz)
         
