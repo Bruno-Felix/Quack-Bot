@@ -183,11 +183,7 @@ class Palpite(commands.Cog):
     @app_commands.command(description="📊 Mostra todos os palpites de um jogo")
     async def palpites_jogo(self, interaction: discord.Interaction, jogo_id: int):
         await interaction.response.defer()
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 943210f55eb125e27c702a5694fd3a3e8454a2ac
         palpites = palpites_banco.get_palpites_do_jogo(jogo_id)
         if not palpites:
             await interaction.followup.send("⚠️ Nenhum palpite registrado para esse jogo.")
@@ -214,11 +210,7 @@ class Palpite(commands.Cog):
                 status = " ✅" if palpite == resultado else " ❌"
     
             embed.add_field(name=nome, value=f"{simbolo} ({palpite}){status}", inline=False)
-<<<<<<< HEAD
     
-=======
-
->>>>>>> 943210f55eb125e27c702a5694fd3a3e8454a2ac
         await interaction.followup.send(embed=embed)
 
 
