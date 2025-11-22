@@ -41,11 +41,11 @@ class AniversarioAlerta(commands.Cog):
 
         today = date.today()
         today_str = today.strftime("%d/%m")
-        aniversarios_xet = [id for id, data in aniversarios.items() if data == today_str]
+        aniversarios_bobo = [id for id, data in aniversarios.items() if data == today_str]
 
-        if aniversarios_xet:
+        if aniversarios_bobo:
             message = f"🎉 **Parabéns aos aniversariantes de hoje!** 🎉\n"
-            message += "\n".join(f"- <@{id}>" for id in aniversarios_xet)
+            message += "\n".join(f"- <@{id}>" for id in aniversarios_bobo)
             await channel.send(message)
             await channel.send(file=discord.File("static/aniversario.gif"))
         else:
