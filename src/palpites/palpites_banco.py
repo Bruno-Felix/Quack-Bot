@@ -422,7 +422,7 @@ def atualizar_pontos_usuario(user_id: str, pontos: int):
     conn, cursor = get_db_connection()
     cursor.execute("""
         INSERT INTO usuarios (id, pontos) VALUES (?, ?)
-        ON CONFLICT(id) DO UPDATE SET pontos = pontos + ?
+        ON CONFLICT(id) DO UPDATE SET pontos = MAX(pontos + ?, 0)
     """, (user_id, pontos, pontos))
     conn.commit()
     conn.close()

@@ -270,11 +270,6 @@ class Palpite(commands.Cog):
             await interaction.response.send_message("❌ Você não tem permissão para usar este comando.", ephemeral=True)
             return
 
-        # Verifica quantidade
-        if pontos <= 0:
-            await interaction.response.send_message("⚠️ A quantidade de pontos deve ser maior que zero.", ephemeral=True)
-            return
-
         # Atualiza os pontos no banco usando a função
         try:
             palpites_banco.atualizar_pontos_usuario(user_id, pontos)
@@ -289,7 +284,7 @@ class Palpite(commands.Cog):
         except:
             nome = f"ID: {user_id}"
 
-        await interaction.response.send_message(f"🏅 `{pontos}` pontos adicionados para **{nome}**!")
+        await interaction.response.send_message(f"🏅 `{pontos}` pontos adicionados para **{nome}({user_id})**!")
 
 
 
