@@ -262,6 +262,36 @@ class Palpite(commands.Cog):
     
         await interaction.response.send_message(mensagem)
 
+    @app_commands.command(description="➕ Adiciona pontos manualmente a um jogador")
+    @app_commands.describe(user_id="ID do usuário alvo", pontos="Quantidade de pontos a adicionar")
+    async def add_pontos(self, interaction: discord.Interaction, user_id: str, pontos: int):
+        # Verifica se quem executou o comando é você
+        if interaction.user.id != 701955314161025086:
+            await interaction.response.send_message("❌ Você não tem permissão para usar este comando.", ephemeral=True)
+            return
+
+        # Verifica quantidade
+        if pontos <= 0:
+            await interaction.response.send_message("⚠️ A quantidade de pontos deve ser maior que zero.", ephemeral=True)
+            return
+
+        # Atualiza os pontos no banco usando a função
+        try:
+            palpites_banco.atualizar_pontos_usuario(user_id, pontos)
+        except Exception as e:
+            await interaction.response.send_message(f"⚠️ Erro ao adicionar pontos: `{e}`", ephemeral=True)
+            return
+
+        # Obtém nome do usuário no servidor
+        try:
+            member = await interaction.guild.fetch_member(int(user_id))
+            nome = member.display_name
+        except:
+            nome = f"ID: {user_id}"
+
+        await interaction.response.send_message(f"🏅 `{pontos}` pontos adicionados para **{nome}**!")
+
+
 
 
 async def setup(bot):

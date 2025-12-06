@@ -414,3 +414,15 @@ def listar_palpites_rodada(rodada_id: int):
         )
 
     return palpites
+
+def atualizar_pontos_usuario(user_id: str, pontos: int):
+    """
+    Adiciona pontos a um usuário. Se o usuário não existir, cria.
+    """
+    conn, cursor = get_db_connection()
+    cursor.execute("""
+        INSERT INTO usuarios (id, pontos) VALUES (?, ?)
+        ON CONFLICT(id) DO UPDATE SET pontos = pontos + ?
+    """, (user_id, pontos, pontos))
+    conn.commit()
+    conn.close()
