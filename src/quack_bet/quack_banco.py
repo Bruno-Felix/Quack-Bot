@@ -328,6 +328,16 @@ async def get_jogos_postagem():
     """, (agora,))
 
     rows = cursor.fetchall()
+
+    if rows:
+        ids = [row[0] for row in rows]
+        cursor.execute(f"""
+            UPDATE jogos
+            SET status = 1
+            WHERE id IN ({','.join(['?']*len(ids))})
+        """, ids)
+        conn.commit()
+
     conn.close()
 
     jogos = [
