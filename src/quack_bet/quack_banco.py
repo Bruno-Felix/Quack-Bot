@@ -102,7 +102,7 @@ async def catalogar_novos_jogos():
 
 async def processar_palpites(bot):
     guild = bot.guilds[0]
-    channel = guild.get_channel(int(ESPORTES_CHANNEL_ID))
+    channel = guild.get_channel(1374763664305029212)
     
     conn, cursor = get_db_connection()
     agora = datetime.now(ZoneInfo("America/Sao_Paulo"))
