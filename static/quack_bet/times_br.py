@@ -13,7 +13,7 @@ clubes_serie_a = [
     {"nome": "Atlético-MG", "abreviacao": "CAM", "id": 282, "emoji": ""},
     {"nome": "Cruzeiro", "abreviacao": "CRU", "id": 283, "emoji": ""},
     {"nome": "Grêmio", "abreviacao": "GRE", "id": 284, "emoji": ""},
-    {"nome": "Internacional", "abreviacao": "INT", "id": 285, "emoji": ""},
+    {"nome": "Internacional", "abreviacao": "INT", "id": 285, "emoji": "<:Internacional:1466176450158657546>"},
     {"nome": "Vitória", "abreviacao": "VIT", "id": 287, "emoji": ""},
     {"nome": "Athletico-PR", "abreviacao": "CAP", "id": 293, "emoji": ""},
     {"nome": "Coritiba", "abreviacao": "CFC", "id": 294, "emoji": ""},

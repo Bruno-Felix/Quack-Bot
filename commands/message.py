@@ -39,7 +39,7 @@ class Message(commands.Cog):
         if 'kaede' in (str(message.content).lower()):
             await message.add_reaction('<:kaedeca:1374079658953281536>')
 
-        if 'fran' in (str(message.content).lower()):
+        if ' fran ' == (str(message.content).lower()):
             await message.add_reaction('<:sapinhodansa:1377317641760407583>')
 
         if 'medica' in (str(message.content).lower()) or 'médica' in (str(message.content).lower()):
