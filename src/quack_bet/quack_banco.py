@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from datetime import datetime
 from datetime import datetime
@@ -7,6 +8,8 @@ from zoneinfo import ZoneInfo
 from static.quack_bet.times_br import get_clubes_br_por_id
 
 from .endpoints_get_jogos import get_lista_jogos
+
+ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')
 
 def get_db_connection():
     conn = sqlite3.connect("quack_bet.db")
@@ -98,6 +101,9 @@ async def catalogar_novos_jogos():
 
 
 async def processar_palpites(bot):
+    guild = bot.guilds[0]
+    channel = guild.get_channel(int(ESPORTES_CHANNEL_ID))
+    
     conn, cursor = get_db_connection()
     agora = datetime.now(ZoneInfo("America/Sao_Paulo"))
     agora_str = agora.strftime("%Y-%m-%d %H:%M:%S")
@@ -128,15 +134,11 @@ async def processar_palpites(bot):
         contagem = {'1': 0, 'E': 0, '2': 0}
 
         mensagem = None
-        for guild in bot.guilds:
-            for channel in guild.text_channels:
-                try:
-                    mensagem = await channel.fetch_message(int(message_id))
-                    break
-                except discord.NotFound:
-                    continue
-            if mensagem:
-                break
+        try:
+            mensagem = await channel.fetch_message(int(message_id))
+        except Exception as e:
+            print(f"Erro ao buscar mensagem {message_id}: {e}")
+            continue
 
         if not mensagem:
             print(f"Mensagem {message_id} não encontrada em nenhum canal.")
