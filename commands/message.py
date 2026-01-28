@@ -30,11 +30,11 @@ class Message(commands.Cog):
         if '/malu' == str(message.content).lower():
             await message.channel.send(file=discord.File(f'static/malu_gowon.gif'))
         
-        if 'quack' in (str(message.content).lower()):
+        """ if 'quack' in (str(message.content).lower()):
             await message.add_reaction('<:joia:1374114967418048573>')
 
         if 'maluca' in (str(message.content).lower()):
-            await message.add_reaction('<:joia:1374114967418048573>')
+            await message.add_reaction('<:joia:1374114967418048573>') """
 
         if 'kaede' in (str(message.content).lower()):
             await message.add_reaction('<:kaedeca:1374079658953281536>')
