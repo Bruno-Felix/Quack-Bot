@@ -120,8 +120,8 @@ async def processar_palpites(bot):
     for jogo in jogos_db:
         jogo_id, partida_id, partida_data, clube_casa, clube_visitante, message_id = jogo
 
-        time_casa = get_clubes_br_por_id(jogo['clube_casa_id'])
-        time_visitante = get_clubes_br_por_id(jogo['clube_visitante_id'])
+        time_casa = get_clubes_br_por_id(clube_casa)
+        time_visitante = get_clubes_br_por_id(clube_visitante)
 
         print(f'JOGO {jogo_id}/{partida_id} . {partida_data} - {time_casa['nome'] } x {time_visitante['nome']}')
 
