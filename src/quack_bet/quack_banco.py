@@ -4,6 +4,8 @@ from datetime import datetime
 import discord
 from zoneinfo import ZoneInfo
 
+from static.quack_bet.times_br import get_clubes_br_por_id
+
 from .endpoints_get_jogos import get_lista_jogos
 
 def get_db_connection():
@@ -118,7 +120,7 @@ async def processar_palpites(bot):
     for jogo in jogos_db:
         jogo_id, partida_id, partida_data, clube_casa, clube_visitante, message_id = jogo
 
-        print(f'JOGO {jogo_id}/{partida_id} . {partida_data} - {clube_casa} x {clube_visitante}')
+        print(f'JOGO {jogo_id}/{partida_id} . {partida_data} - {get_clubes_br_por_id(clube_casa) } x {get_clubes_br_por_id(clube_visitante)}')
 
         contagem = {'1': 0, 'E': 0, '2': 0}
 
