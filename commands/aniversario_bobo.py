@@ -6,7 +6,7 @@ import os
 
 from src.paginator import split_text_by_newline, send_paginated_embeds
 
-class AniversarioXet(commands.Cog):
+class AniversarioBobeira(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.arquivo_csv = 'static/aniversarios.csv'
@@ -103,4 +103,4 @@ class AniversarioXet(commands.Cog):
             await interaction.followup.send(message)
 
 async def setup(bot):
-    await bot.add_cog(AniversarioXet(bot))
+    await bot.add_cog(AniversarioBobeira(bot))

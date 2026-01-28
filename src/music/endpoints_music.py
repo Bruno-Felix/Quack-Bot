@@ -1,47 +1,39 @@
-import os
-from googleapiclient.discovery import build
-from notion_client import Client
-from dotenv import load_dotenv
+import requests
+from bs4 import BeautifulSoup
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '../.env')
-load_dotenv(dotenv_path)
+async def request_month_kpop_calendar(month, year):
+    URL = f"https://kpopofficial.com/kpop-comeback-schedule-{month}-{year}/"
 
-NOTION_TOKEN = os.getenv('NOTION_TOKEN')
-DATABASE_NOTION_ID = os.getenv('DATABASE_NOTION_ID')
-YOUTUBE_API = os.getenv('YOUTUBE_API')
-
-async def request_daily_kpop_calendar(search_date):
-    notion = Client(auth=NOTION_TOKEN)
-
-    query = {
-        "database_id": DATABASE_NOTION_ID,
-        "filter": {
-            "property": "Date",
-            "date": {
-                "equals": search_date
-            }
-        }
+    headers = {
+        "User-Agent": "Mozilla/5.0"
     }
 
-    results = notion.databases.query(**query)
+    response = requests.get(URL, headers=headers)
+    response.raise_for_status()
 
-    return results
+    soup = BeautifulSoup(response.text, "html.parser")
 
-async def search_youtube(query):
-    youtube = build("youtube", "v3", developerKey=YOUTUBE_API)
+    comebacks = []
 
-    response = youtube.search().list(
-        q=query,
-        part="snippet",
-        maxResults=1,
-        type="video"
-    ).execute()
+    ul = soup.select_one("ul.wp-block-post-template")
 
-    if response['items']:
-        video = response['items'][0]
-        video_id = video['id']['videoId']
-        video_url = f"https://www.youtube.com/watch?v={video_id}"
-        
-        return video_url
-    else:
-        return "Nenhum vídeo encontrado"
+    if not ul:
+        raise Exception("Lista de comebacks não encontrada")
+
+    for li in ul.select("li"):
+        values = [v.get_text(strip=True) for v in li.select(".gspb_meta_value")]
+
+        if len(values) < 4:
+            continue
+
+        comeback = {
+            "month": values[0],
+            "date": values[1],
+            "title": values[2],
+            "album": values[3],
+            "views": values[4] if len(values) >= 5 else None
+        }
+
+        comebacks.append(comeback)
+
+    return comebacks

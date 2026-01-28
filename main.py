@@ -3,9 +3,8 @@ import discord
 from os.path import join, dirname
 from dotenv import load_dotenv
 from discord.ext import commands
-from static.reactions import reactions
 
-from src.schedule import schedule_today_musics, schedule_change_idol_guess_for_today, schedule_rodada_cartola
+from src.schedule import scheduler_tasks
 
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
@@ -39,9 +38,7 @@ async def on_ready():
         print(f'\nQuack Bot pronta!! Conectado como {bot.user}')
         print(f'{len(synced)} comandos sincronizados')
 
-        bot.loop.create_task(schedule_today_musics(bot))
-        bot.loop.create_task(schedule_change_idol_guess_for_today(bot))
-        bot.loop.create_task(schedule_rodada_cartola(bot))
+        bot.loop.create_task(scheduler_tasks(bot))
     except Exception as error:
         print(error)
 

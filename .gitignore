@@ -13,5 +13,5 @@ env.bak/
 venv.bak/
 
 game_guess.db
-rodada_palpites.db
+quack_bet.db
 aniversarios.csv

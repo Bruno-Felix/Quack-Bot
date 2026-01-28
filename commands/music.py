@@ -43,53 +43,40 @@ class Music(commands.Cog):
             await channel.send(embed=embed)
 
     @app_commands.command(description='Veja os lançamentos de kpop do dia')
-    async def hoje(self, interaction: discord.Interaction):
+    async def calendario_kpop(self, interaction: discord.Interaction):
         await interaction.response.defer()
 
         embed = discord.Embed(
             title='Lançamentos!!',
-            description='Todos os lançamentos de hoje\n',
+            description='Todos os lançamentos do Mes\n',
             color=get_sort_triples_color()
         )
 
-        search_date = str(datetime.now(brasilia_tz).date())
-        # search_date = date(2024, 12, 18).strftime("%Y-%m-%d")
-
-        results = await calendar.get_daily_kpop_calendar(search_date)
-
         embed.set_author(name=interaction.user.name,
                         icon_url=interaction.user.avatar)
+
+        results = await calendar.get_month_kpop_calendar()
 
         if results:
-            for result in results:
-                embed.add_field(name="\u200b", value=result, inline=False)
+            for r in results:
+                text = (
+                    f"📅 **{r['month']} {r['date']}**\n"
+                    f"🎤 **{r['title']}**\n"
+                    f"💿 {r['views']}\n"
+                    f"⏰ {r['album']}"
+                )
+
+                embed.add_field(
+                    name="\u200b",
+                    value=text,
+                    inline=False
+                )
         else:
-            embed.add_field(name="\u200b", value='Sem lançamentos hoje!!', inline=False)
-
-        await interaction.followup.send(embed=embed)
-
-    @app_commands.command(description='Veja os lançamentos de kpop da semana')
-    async def semana(self, interaction: discord.Interaction):
-        await interaction.response.defer()
-
-        embed = discord.Embed(
-            title='Lançamentos!!',
-            description='Todos os lançamentos dessa proxima semana\n',
-            color=get_sort_triples_color()
-        )
-
-        search_start_date = date.today()
-
-        results = await calendar.get_weekly_kpop_calendar(search_start_date)
-
-        embed.set_author(name=interaction.user.name,
-                        icon_url=interaction.user.avatar)
-
-        for dia, eventos in results.items():
-            eventos_str = "\n".join(
-                eventos) if eventos else "Sem lançamentos nessa data"
-
-            embed.add_field(name=f"{dia}:", value=eventos_str, inline=False)
+            embed.add_field(
+                name="\u200b",
+                value="🚫 **Sem lançamentos!**",
+                inline=False
+            )
 
         await interaction.followup.send(embed=embed)
 

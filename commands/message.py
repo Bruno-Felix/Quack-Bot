@@ -3,11 +3,9 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from random import randint
 
-from static.roles import rules
 from static.triples_colors import get_sort_triples_color
 
 from src.mentions import get_users_by_reaction
-from static.reactions import reactions
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '../../.env')
 load_dotenv(dotenv_path)
@@ -33,75 +31,25 @@ class Message(commands.Cog):
             await message.channel.send(file=discord.File(f'static/malu_gowon.gif'))
         
         if 'quack' in (str(message.content).lower()):
-            gif_number = randint(1, 2)
-
-            await message.channel.send('QUACK Yeonji mencionada!!')
-            await message.channel.send(file=discord.File(f'static/quack_{gif_number}.gif'))
+            await message.add_reaction('<:joia:1374114967418048573>')
 
         if 'maluca' in (str(message.content).lower()):
-            gif_number = randint(1, 5)
+            await message.add_reaction('<:joia:1374114967418048573>')
 
-            await message.channel.send('MALUCA mencionada!!')
-            await message.channel.send(file=discord.File(f'static/chaeyeon_{gif_number}.gif'))
+        if 'kaede' in (str(message.content).lower()):
+            await message.add_reaction('<:kaedeca:1374079658953281536>')
+
+        if 'fran' in (str(message.content).lower()):
+            await message.add_reaction('<:sapinhodansa:1377317641760407583>')
 
         if 'medica' in (str(message.content).lower()) or 'médica' in (str(message.content).lower()):
-            gif_number = randint(1, 5)
+            await message.add_reaction('<:joia:1374114967418048573>')
 
-            await message.channel.send('MEDICA mencionada!!')
-            await message.channel.send(file=discord.File(f'static/medica{gif_number}.gif'))
+        if 'cafe' in (str(message.content).lower()) or 'café' in (str(message.content).lower()):
+            await message.add_reaction('<:gatojoia:1374091388010106923>')
 
-
-# --------------
-
-
-        if "!live" == (str(message.content).lower()):
-            await message.channel.send(file=discord.File('static/tohrjob.gif'))
-
-        for reaction in reactions:
-            if f"!{reaction['command']}" == (str(message.content).lower()):
-                mentions = await get_users_by_reaction(self, JOGOS_CHANNEL_ID,
-                                                       JOGOS_REACTIONS_MESSAGE_ID, reaction['emoji'])
-
-                if mentions:
-                    await message.channel.send(f'{mentions}')
-                    if 'gif' in reaction:
-                       await message.channel.send(file=discord.File(reaction['gif'])) 
-                else:
-                    await message.channel.send(f"Ninguém reagiu para {reaction['description']}")
-
-        if message.content.lower().startswith('!regra'):
-            try:
-                embed = discord.Embed(
-                    color=get_sort_triples_color()
-                )
-
-                role_number = int(message.content[6:])
-                rule = rules[role_number - 1]
-                
-                embed.add_field(name=rule['title'], value=rule['body'], inline=False)
-                
-                await message.channel.send(embed=embed)
-            except:
-                None
-
-    @commands.command(name="reagir")
-    async def reagir_msg(self, ctx):
-        embed = discord.Embed(
-            title='Escolha os jogos que queira ser notificado!!',
-            description='Reaja a esta mensagem com o emoji do respectivo jogo para lhe mencionar na proxima jogatina:',
-            color=get_sort_triples_color()
-        )
-
-        for reaction in reactions:
-            embed.add_field(name=f"{reaction['emoji']}", value=f"{reaction['description']}", inline=True)
-
-        msg = await ctx.send(embed=embed)
-
-        for reaction in reactions:
-            await msg.add_reaction(reaction['emoji'])
-
-
-# --------------
+        if 'chuu' in (str(message.content).lower()):
+            await message.add_reaction('<:chuu:1374091856874307584>')
 
 
 async def setup(bot):

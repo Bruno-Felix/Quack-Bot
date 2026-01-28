@@ -1,35 +1,27 @@
 import asyncio
 import schedule
 
+from src.quack_bet.quack_banco import get_jogos_postagem
 from src.guess.guess_logic import select_idol_guess_for_today
 
-async def schedule_today_musics(bot):
-    print('schedule sincronizado today_musics')
-    music_cog = bot.get_cog("Music")
+async def scheduler_tasks(bot):
+    print('---------\nSchedule Sincronizado!!\n---------')
 
-    schedule.every().day.at("11:00").do(lambda: asyncio.create_task(music_cog.hoje_diario()))
+    cartola_cog = bot.get_cog("Cartola")
+    quack_bet_aposta_cog = bot.get_cog("QuackBetApostas")
 
-    while True:
-        schedule.run_pending()
-        await asyncio.sleep(60)
-
-async def schedule_change_idol_guess_for_today(bot):
-    print('schedule sincronizado change_idol')
+    schedule.every().hour.at(":00").do(lambda: asyncio.create_task(cartola_cog.call_rodada_cartola()))
 
     schedule.every().day.at("03:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
     schedule.every().day.at("15:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
     schedule.every().day.at("21:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
+    
+    schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.postar_jogos()))
+
+    schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
+    schedule.every().hour.at(":30").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
+
 
     while True:
         schedule.run_pending()
         await asyncio.sleep(1)
-
-async def schedule_rodada_cartola(bot):
-    print('schedule sincronizado rodada_cartola')
-    cartola_cog = bot.get_cog("Cartola")
-
-    schedule.every().hour.at(":00").do(lambda: asyncio.create_task(cartola_cog.call_rodada_cartola()))
-
-    while True:
-        schedule.run_pending()
-        await asyncio.sleep(60)

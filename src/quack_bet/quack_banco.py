@@ -1,0 +1,368 @@
+import sqlite3
+from datetime import datetime
+from datetime import datetime
+import discord
+from zoneinfo import ZoneInfo
+
+from .endpoints_get_jogos import get_lista_jogos
+
+def get_db_connection():
+    conn = sqlite3.connect("quack_bet.db")
+    return conn, conn.cursor()
+
+def setup_quack_bet_database():
+    conn, cursor = get_db_connection()
+
+    cursor.executescript("""
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id TEXT PRIMARY KEY,
+            pontos REAL DEFAULT 0,
+            acertos INTEGER DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS jogos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            partida_id INTEGER,
+            partida_data TEXT,
+            status INTEGER DEFAULT 0,
+            clube_casa TEXT,
+            clube_visitante TEXT,
+            palpites_clube_casa INTEGER DEFAULT 0,
+            palpites_empate INTEGER DEFAULT 0,
+            palpites_clube_visitante INTEGER DEFAULT 0,
+            resultado TEXT,
+            message_id TEXT
+        );
+                         
+        CREATE TABLE IF NOT EXISTS palpites (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT,
+            jogo_id INTEGER,
+            palpite TEXT,
+            FOREIGN KEY (jogo_id) REFERENCES jogos(id)
+        );
+    """)
+    conn.commit()
+    conn.close()
+
+emoji_para_palpite = {
+    '1️⃣': '1',   # emoji número 1 salva string "1"
+    '🇪': 'E',   # emoji da letra E salva string "E"
+    '2️⃣': '2',   # emoji número 2 salva string "2"
+}
+
+
+# ----------------------------------------------------------------------------------
+
+async def catalogar_novos_jogos():
+    conn, cursor = get_db_connection()
+    jogos = get_lista_jogos()
+    novos = 0
+
+    for jogo in jogos:
+        partida_id = jogo["partida_id"]
+
+        cursor.execute(
+            "SELECT 1 FROM jogos WHERE partida_id = ?",
+            (partida_id,)
+        )
+        existe = cursor.fetchone()
+
+        if existe:
+            continue
+
+        cursor.execute("""
+            INSERT INTO jogos (
+                partida_id,
+                partida_data,
+                clube_casa,
+                clube_visitante
+            ) VALUES (?, ?, ?, ?)
+        """, (
+            partida_id,
+            jogo["partida_data"],
+            jogo["clube_casa_id"],
+            jogo["clube_visitante_id"],
+        ))
+
+        novos += 1
+
+    print(f'NOVOS JOGOS CATALOGADOS - {novos}')
+    
+    conn.commit()
+    conn.close()
+    
+    return novos
+
+
+async def processar_palpites(bot):
+    conn, cursor = get_db_connection()
+    agora = datetime.now(ZoneInfo("America/Sao_Paulo"))
+    hora_minuto = agora.strftime("%H:%M")
+
+    print(f'PROCESSANDO PALPITES ({hora_minuto})')
+
+    cursor.execute("""
+        SELECT id, partida_id, partida_data, clube_casa, clube_visitante, message_id
+        FROM jogos
+        WHERE status = 1
+          AND strftime('%H:%M', partida_data) = ?
+    """, (hora_minuto,))
+
+    jogos_db = cursor.fetchall()
+    conn.close()
+
+    resultado = []
+
+    for jogo in jogos_db:
+        jogo_id, partida_id, partida_data, clube_casa, clube_visitante, message_id = jogo
+
+        print(f'JOGO {jogo_id}/{partida_id} . {partida_data} - {clube_casa} x {clube_visitante}')
+
+        contagem = {'1': 0, 'E': 0, '2': 0}
+
+        mensagem = None
+        for guild in bot.guilds:
+            for channel in guild.text_channels:
+                try:
+                    mensagem = await channel.fetch_message(int(message_id))
+                    break
+                except discord.NotFound:
+                    continue
+            if mensagem:
+                break
+
+        if not mensagem:
+            print(f"Mensagem {message_id} não encontrada em nenhum canal.")
+            continue
+
+        for reaction in mensagem.reactions:
+            palpite_valor = emoji_para_palpite.get(str(reaction.emoji))
+            if palpite_valor is None:
+                continue
+
+            async for user in reaction.users():
+                if user.bot:
+                    continue
+
+                contagem[palpite_valor] += 1
+
+                conn, cursor = get_db_connection()
+                cursor.execute("""
+                    INSERT INTO palpites (user_id, jogo_id, palpite)
+                    VALUES (?, ?, ?)
+                """, (str(user.id), jogo_id, palpite_valor))
+                conn.commit()
+                conn.close()
+
+        onn, cursor = get_db_connection()
+        cursor.execute("""
+            UPDATE jogos
+            SET palpites_clube_casa = ?,
+                palpites_empate = ?,
+                palpites_clube_visitante = ?,
+                status = 2
+            WHERE id = ?
+        """, (contagem['1'], contagem['E'], contagem['2'], jogo_id))
+        conn.commit()
+        conn.close()
+
+        resultado.append({
+            "partida_id": partida_id,
+            "clube_casa": clube_casa,
+            "clube_visitante": clube_visitante,
+            "palpites": contagem
+        })
+
+    return resultado
+
+
+async def registrar_resultado(jogo_id: int, resultado: str):
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT status, clube_casa, clube_visitante,
+               palpites_clube_casa, palpites_empate, palpites_clube_visitante
+        FROM jogos
+        WHERE id = ?
+    """, (jogo_id,))
+    jogo = cursor.fetchone()
+
+    if not jogo:
+        conn.close()
+        raise ValueError(f"Jogo com id {jogo_id} não encontrado.")
+
+    status_atual, clube_casa, clube_visitante, pc, pe, pv = jogo
+
+    if status_atual != 2:
+        conn.close()
+        raise ValueError(f"Jogo {jogo_id} não pode ser atualizado. Status atual: {status_atual}")
+
+    cursor.execute("""
+        UPDATE jogos
+        SET status = 3,
+            resultado = ?
+        WHERE id = ?
+    """, (resultado, jogo_id))
+
+    conn.commit()
+    conn.close()
+
+    pontuacao = await pontuar_usuarios(jogo_id, resultado)
+
+    return {
+        "jogo_id": jogo_id,
+        "clube_casa": clube_casa,
+        "clube_visitante": clube_visitante,
+        "resultado": resultado,
+        "acertadores": pontuacao["acertadores"],
+        "pontos_distribuidos": pontuacao["pontos_distribuidos"]
+    }
+
+
+async def pontuar_usuarios(jogo_id: int, resultado: str):
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT palpites_clube_casa, palpites_empate, palpites_clube_visitante
+        FROM jogos
+        WHERE id = ?
+    """, (jogo_id,))
+    jogo = cursor.fetchone()
+
+    if not jogo:
+        conn.close()
+        raise ValueError(f"Jogo {jogo_id} não encontrado.")
+
+    pc, pe, pv = jogo
+    soma_total = pc + pe + pv
+
+    if resultado == "1":
+        if pc == 0:
+            conn.close()
+            return {"pontos_distribuidos": 0, "acertadores": 0}
+        pontos = soma_total / pc
+    elif resultado == "E":
+        if pe == 0:
+            conn.close()
+            return {"pontos_distribuidos": 0, "acertadores": 0}
+        pontos = soma_total / pe
+    elif resultado == "2":
+        if pv == 0:
+            conn.close()
+            return {"pontos_distribuidos": 0, "acertadores": 0}
+        pontos = soma_total / pv
+    else:
+        conn.close()
+        raise ValueError(f"Resultado inválido: {resultado}")
+    
+    pontos = round(pontos, 2)
+
+    cursor.execute("""
+        SELECT user_id
+        FROM palpites
+        WHERE jogo_id = ?
+          AND palpite = ?
+    """, (jogo_id, resultado))
+
+    palpites_corretos = cursor.fetchall()
+
+    for (user_id,) in palpites_corretos:
+        cursor.execute("""
+            UPDATE usuarios
+            SET pontos = pontos + ?,
+                acertos = acertos + 1
+            WHERE id = ?
+        """, (pontos, user_id))
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "pontos_distribuidos": pontos,
+        "acertadores": len(palpites_corretos)
+    }
+
+
+def get_proximos_jogos(limite=15):
+    conn, cursor = get_db_connection()
+    agora = datetime.now().isoformat(sep=" ", timespec="seconds")
+
+    cursor.execute("""
+        SELECT partida_id, partida_data, clube_casa, clube_visitante
+        FROM jogos
+        WHERE partida_data >= ?
+        ORDER BY partida_data ASC
+        LIMIT ?
+    """, (agora, limite))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    jogos = [
+        {
+            "partida_id": row[0],
+            "partida_data": row[1],
+            "clube_casa_id": row[2],
+            "clube_visitante_id": row[3],
+        }
+        for row in rows
+    ]
+
+    return jogos
+
+
+async def get_jogos_postagem():
+    await catalogar_novos_jogos()
+
+    conn, cursor = get_db_connection()
+    agora = datetime.now().isoformat(sep=" ", timespec="seconds")
+
+    cursor.execute("""
+        SELECT partida_id, partida_data, clube_casa, clube_visitante
+        FROM jogos
+        WHERE status = 0
+          AND partida_data >= ?
+        ORDER BY partida_data ASC
+    """, (agora,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    jogos = [
+        {
+            "partida_id": row[0],
+            "partida_data": row[1],
+            "clube_casa_id": row[2],
+            "clube_visitante_id": row[3],
+        }
+        for row in rows
+    ]
+
+    return jogos
+
+
+def atualizar_message_id(jogo_id, message_id):
+    conn, cursor = get_db_connection()
+    
+    cursor.execute("""
+        UPDATE jogos
+        SET message_id = ?
+        WHERE partida_id = ?
+    """, (message_id, jogo_id))
+    
+    conn.commit()
+    conn.close()
+
+
+def get_ranking():
+    conn, cursor = get_db_connection()
+    
+    cursor.execute("SELECT id, pontos FROM usuarios ORDER BY pontos DESC")
+    usuarios = cursor.fetchall()
+
+    conn.close()
+
+    return usuarios
+
+

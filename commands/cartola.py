@@ -47,16 +47,24 @@ class Cartola(commands.Cog):
         channel = guild.get_channel(int(ESPORTES_CHANNEL_ID))
 
         _, fechamento, status_mercado, _, diferenca_date_time = await cartola.market_close_date()
-        
+
         if status_mercado:
-            diferenca_horas = (diferenca_date_time.total_seconds() // 3600) + 3
-            print('Cartola:', fechamento, diferenca_horas)
+            diferenca_horas = (diferenca_date_time.total_seconds() // 3600)
             
             if diferenca_horas == 2 or diferenca_horas == 24:
-                mentions = await get_users_by_reaction(self, ESPORTES_CHANNEL_ID, CARTOLA_REACTIONS_MESSAGE_ID, "🎩")
+                embed = discord.Embed(
+                    title='Rodada do Cartola',
+                    description='Não deixe de escalar o Cartola',
+                    color=get_sort_triples_color()
+                )
 
-                message = f'Não deixe de escalar o Cartola!!\nO mercado fechará {fechamento}.\n{mentions}'
-                await channel.send(message)
+                embed.add_field(
+                    name='Fechamento do Mercado',
+                    value=f'**{fechamento}**',
+                    inline=False
+                )
+
+                await channel.send(embed=embed)
 
 
 # --------------
