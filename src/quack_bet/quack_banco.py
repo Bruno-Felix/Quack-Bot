@@ -98,18 +98,19 @@ async def catalogar_novos_jogos():
 async def processar_palpites(bot):
     conn, cursor = get_db_connection()
     agora = datetime.now(ZoneInfo("America/Sao_Paulo"))
+    agora_str = agora.strftime("%Y-%m-%d %H:%M:%S")
 
     cursor.execute("""
         SELECT id, partida_id, partida_data, clube_casa, clube_visitante, message_id
         FROM jogos
         WHERE status = 0
         AND partida_data <= ?
-    """, (agora.isoformat(),))
+    """, (agora_str,))
 
     jogos_db = cursor.fetchall()
     conn.close()
 
-    print(f'PROCESSANDO PALPITES ({agora}):')
+    print(f'PROCESSANDO PALPITES ({agora_str}):')
     print(f"Número de jogos: {len(jogos_db)}")
     
     resultado = []
