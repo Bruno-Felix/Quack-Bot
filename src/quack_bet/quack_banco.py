@@ -130,8 +130,6 @@ async def catalogar_novos_jogos():
 async def processar_palpites(bot):
     guild = bot.guilds[0]
     channel = guild.get_channel(1374763664305029212)
-
-    await corrigir_message_ids()
     
     conn, cursor = get_db_connection()
     agora = datetime.now(ZoneInfo("America/Sao_Paulo"))
