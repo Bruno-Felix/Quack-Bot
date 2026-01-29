@@ -57,6 +57,33 @@ emoji_para_palpite = {
 }
 
 
+def corrigir_message_ids():
+    # Mapeamento partida_id -> message_id correto
+    correcoes = {
+        346235: "1466174775977050122",  # Fluminense x Grêmio
+        346238: "1466174782054596771",  # Corinthians x Bahia
+        346240: "1466174751222530255",  # Atlético-MG x Palmeiras
+        346241: "1466174758675550431",  # Internacional x Athletico-PR
+        346242: "1466174763985797355",  # Coritiba x Bragantino
+        346243: "1466174769715085539",  # Vitória x Remo
+        346244: "1466174795199811716",  # Chapecoense x Santos
+    }
+
+    conn, cursor = get_db_connection()
+
+    for partida_id, message_id in correcoes.items():
+        cursor.execute("""
+            UPDATE jogos
+            SET message_id = ?
+            WHERE partida_id = ?
+        """, (message_id, partida_id))
+        print(f"Atualizado partida_id {partida_id} -> message_id {message_id}")
+
+    conn.commit()
+    conn.close()
+    print("Correção de message_id concluída!")
+
+
 # ----------------------------------------------------------------------------------
 
 async def catalogar_novos_jogos():
@@ -103,6 +130,8 @@ async def catalogar_novos_jogos():
 async def processar_palpites(bot):
     guild = bot.guilds[0]
     channel = guild.get_channel(1374763664305029212)
+
+    await corrigir_message_ids()
     
     conn, cursor = get_db_connection()
     agora = datetime.now(ZoneInfo("America/Sao_Paulo"))
