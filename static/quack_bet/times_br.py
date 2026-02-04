@@ -14,7 +14,7 @@ clubes_serie_a = [
     {"nome": "Cruzeiro", "abreviacao": "CRU", "id": 283, "emoji": "<:time_cruzeiro:1466201538644152423>"},
     {"nome": "Grêmio", "abreviacao": "GRE", "id": 284, "emoji": "<:time_gremio:1466201595917373472>"},
     {"nome": "Internacional", "abreviacao": "INT", "id": 285, "emoji": "<:time_inter:1466176450158657546>"},
-    {"nome": "Vitória", "abreviacao": "VIT", "id": 287, "emoji": ":<time_coritiva:1466201483900096543>"},
+    {"nome": "Vitória", "abreviacao": "VIT", "id": 287, "emoji": "<:time_vitoria:1466495671434608727>"},
     {"nome": "Athletico-PR", "abreviacao": "CAP", "id": 293, "emoji": "<:time_cap:1466201363074781285>"},
     {"nome": "Coritiba", "abreviacao": "CFC", "id": 294, "emoji": "<:time_coritiba:1466201483900096543>"},
     {"nome": "Chapecoense", "abreviacao": "CHA", "id": 315, "emoji": "<:time_chape:1466201424340844545>"},

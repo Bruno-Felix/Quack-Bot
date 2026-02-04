@@ -59,9 +59,16 @@ emoji_para_palpite = {
 
 def corrigir_message_ids():
     correcoes = {
+        346235: "1466174775977050122",
         346236: "1466174813885173780",  # Botafogo x Cruzeiro
         346237: "1466174801512108163",  # São Paulo x Flamengo
-        346239: "1466174807614820453"   # Mirassol x Vasco
+        346238: "1466174782054596771",
+        346239: "1466174807614820453",  # Mirassol x Vasco
+        346240: "1466174751222530255",
+        346241: "1466174758675550431",
+        346242: "1466174763985797355",
+        346243: "1466174769715085539",
+        346244: "1466174795199811716",
     }
 
     conn, cursor = get_db_connection()
@@ -176,6 +183,17 @@ async def processar_palpites(bot):
                 if user.bot:
                     continue
 
+                cursor.execute("""
+                    SELECT id FROM usuarios WHERE id = ?
+                """, (str(user.id),))
+                usuario = cursor.fetchone()
+
+                if not usuario:
+                    cursor.execute("""
+                        INSERT INTO usuarios (id)
+                        VALUES (?)
+                    """, (str(user.id),))
+
                 contagem[palpite_valor] += 1
 
                 cursor.execute("""
@@ -208,7 +226,7 @@ async def registrar_resultado(partida_id: int, resultado: str):
     conn, cursor = get_db_connection()
 
     cursor.execute("""
-        SELECT status, clube_casa, clube_visitante,
+        SELECT id, status, clube_casa, clube_visitante,
                palpites_clube_casa, palpites_empate, palpites_clube_visitante
         FROM jogos
         WHERE partida_id = ?
@@ -219,7 +237,7 @@ async def registrar_resultado(partida_id: int, resultado: str):
         conn.close()
         raise ValueError(f"Jogo com id {partida_id} não encontrado.")
 
-    status_atual, clube_casa, clube_visitante, pc, pe, pv = jogo
+    id, status_atual, clube_casa, clube_visitante, pc, pe, pv = jogo
 
     if status_atual != 2:
         conn.close()
@@ -235,7 +253,7 @@ async def registrar_resultado(partida_id: int, resultado: str):
     conn.commit()
     conn.close()
 
-    pontuacao = await pontuar_usuarios(partida_id, resultado)
+    pontuacao = await pontuar_usuarios(id, resultado)
 
     return {
         "partida_id": partida_id,
@@ -247,19 +265,19 @@ async def registrar_resultado(partida_id: int, resultado: str):
     }
 
 
-async def pontuar_usuarios(partida_id: int, resultado: str):
+async def pontuar_usuarios(id: int, resultado: str):
     conn, cursor = get_db_connection()
 
     cursor.execute("""
         SELECT palpites_clube_casa, palpites_empate, palpites_clube_visitante
         FROM jogos
-        WHERE partida_id = ?
-    """, (partida_id,))
+        WHERE id = ?
+    """, (id,))
     jogo = cursor.fetchone()
 
     if not jogo:
         conn.close()
-        raise ValueError(f"Jogo {partida_id} não encontrado.")
+        raise ValueError(f"Jogo {id} não encontrado.")
 
     pc, pe, pv = jogo
     soma_total = pc + pe + pv
@@ -290,7 +308,7 @@ async def pontuar_usuarios(partida_id: int, resultado: str):
         FROM palpites
         WHERE jogo_id = ?
           AND palpite = ?
-    """, (partida_id, resultado))
+    """, (id, resultado))
 
     palpites_corretos = cursor.fetchall()
 
@@ -395,14 +413,91 @@ def atualizar_message_id(jogo_id, message_id):
     conn.close()
 
 
-def get_ranking():
+def get_ranking(tipo="pontos"):
     conn, cursor = get_db_connection()
-    
-    cursor.execute("SELECT id, pontos FROM usuarios ORDER BY pontos DESC")
+
+    if tipo == "pontos":
+        cursor.execute("""
+            SELECT id, pontos
+            FROM usuarios
+            ORDER BY pontos DESC
+        """)
+    elif tipo == "acertos":
+        cursor.execute("""
+            SELECT p.user_id, COUNT(*) as acertos
+            FROM palpites p
+            JOIN jogos j ON j.id = p.jogo_id
+            WHERE p.palpite = j.resultado
+            GROUP BY p.user_id
+            ORDER BY acertos DESC
+        """)
+
     usuarios = cursor.fetchall()
-
     conn.close()
-
     return usuarios
 
 
+
+def get_jogos_por_status(status: int):
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT partida_id, partida_data, clube_casa, clube_visitante, status, message_id
+        FROM jogos
+        WHERE status = ?
+        ORDER BY partida_data ASC
+    """, (status,))
+
+    rows = cursor.fetchall()
+    conn.close()
+
+    jogos = [
+        {
+            "partida_id": row[0],
+            "partida_data": row[1],
+            "clube_casa": row[2],
+            "clube_visitante": row[3],
+            "status": row[4],
+            "message_id": row[5]
+        }
+        for row in rows
+    ]
+
+    return jogos
+
+
+def get_usuarios():
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT id, pontos, acertos
+        FROM usuarios
+        ORDER BY pontos DESC, acertos DESC
+    """)
+    rows = cursor.fetchall()
+    conn.close()
+
+    usuarios = [
+        {
+            "id": row[0],
+            "pontos": row[1],
+            "acertos": row[2],
+        }
+        for row in rows
+    ]
+
+    return usuarios
+
+async def listar_palpites_jogo(jogo_id: int):
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT p.user_id, p.palpite
+        FROM palpites p
+        WHERE p.jogo_id = ?
+    """, (jogo_id,))
+
+    palpites = cursor.fetchall()
+    conn.close()
+
+    return palpites

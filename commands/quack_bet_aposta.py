@@ -130,6 +130,91 @@ class QuackBetApostas(commands.Cog):
             await channel.send(embed=embed)
             """ await thread.send(embed=embed) """
 
+    @app_commands.command(name="listar_jogos", description="Lista jogos pelo status")
+    @app_commands.describe(
+        status="Status do jogo: 0=Cadastrado, 1=Postado, 2=Palpites encerrados, 3=Finalizado"
+    )
+    async def listar_jogos(self, interaction: discord.Interaction, status: int):
+        await interaction.response.defer()
+
+        if status not in (0, 1, 2, 3):
+            await interaction.followup.send("❌ Status inválido. Use apenas: 0, 1, 2 ou 3.")
+            return
+
+        jogos = quack_banco.get_jogos_por_status(status)
+
+        if not jogos:
+            await interaction.followup.send("📭 Nenhum jogo encontrado com esse status.")
+            return
+
+        status_map = {
+            0: "Cadastrados",
+            1: "Postados",
+            2: "Palpites encerrados",
+            3: "Finalizados"
+        }
+
+        embed = discord.Embed(
+            title=f"Quack Bet • Jogos {status_map[status]}",
+            color=get_sort_triples_color()
+        )
+
+        for jogo in jogos[:20]:
+            time_casa = get_clubes_br_por_id(jogo['clube_casa'])
+            time_visitante = get_clubes_br_por_id(jogo['clube_visitante'])
+
+            embed.add_field(
+                name=f"{time_casa['emoji']} {time_casa['nome']} x {time_visitante['nome']} {time_visitante['emoji']}",
+                value=f"📅 {jogo['partida_data']} | 🆔 {jogo['partida_id']} {jogo['message_id']}",
+                inline=False
+            )
+
+        await interaction.followup.send(embed=embed)
+
+
+    @app_commands.command(name="listar_usuarios", description="Lista todos os usuários cadastrados")
+    async def listar_usuarios(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
+        usuarios = quack_banco.get_usuarios()
+
+        if not usuarios:
+            await interaction.followup.send("📭 Nenhum usuário encontrado.")
+            return
+
+        embed = discord.Embed(
+            title="Quack Bet • Usuários",
+            color=get_sort_triples_color()
+        )
+
+        for i, usuario in enumerate(usuarios[:20], start=1):
+            embed.add_field(
+                name=f"{i}. Usuário ID: {usuario['id']}",
+                value=f"⭐ Pontos: {usuario['pontos']} | 🎯 Acertos: {usuario['acertos']}",
+                inline=False
+            )
+
+        await interaction.followup.send(embed=embed)
+
+
+    @app_commands.command(name="listar_palpites", description="Lista os palpites de um jogo")
+    @app_commands.describe(jogo_id="ID do jogo no banco")
+    async def listar_palpites(self, interaction: discord.Interaction, jogo_id: int):
+        await interaction.response.defer(ephemeral=True)
+
+        palpites = await quack_banco.listar_palpites_jogo(jogo_id)
+
+        if not palpites:
+            await interaction.followup.send("Nenhum palpite encontrado para este jogo.")
+            return
+
+        texto = f"📊 **Palpites do jogo {jogo_id}:**\n\n"
+        for user_id, palpite in palpites:
+            texto += f"• <@{user_id}> → `{palpite}`\n"
+
+        await interaction.followup.send(texto)
+
+
 
 async def setup(bot):
     await bot.add_cog(QuackBetApostas(bot))
