@@ -122,9 +122,7 @@ async def catalogar_novos_jogos():
     return novos
 
 
-async def processar_palpites(bot):
-    await corrigir_message_ids()
-    
+async def processar_palpites(bot):    
     guild = bot.guilds[0]
     channel = guild.get_channel(1374763664305029212)
     

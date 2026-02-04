@@ -18,7 +18,7 @@ async def scheduler_tasks(bot):
     
     #schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.postar_jogos()))
 
-    schedule.every().hour.at(":35").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
+    schedule.every().hour.at(":37").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
     #schedule.every().hour.at(":30").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
 
 
