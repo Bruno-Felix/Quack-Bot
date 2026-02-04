@@ -204,41 +204,41 @@ async def processar_palpites(bot):
 
     return resultado
 
-async def registrar_resultado(jogo_id: int, resultado: str):
+async def registrar_resultado(partida_id: int, resultado: str):
     conn, cursor = get_db_connection()
 
     cursor.execute("""
         SELECT status, clube_casa, clube_visitante,
                palpites_clube_casa, palpites_empate, palpites_clube_visitante
         FROM jogos
-        WHERE id = ?
-    """, (jogo_id,))
+        WHERE partida_id = ?
+    """, (partida_id,))
     jogo = cursor.fetchone()
 
     if not jogo:
         conn.close()
-        raise ValueError(f"Jogo com id {jogo_id} não encontrado.")
+        raise ValueError(f"Jogo com id {partida_id} não encontrado.")
 
     status_atual, clube_casa, clube_visitante, pc, pe, pv = jogo
 
     if status_atual != 2:
         conn.close()
-        raise ValueError(f"Jogo {jogo_id} não pode ser atualizado. Status atual: {status_atual}")
+        raise ValueError(f"Jogo {partida_id} não pode ser atualizado. Status atual: {status_atual}")
 
     cursor.execute("""
         UPDATE jogos
         SET status = 3,
             resultado = ?
-        WHERE id = ?
-    """, (resultado, jogo_id))
+        WHERE partida_id = ?
+    """, (resultado, partida_id))
 
     conn.commit()
     conn.close()
 
-    pontuacao = await pontuar_usuarios(jogo_id, resultado)
+    pontuacao = await pontuar_usuarios(partida_id, resultado)
 
     return {
-        "jogo_id": jogo_id,
+        "partida_id": partida_id,
         "clube_casa": clube_casa,
         "clube_visitante": clube_visitante,
         "resultado": resultado,
@@ -247,19 +247,19 @@ async def registrar_resultado(jogo_id: int, resultado: str):
     }
 
 
-async def pontuar_usuarios(jogo_id: int, resultado: str):
+async def pontuar_usuarios(partida_id: int, resultado: str):
     conn, cursor = get_db_connection()
 
     cursor.execute("""
         SELECT palpites_clube_casa, palpites_empate, palpites_clube_visitante
         FROM jogos
-        WHERE id = ?
-    """, (jogo_id,))
+        WHERE partida_id = ?
+    """, (partida_id,))
     jogo = cursor.fetchone()
 
     if not jogo:
         conn.close()
-        raise ValueError(f"Jogo {jogo_id} não encontrado.")
+        raise ValueError(f"Jogo {partida_id} não encontrado.")
 
     pc, pe, pv = jogo
     soma_total = pc + pe + pv
@@ -290,7 +290,7 @@ async def pontuar_usuarios(jogo_id: int, resultado: str):
         FROM palpites
         WHERE jogo_id = ?
           AND palpite = ?
-    """, (jogo_id, resultado))
+    """, (partida_id, resultado))
 
     palpites_corretos = cursor.fetchall()
 

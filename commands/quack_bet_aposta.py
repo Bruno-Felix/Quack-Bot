@@ -39,7 +39,7 @@ class QuackBetApostas(commands.Cog):
         jogo_id="ID do jogo",
         resultado="Resultado do jogo: 1, E ou 2"
     )
-    async def registrar_resultado_cmd(self, interaction: discord.Interaction, jogo_id: int, resultado: str):
+    async def registrar_resultado_cmd(self, interaction: discord.Interaction, partida_id: int, resultado: str):
         await interaction.response.defer()
 
         if resultado not in ("1", "E", "2"):
@@ -47,7 +47,7 @@ class QuackBetApostas(commands.Cog):
             return
 
         try:
-            res = await quack_banco.registrar_resultado(jogo_id, resultado)
+            res = await quack_banco.registrar_resultado(partida_id, resultado)
         except ValueError as e:
             await interaction.followup.send(f"❌ Erro: {e}")
             return
@@ -85,6 +85,8 @@ class QuackBetApostas(commands.Cog):
                     color=get_sort_triples_color()
                 )
 
+                embed.set_footer(text=f"ID: {jogo['partida_id']}")
+
                 mensagem = await channel.send(embed=embed)
 
                 for emoji in ["1️⃣", "🇪", "2️⃣"]:
@@ -111,6 +113,8 @@ class QuackBetApostas(commands.Cog):
                 description=f'Os palpites desse jogo foram encerrados!',
                 color=0x1abc9c
             )
+
+            embed.set_footer(text=f"ID: {partida_id}")
 
             embed.add_field(
                 name="Palpites",
