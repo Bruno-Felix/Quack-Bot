@@ -82,7 +82,7 @@ class QuackBet(commands.Cog):
             rotulo = "Pontos" if tipo.value == "pontos" else "Acertos"
 
             linha = (
-                f"{idx:>2}º {nome_formatado:<20}"
+                f"{idx:>2}º {nome_formatado}"
                 f"{int(valor) if tipo.value == 'acertos' else float(valor):<6.2f} {rotulo} {medalha}\n"
             )
 
