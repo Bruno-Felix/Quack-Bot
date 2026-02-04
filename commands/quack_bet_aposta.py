@@ -51,10 +51,13 @@ class QuackBetApostas(commands.Cog):
         except ValueError as e:
             await interaction.followup.send(f"❌ Erro: {e}")
             return
+        
+        time_casa = get_clubes_br_por_id(res['clube_casa'])
+        time_visitante = get_clubes_br_por_id(res['clube_visitante'])
 
         embed = discord.Embed(
-            title="Quack Bet • Jogo Finalizado 🏁",
-            description=f"O jogo **{res['clube_casa']} x {res['clube_visitante']}** foi finalizado!",
+            title=f"{time_casa['emoji']} {time_casa['nome']} x {time_visitante['nome']} {time_visitante['emoji']}",
+            description=f"Jogo com resultado registrado",
             color=0x1abc9c
         )
         embed.add_field(name="Resultado", value=f"**{resultado}**", inline=False)

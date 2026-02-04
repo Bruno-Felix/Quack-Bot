@@ -294,7 +294,10 @@ async def pontuar_usuarios(partida_id: int, resultado: str):
 
     palpites_corretos = cursor.fetchall()
 
+    print(palpites_corretos)
+
     for (user_id,) in palpites_corretos:
+        print(user_id)
         cursor.execute("""
             UPDATE usuarios
             SET pontos = pontos + ?,
