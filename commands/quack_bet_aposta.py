@@ -16,7 +16,7 @@ class QuackBetApostas(commands.Cog):
         super().__init__()
 
     @app_commands.command(description='catalogar jogos')
-    async def catalogar_jogos(self, interaction: discord.Integration):
+    async def catalogar_jogos(self, interaction: discord.Interaction):
         await interaction.response.defer()
 
         novos_jogos = await quack_banco.catalogar_novos_jogos()
@@ -36,7 +36,7 @@ class QuackBetApostas(commands.Cog):
 
     @app_commands.command(name="registrar_resultado", description="Registra o resultado de um jogo e pontua os usuários")
     @app_commands.describe(
-        jogo_id="ID do jogo",
+        partida_id="ID da partida",
         resultado="Resultado do jogo: 1, E ou 2"
     )
     async def registrar_resultado(self, interaction: discord.Interaction, partida_id: int, resultado: str):
