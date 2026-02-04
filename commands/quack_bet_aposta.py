@@ -102,12 +102,12 @@ class QuackBetApostas(commands.Cog):
 
         for jogo in jogos:
             partida_id = jogo["partida_id"]
-            clube_casa = jogo["clube_casa"]
-            clube_visitante = jogo["clube_visitante"]
+            time_casa = get_clubes_br_por_id(jogo['clube_casa'])
+            time_visitante = get_clubes_br_por_id(jogo['clube_visitante'])
             palpites = jogo["palpites"]
 
             embed = discord.Embed(
-                title=f'{clube_casa} x {clube_visitante}',
+                title=f"{time_casa['emoji']} {time_casa['nome']} x {time_visitante['nome']} {time_visitante['emoji']}",
                 description=f'Os palpites desse jogo foram encerrados!',
                 color=0x1abc9c
             )
