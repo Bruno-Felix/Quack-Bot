@@ -70,14 +70,19 @@ class QuackBet(commands.Cog):
 
         for idx, (user_id, valor) in enumerate(usuarios_db, start=1):
             user = await self.bot.fetch_user(int(user_id))
-            nome = user.display_name
+
+            nome_real = user.display_name
+            nome_limpo = remover_emojis(nome_real)
+
+            padding = max(20 - len(nome_limpo), 0)
+            nome_formatado = nome_real + " " * padding
 
             medalha = medalhas[idx - 1] if idx <= top_ranking_numero else ""
 
             rotulo = "Pontos" if tipo.value == "pontos" else "Acertos"
 
             linha = (
-                f"{idx:>2}º {nome:<20}"
+                f"{idx:>2}º {nome_formatado:<20}"
                 f"{int(valor) if tipo.value == 'acertos' else float(valor):<6.2f} {rotulo} {medalha}\n"
             )
 
@@ -111,6 +116,22 @@ class QuackBet(commands.Cog):
         embed.set_footer(text=titulo)
 
         await interaction.followup.send(embed=embed)
+
+import re
+
+def remover_emojis(texto: str) -> str:
+    emoji_pattern = re.compile(
+        "["
+        "\U0001F600-\U0001F64F"  # emoticons
+        "\U0001F300-\U0001F5FF"  # símbolos e pictogramas
+        "\U0001F680-\U0001F6FF"  # transporte
+        "\U0001F1E0-\U0001F1FF"  # bandeiras
+        "\U00002700-\U000027BF"
+        "\U000024C2-\U0001F251"
+        "]+",
+        flags=re.UNICODE,
+    )
+    return emoji_pattern.sub("", texto)
 
 
 async def setup(bot):
