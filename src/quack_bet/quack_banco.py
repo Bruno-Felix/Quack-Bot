@@ -156,11 +156,10 @@ async def processar_palpites(bot):
         time_casa = get_clubes_br_por_id(clube_casa)
         time_visitante = get_clubes_br_por_id(clube_visitante)
 
-        print(f'JOGO {jogo_id}/{partida_id} . {partida_data} - {time_casa['nome'] } x {time_visitante['nome']}')
+        print(f'JOGO {jogo_id}/{partida_id} . {partida_data} - {time_casa["nome"]} x {time_visitante["nome"]}')
 
         contagem = {'1': 0, 'E': 0, '2': 0}
 
-        mensagem = None
         try:
             mensagem = await channel.fetch_message(int(message_id))
         except Exception as e:
@@ -168,8 +167,10 @@ async def processar_palpites(bot):
             continue
 
         if not mensagem:
-            print(f"Mensagem {message_id} não encontrada em nenhum canal.")
+            print(f"Mensagem {message_id} não encontrada.")
             continue
+
+        conn, cursor = get_db_connection()
 
         for reaction in mensagem.reactions:
             palpite_valor = emoji_para_palpite.get(str(reaction.emoji))
@@ -182,15 +183,11 @@ async def processar_palpites(bot):
 
                 contagem[palpite_valor] += 1
 
-                conn, cursor = get_db_connection()
                 cursor.execute("""
                     INSERT INTO palpites (user_id, jogo_id, palpite)
                     VALUES (?, ?, ?)
                 """, (str(user.id), jogo_id, palpite_valor))
-                conn.commit()
-                conn.close()
 
-        onn, cursor = get_db_connection()
         cursor.execute("""
             UPDATE jogos
             SET palpites_clube_casa = ?,
@@ -199,6 +196,7 @@ async def processar_palpites(bot):
                 status = 2
             WHERE id = ?
         """, (contagem['1'], contagem['E'], contagem['2'], jogo_id))
+        
         conn.commit()
         conn.close()
 
@@ -210,7 +208,6 @@ async def processar_palpites(bot):
         })
 
     return resultado
-
 
 async def registrar_resultado(jogo_id: int, resultado: str):
     conn, cursor = get_db_connection()
