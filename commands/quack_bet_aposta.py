@@ -39,7 +39,7 @@ class QuackBetApostas(commands.Cog):
         jogo_id="ID do jogo",
         resultado="Resultado do jogo: 1, E ou 2"
     )
-    async def registrar_resultado_cmd(self, interaction: discord.Interaction, partida_id: int, resultado: str):
+    async def registrar_resultado(self, interaction: discord.Interaction, partida_id: int, resultado: str):
         await interaction.response.defer()
 
         if resultado not in ("1", "E", "2"):
