@@ -16,10 +16,10 @@ async def scheduler_tasks(bot):
     schedule.every().day.at("15:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
     schedule.every().day.at("21:00").do(lambda: asyncio.create_task(select_idol_guess_for_today()))
     
-    schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.postar_jogos()))
+    #schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.postar_jogos()))
 
     schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
-    schedule.every().hour.at(":30").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
+    #schedule.every().hour.at(":30").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
 
 
     while True:
