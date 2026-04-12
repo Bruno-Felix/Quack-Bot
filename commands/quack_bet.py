@@ -49,8 +49,8 @@ class QuackBet(commands.Cog):
     @app_commands.command(description='Mostra o ranking do Quack Bet')
     @app_commands.describe(tipo="Escolha se o ranking será por pontos ou por acertos")
     @app_commands.choices(tipo=[
-        app_commands.Choice(name="Pontos", value="pontos"),
-        app_commands.Choice(name="Acertos", value="acertos")
+        app_commands.Choice(name="Acertos", value="acertos"),
+        app_commands.Choice(name="Pontos", value="pontos")
     ])
     async def ranking_quack_bet(self, interaction: discord.Interaction, tipo: app_commands.Choice[str]):
         await interaction.response.defer()
