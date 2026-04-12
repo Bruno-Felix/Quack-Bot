@@ -424,11 +424,8 @@ def get_ranking(tipo="pontos"):
         """)
     elif tipo == "acertos":
         cursor.execute("""
-            SELECT p.user_id, COUNT(*) as acertos
-            FROM palpites p
-            JOIN jogos j ON j.id = p.jogo_id
-            WHERE p.palpite = j.resultado
-            GROUP BY p.user_id
+            SELECT id, acertos
+            FROM usuarios
             ORDER BY acertos DESC
         """)
 
