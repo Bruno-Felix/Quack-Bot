@@ -488,6 +488,37 @@ def get_usuarios():
 
     return usuarios
 
+
+def atualizar_usuario(user_id: str, pontos: float, acertos: int):
+    conn, cursor = get_db_connection()
+
+    cursor.execute("""
+        SELECT id
+        FROM usuarios
+        WHERE id = ?
+    """, (str(user_id),))
+    usuario = cursor.fetchone()
+
+    if not usuario:
+        conn.close()
+        raise ValueError(f"Usuário com id {user_id} não encontrado.")
+
+    cursor.execute("""
+        UPDATE usuarios
+        SET pontos = ?,
+            acertos = ?
+        WHERE id = ?
+    """, (pontos, acertos, str(user_id)))
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "id": str(user_id),
+        "pontos": pontos,
+        "acertos": acertos,
+    }
+
 async def listar_palpites_jogo(jogo_id: int):
     conn, cursor = get_db_connection()
 

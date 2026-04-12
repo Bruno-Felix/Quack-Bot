@@ -197,6 +197,32 @@ class QuackBetApostas(commands.Cog):
         await interaction.followup.send(embed=embed)
 
 
+    """ @app_commands.command(name="atualizar_usuario", description="Atualiza os pontos e acertos de um usuário")
+    @app_commands.describe(
+        user_id="ID do usuário",
+        pontos="Novo total de pontos",
+        acertos="Novo total de acertos"
+    )
+    async def atualizar_usuario(self, interaction: discord.Interaction, user_id: str, pontos: float, acertos: int):
+        await interaction.response.defer(ephemeral=True)
+
+        try:
+            usuario = quack_banco.atualizar_usuario(user_id, pontos, acertos)
+        except ValueError as e:
+            await interaction.followup.send(f"❌ Erro: {e}", ephemeral=True)
+            return
+
+        embed = discord.Embed(
+            title="Quack Bet • Usuário Atualizado",
+            color=get_sort_triples_color()
+        )
+        embed.add_field(name="Usuário", value=f"<@{usuario['id']}> ({usuario['id']})", inline=False)
+        embed.add_field(name="Pontos", value=str(usuario['pontos']), inline=True)
+        embed.add_field(name="Acertos", value=str(usuario['acertos']), inline=True)
+
+        await interaction.followup.send(embed=embed, ephemeral=True) """
+
+
     @app_commands.command(name="listar_palpites", description="Lista os palpites de um jogo")
     @app_commands.describe(jogo_id="ID do jogo no banco")
     async def listar_palpites(self, interaction: discord.Interaction, jogo_id: int):
