@@ -1,11 +1,11 @@
-guess_idols_list = [
+[
   {
     "_id": "5d03bbb74ed94357a684871a",
     "name": "Kyehoon",
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2004,
     "type": "Boy"
   },
@@ -15,7 +15,7 @@ guess_idols_list = [
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Japan",
-    "height": 000,
+    "height": 0,
     "birthYear": 2005,
     "type": "Boy"
   },
@@ -25,7 +25,7 @@ guess_idols_list = [
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Boy"
   },
@@ -35,7 +35,7 @@ guess_idols_list = [
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Boy"
   },
@@ -45,7 +45,7 @@ guess_idols_list = [
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Boy"
   },
@@ -55,7 +55,7 @@ guess_idols_list = [
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Japan",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Boy"
   },
@@ -65,7 +65,7 @@ guess_idols_list = [
     "group": "KickFlip",
     "company": "JYP",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2007,
     "type": "Boy"
   },
@@ -75,7 +75,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Girl"
   },
@@ -85,7 +85,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Indonesia",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Girl"
   },
@@ -95,7 +95,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2007,
     "type": "Girl"
   },
@@ -105,7 +105,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2007,
     "type": "Girl"
   },
@@ -115,7 +115,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2008,
     "type": "Girl"
   },
@@ -125,7 +125,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2008,
     "type": "Girl"
   },
@@ -135,7 +135,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2009,
     "type": "Girl"
   },
@@ -145,7 +145,7 @@ guess_idols_list = [
     "group": "Hearts2Hearts",
     "company": "SM",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2010,
     "type": "Girl"
   },
@@ -155,7 +155,7 @@ guess_idols_list = [
     "group": "KiiiKiii",
     "company": "Starship",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Girl"
   },
@@ -165,7 +165,7 @@ guess_idols_list = [
     "group": "KiiiKiii",
     "company": "Starship",
     "nationality": "Japan",
-    "height": 000,
+    "height": 0,
     "birthYear": 2010,
     "type": "Girl"
   },
@@ -175,7 +175,7 @@ guess_idols_list = [
     "group": "KiiiKiii",
     "company": "Starship",
     "nationality": "Japan",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Girl"
   },
@@ -185,7 +185,7 @@ guess_idols_list = [
     "group": "KiiiKiii",
     "company": "Starship",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2005,
     "type": "Girl"
   },
@@ -195,7 +195,7 @@ guess_idols_list = [
     "group": "KiiiKiii",
     "company": "Starship",
     "nationality": "Korea",
-    "height": 000,
+    "height": 0,
     "birthYear": 2006,
     "type": "Girl"
   },
@@ -3560,5 +3560,3 @@ guess_idols_list = [
     "type": "Boy"
   }
 ]
-
-idols_dict_list = {idol["name"]: idol for idol in guess_idols_list}

@@ -1,7 +1,7 @@
 import aiohttp
 
-async def get_page_content(mes):
-    url = f'https://kpopping.com/calendar/2024-{mes}/category-Birthday'
+async def get_page_content(mes, dia):
+    url = f'https://kpopping.com/categories/birthday/month/{mes}?day={dia}'
 
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:

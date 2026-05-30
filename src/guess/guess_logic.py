@@ -1,7 +1,7 @@
 from random import randint
 
 from .users import get_user, create_user, update_new_is_correct_today, increase_attempts_the_day, increase_total_attempts, daily_guess_reset
-from static.guess_idols import guess_idols_list, idols_dict_list
+from .guess_idols import guess_idols_list, idols_dict_list
 
 def get_groups_by_company():
     groups_list = {}
@@ -18,6 +18,9 @@ def get_groups_by_company():
     return {company: groups for company, groups in groups_list.items()}
 
 def get_random_idol_id():
+    if not guess_idols_list:
+        raise ValueError("guess_idols_list está vazia")
+
     return randint(0, len(guess_idols_list) - 1)
 
 def get_random_idol():
@@ -33,8 +36,12 @@ def get_random_idol():
 async def select_idol_guess_for_today():
     from commands.guess import Guess
 
-    Guess.idol_of_the_day = get_random_idol()
-    daily_guess_reset()
+    try:
+        Guess.idol_of_the_day = get_random_idol()
+        daily_guess_reset()
+    except ValueError as error:
+        Guess.idol_of_the_day = None
+        print(f"Não foi possível selecionar o idol do dia: {error}")
 
 def get_idol_guess_for_id(id_list):
     idol = guess_idols_list[id_list]

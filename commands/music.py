@@ -5,13 +5,14 @@ from discord import app_commands
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 from dotenv import load_dotenv
+from pathlib import Path
 
-from static.triples_colors import get_sort_triples_color
+from src.utils.triples_colors import get_sort_triples_color
 from src.music import calendar
 
 brasilia_tz = ZoneInfo("America/Sao_Paulo")
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '../../.env')
+dotenv_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path)
 
 QUACK_BOT_CHANNEL_ID = os.getenv('QUACK_BOT_CHANNEL_ID')

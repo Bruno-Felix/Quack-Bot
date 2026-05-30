@@ -4,7 +4,7 @@ import time
 from discord.ext import commands
 from discord import app_commands
 
-from static.triples_colors import get_sort_triples_color
+from src.utils.triples_colors import get_sort_triples_color
 
 from src.guess.users import setup_users_database
 from src.guess.guess_logic import user_guess_action, select_idol_guess_for_today, get_random_idol, get_groups_by_company

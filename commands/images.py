@@ -2,11 +2,24 @@ import discord
 from discord.ext import commands
 from discord import app_commands
 from typing import Optional
-from random import randint
+import json
+from pathlib import Path
 
 from src.images import image_utils
-from src.data.templates import templates
 from src.data.idols import idolList
+
+
+TEMPLATES_PATH = Path(__file__).parent.parent / 'src' / 'data' / 'templates.json'
+
+def load_templates():
+    try:
+        with TEMPLATES_PATH.open(encoding="utf-8") as file:
+            return json.load(file)
+    except Exception:
+        return {}
+
+
+templates = load_templates()
 
 class Images(commands.Cog):
     def __init__(self, bot):
@@ -24,7 +37,10 @@ class Images(commands.Cog):
             await interaction.followup.send("Forneça uma imagem válida!")
             return
 
-        template = templates['idols'][idol]
+        template = templates.get('idols', {}).get(idol)
+        if not template:
+            await interaction.followup.send("Template do idol não encontrado.")
+            return
 
         await image_utils.reply_image(interaction=interaction, template=template, image=image)
 
