@@ -1,15 +1,31 @@
 import os
+import json
 import sqlite3
 from datetime import datetime
 from datetime import datetime
 import discord
 from zoneinfo import ZoneInfo
-
-from static.quack_bet.times_br import get_clubes_br_por_id
+from pathlib import Path
 
 from .endpoints_get_jogos import get_lista_jogos
 
 ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')
+TIMES_BR_JSON_PATH = Path(__file__).parent.parent / 'data' / 'times_br.json'
+
+
+def _load_clubes_br():
+    try:
+        with TIMES_BR_JSON_PATH.open(encoding='utf-8') as file:
+            return json.load(file)
+    except Exception:
+        return []
+
+
+clubes_serie_a = _load_clubes_br()
+
+
+def get_clubes_br_por_id(clube_id):
+    return next((clube for clube in clubes_serie_a if str(clube.get('id')) == str(clube_id)), None)
 
 def get_db_connection():
     conn = sqlite3.connect("quack_bet.db")

@@ -1,13 +1,15 @@
-import discord, os
+import discord
+import os
 from discord.ext import commands
 from discord import app_commands
 from dotenv import load_dotenv
+from pathlib import Path
 
-from static.triples_colors import get_sort_triples_color
+from src.utils.triples_colors import get_sort_triples_color
 from src.cartola import cartola
 from src.mentions import get_users_by_reaction
 
-dotenv_path = os.path.join(os.path.dirname(__file__), '../../.env')
+dotenv_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path)
 
 ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')

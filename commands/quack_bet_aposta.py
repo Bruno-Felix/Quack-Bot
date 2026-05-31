@@ -2,10 +2,10 @@ import os
 import discord
 from discord.ext import commands
 from discord import app_commands
-from static.quack_bet.times_br import get_clubes_br_por_id
-from static.triples_colors import get_sort_triples_color
+from src.utils.triples_colors import get_sort_triples_color
 
 from src.quack_bet import quack_banco
+from src.quack_bet.quack_banco import get_clubes_br_por_id
 
 ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')
 
