@@ -12,6 +12,4 @@ ENV/
 env.bak/
 venv.bak/
 
-game_guess.db
-quack_bet.db
-aniversario_bobo.db
+*.db

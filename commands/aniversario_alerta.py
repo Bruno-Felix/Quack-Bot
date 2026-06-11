@@ -22,7 +22,7 @@ minute = 0
 class AniversarioAlerta(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.aniversario_canal_id = int(os.getenv('QUACK_BOT_BIRTHDAY_CHANNEL_ID'))
+        self.aniversario_canal_id = os.getenv('QUACK_BOT_BIRTHDAY_CHANNEL_ID')
         setup_aniversario_database()
         self.check_aniversarios.start()
         super().__init__()
