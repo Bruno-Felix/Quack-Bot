@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from pathlib import Path
 
 ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')
-PRAZO_PALPITE_COPA = datetime(2026, 6, 11, 16, 0, tzinfo=ZoneInfo("America/Sao_Paulo"))
+PRAZO_PALPITE_COPA = datetime(2026, 6, 11, 21, 0, tzinfo=ZoneInfo("America/Sao_Paulo"))
 
 def get_db_copa_connection():
     conn = sqlite3.connect("quack_bet_copa.db")
