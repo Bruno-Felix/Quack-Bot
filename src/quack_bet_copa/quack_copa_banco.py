@@ -27,8 +27,7 @@ def setup_quack_bet_copa_database():
             nome TEXT,
             grupo_id TEXT,
             tier INTEGER,
-            bandeira TEXT,
-            pontos INTEGER DEFAULT 0
+            bandeira TEXT        
         );
 
         CREATE TABLE IF NOT EXISTS jogos (
@@ -568,7 +567,6 @@ async def postar_rodada_copa(rodada):
     ]
 
 async def processar_palpites_copa(bot):
-    print('\nPROCESSAR PALPITES\n')
     guild = bot.guilds[0]
     channel = guild.get_channel(int(ESPORTES_CHANNEL_ID))
 
@@ -643,7 +641,6 @@ async def processar_palpites_copa(bot):
         conn, cursor = get_db_copa_connection()
 
         for reaction in mensagem.reactions:
-
             palpite = emoji_para_palpite.get(
                 str(reaction.emoji)
             )
@@ -652,9 +649,19 @@ async def processar_palpites_copa(bot):
                 continue
 
             async for user in reaction.users():
-
                 if user.bot:
                     continue
+
+                cursor.execute("""
+                    SELECT id FROM usuarios WHERE id = ?
+                """, (str(user.id),))
+                usuario = cursor.fetchone()
+
+                if not usuario:
+                    cursor.execute("""
+                        INSERT INTO usuarios (id)
+                        VALUES (?)
+                    """, (str(user.id),))
 
                 cursor.execute("""
                     INSERT INTO palpites (
@@ -757,3 +764,157 @@ def get_meus_palpites(user_id, rodada_id):
     conn.close()
 
     return resultado
+
+async def registrar_resultado_copa(partida_id: int, resultado: str):
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            status,
+            selecao_mandante_id,
+            selecao_visitante_id,
+            palpites_selecao_mandante,
+            palpites_empate,
+            palpites_selecao_visitante
+        FROM jogos
+        WHERE partida_id = ?
+        """,
+        (partida_id,)
+    )
+
+    jogo = cursor.fetchone()
+
+    if not jogo:
+        conn.close()
+        raise ValueError(
+            f"Partida {partida_id} não encontrada."
+        )
+
+    (
+        jogo_id,
+        status_atual,
+        selecao_mandante_id,
+        selecao_visitante_id,
+        palpites_selecao_mandante,
+        palpites_empate,
+        palpites_selecao_visitante
+    ) = jogo
+
+    if status_atual != 2:
+        conn.close()
+        raise ValueError(
+            f"A partida {partida_id} não pode receber resultado. Status atual: {status_atual}"
+        )
+
+    cursor.execute(
+        """
+        UPDATE jogos
+        SET
+            resultado = ?,
+            status = 3
+        WHERE partida_id = ?
+        """,
+        (
+            resultado,
+            partida_id
+        )
+    )
+
+    conn.commit()
+    conn.close()
+
+    pontuacao = await pontuar_usuarios_copa(
+        jogo_id,
+        resultado
+    )
+    return {
+        "partida_id": partida_id,
+        "selecao_mandante_id": selecao_mandante_id,
+        "selecao_visitante_id": selecao_visitante_id,
+        "resultado": resultado,
+        "acertadores": pontuacao["acertadores"]
+    }
+
+async def pontuar_usuarios_copa(jogo_id: int, resultado: str):
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute(
+        """
+        SELECT user_id
+        FROM palpites
+        WHERE jogo_id = ?
+          AND palpite = ?
+        """,
+        (jogo_id, resultado)
+    )
+
+    palpites_corretos = cursor.fetchall()
+
+    for (user_id,) in palpites_corretos:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET pontos = pontos + 1
+            WHERE id = ?
+            """,
+            (user_id,)
+        )
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "acertadores": len(palpites_corretos),
+        "pontos_distribuidos": len(palpites_corretos)
+    }
+
+def get_selecao_por_id(selecao_id):
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            nome,
+            grupo_id,
+            tier,
+            bandeira
+        FROM selecoes
+        WHERE id = ?
+        """,
+        (selecao_id,)
+    )
+
+    row = cursor.fetchone()
+
+    conn.close()
+
+    if not row:
+        return None
+
+    return {
+        "id": row[0],
+        "nome": row[1],
+        "grupo_id": row[2],
+        "tier": row[3],
+        "bandeira": row[4],
+    }
+
+def get_ranking_copa():
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute("""
+        SELECT
+            id,
+            pontos
+        FROM usuarios
+        ORDER BY pontos DESC, id
+    """)
+
+    ranking = cursor.fetchall()
+
+    conn.close()
+
+    return ranking

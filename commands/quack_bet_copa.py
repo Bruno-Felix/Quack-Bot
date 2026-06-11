@@ -45,8 +45,8 @@ class QuackBetCopa(commands.Cog):
                         f"{jogo['selecao_visitante_bandeira']}"
                     ),
                     description=(
-                        f"Grupo {jogo['grupo_id']}\n"
-                        f"📅 {jogo['partida_data']} às {jogo['partida_hora']}"
+                        f"📅 {jogo['partida_data']} às {jogo['partida_hora']}\n"
+                        f"Grupo {jogo['grupo_id']}"
                     ),
                     color=get_sort_triples_color()
                 )
@@ -95,7 +95,63 @@ class QuackBetCopa(commands.Cog):
             )
 
             await channel.send(embed=embed)
+    
+
+    @app_commands.command(name="registrar_resultado_copa", description="Registra o resultado de um jogo e pontua os usuários")
+    @app_commands.describe(
+        partida_id="ID da partida",
+        resultado="Resultado do jogo: 1, E ou 2"
+    )
+    async def registrar_resultado_copa(self, interaction: discord.Interaction, partida_id: int, resultado: str):
+        await interaction.response.defer()
+
+        if resultado not in ("1", "E", "2"):
+            await interaction.followup.send("❌ Resultado inválido. Use apenas: 1, E ou 2.")
+            return
+
+        try:
+            res = await quack_copa_banco.registrar_resultado_copa(partida_id, resultado)
+        except ValueError as e:
+            await interaction.followup.send(f"❌ Erro: {e}")
+            return
         
+        mandante = quack_copa_banco.get_selecao_por_id(
+            res["selecao_mandante_id"]
+        )
+
+        visitante = quack_copa_banco.get_selecao_por_id(
+            res["selecao_visitante_id"]
+        )
+        
+        resultado_texto = {
+            "1": f"Vitória de {mandante['nome']} {mandante['bandeira']}",
+            "E": "Empate",
+            "2": f"Vitória de {visitante['nome']} {visitante['bandeira']}"
+        }
+
+        embed = discord.Embed(
+            title=(
+                f"{mandante['bandeira']} {mandante['nome']} 🆚 "
+                f"{visitante['nome']} {visitante['bandeira']}"
+            ),
+            description="Resultado registrado com sucesso",
+            color=discord.Color.green()
+        )
+
+        embed.add_field(
+            name="Resultado",
+            value=resultado_texto[resultado],
+            inline=False
+        )
+
+        embed.add_field(
+            name="Acertadores",
+            value=f"🏆 {res['acertadores']} usuário(s)",
+            inline=False
+        )
+
+        await interaction.followup.send(embed=embed)
+
 
     @app_commands.command(name="palpite_copa", description="Abrir painel de palpite da Copa")
     async def palpite(self, interaction: discord.Interaction):
@@ -280,6 +336,48 @@ class QuackBetCopa(commands.Cog):
             embed=embed,
         )
 
+    @app_commands.command(
+        name="ranking_copa",
+        description="Mostra o ranking da Copa"
+    )
+    async def ranking_copa(self, interaction: discord.Interaction):
+        ranking = quack_copa_banco.get_ranking_copa()
+
+        if not ranking:
+            await interaction.response.send_message(
+                "Nenhum usuário pontuou ainda."
+            )
+            return
+
+        embed = discord.Embed(
+            title="🏆 Ranking da Copa",
+            color=discord.Color.gold()
+        )
+
+        linhas = []
+
+        medalhas = {
+            1: "🥇",
+            2: "🥈",
+            3: "🥉",
+        }
+
+        for posicao, (user_id, pontos) in enumerate(ranking[:20], start=1):
+            try:
+                usuario = await self.bot.fetch_user(int(user_id))
+                nome = usuario.display_name
+            except Exception:
+                nome = f"Usuário {user_id}"
+
+            emoji = medalhas.get(posicao, f"`{posicao:02}`")
+
+            linhas.append(
+                f"{emoji} **{nome}** — {pontos} pontos"
+            )
+
+        embed.description = "\n".join(linhas)
+
+        await interaction.response.send_message(embed=embed)
 
 async def setup(bot):
     await bot.add_cog(QuackBetCopa(bot))
