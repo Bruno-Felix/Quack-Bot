@@ -6,7 +6,7 @@ from src.quack_bet_copa import quack_copa_banco
 
 LIMITES = {
     "lideres": 4,
-    "classificados": 12,
+    "classificados": 8,
     "lanternas": 4,
 }
 
@@ -50,7 +50,7 @@ def construir_embed_palpite(user_id):
         description=(
             "Voce deve escolher exatamente:\n"
             "- 4 Primeiros Colocados (quem ficará em primeiro lugar do grupo)\n"
-            "- 12 Classificados (quem avançará para a próxima fase, independente da posição)\n"
+            "- 8 Classificados (quem avançará para a próxima fase, independente da posição)\n"
             "- 4 Lanternas (quem ficará em último lugar do grupo)\n\n"
             "Voce pode editar seu palpite quantas vezes quiser ate o começo da copa, mas uma vez finalizado ele nao pode ser editado."
         ),
@@ -77,7 +77,7 @@ def construir_embed_palpite(user_id):
         name="Progresso",
         value=(
             f"Lideres: {len(aposta['lideres'])}/4\n"
-            f"Classificados: {len(aposta['classificados'])}/12\n"
+            f"Classificados: {len(aposta['classificados'])}/8\n"
             f"Lanternas: {len(aposta['lanternas'])}/4"
         ),
         inline=False,
@@ -349,7 +349,7 @@ class PalpiteView(discord.ui.View):
 
         view = CategoriaPalpiteView(self.user_id, "classificados")
         await interaction.response.send_message(
-            "Escolha exatamente 12 classificados usando os dois menus.",
+            "Escolha exatamente 8 classificados usando os dois menus.",
             view=view,
             ephemeral=True,
         )
