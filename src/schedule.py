@@ -9,6 +9,7 @@ async def scheduler_tasks(bot):
 
     cartola_cog = bot.get_cog("Cartola")
     quack_bet_aposta_cog = bot.get_cog("QuackBetApostas")
+    quack_bet_copa_cog = bot.get_cog("QuackBetCopa")
 
     schedule.every().hour.at(":00").do(lambda: asyncio.create_task(cartola_cog.call_rodada_cartola()))
 
@@ -21,6 +22,8 @@ async def scheduler_tasks(bot):
     schedule.every().hour.at(":00").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
     schedule.every().hour.at(":30").do(lambda: asyncio.create_task(quack_bet_aposta_cog.fechar_palpites()))
 
+    schedule.every().hour.at(":55").do(lambda: asyncio.create_task(quack_bet_copa_cog.fechar_palpites_copa()))
+    schedule.every().hour.at(":30").do(lambda: asyncio.create_task(quack_bet_copa_cog.fechar_palpites_copa()))
 
     while True:
         schedule.run_pending()

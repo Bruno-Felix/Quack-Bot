@@ -1,0 +1,588 @@
+[
+  {
+    "selecao_mandante_id": 1,
+    "selecao_visitante_id": 2,
+    "grupo": "A",
+    "rodada": 1,
+    "data": "11/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 3,
+    "selecao_visitante_id": 4,
+    "grupo": "A",
+    "rodada": 1,
+    "data": "11/06/2026",
+    "hora": "23:00"
+  },
+  {
+    "selecao_mandante_id": 4,
+    "selecao_visitante_id": 2,
+    "grupo": "A",
+    "rodada": 2,
+    "data": "18/06/2026",
+    "hora": "13:00"
+  },
+  {
+    "selecao_mandante_id": 1,
+    "selecao_visitante_id": 3,
+    "grupo": "A",
+    "rodada": 2,
+    "data": "18/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 2,
+    "selecao_visitante_id": 3,
+    "grupo": "A",
+    "rodada": 3,
+    "data": "24/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 4,
+    "selecao_visitante_id": 1,
+    "grupo": "A",
+    "rodada": 3,
+    "data": "24/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 5,
+    "selecao_visitante_id": 6,
+    "grupo": "B",
+    "rodada": 1,
+    "data": "12/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 7,
+    "selecao_visitante_id": 8,
+    "grupo": "B",
+    "rodada": 1,
+    "data": "13/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 8,
+    "selecao_visitante_id": 6,
+    "grupo": "B",
+    "rodada": 2,
+    "data": "18/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 5,
+    "selecao_visitante_id": 7,
+    "grupo": "B",
+    "rodada": 2,
+    "data": "18/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 6,
+    "selecao_visitante_id": 7,
+    "grupo": "B",
+    "rodada": 3,
+    "data": "24/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 8,
+    "selecao_visitante_id": 5,
+    "grupo": "B",
+    "rodada": 3,
+    "data": "24/06/2026",
+    "hora": "16:00"
+  },
+
+  {
+    "selecao_mandante_id": 9,
+    "selecao_visitante_id": 10,
+    "grupo": "C",
+    "rodada": 1,
+    "data": "13/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 11,
+    "selecao_visitante_id": 12,
+    "grupo": "C",
+    "rodada": 1,
+    "data": "13/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 12,
+    "selecao_visitante_id": 10,
+    "grupo": "C",
+    "rodada": 2,
+    "data": "19/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 9,
+    "selecao_visitante_id": 11,
+    "grupo": "C",
+    "rodada": 2,
+    "data": "19/06/2026",
+    "hora": "21:30"
+  },
+  {
+    "selecao_mandante_id": 10,
+    "selecao_visitante_id": 11,
+    "grupo": "C",
+    "rodada": 3,
+    "data": "24/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 12,
+    "selecao_visitante_id": 9,
+    "grupo": "C",
+    "rodada": 3,
+    "data": "24/06/2026",
+    "hora": "19:00"
+  },
+
+  {
+    "selecao_mandante_id": 13,
+    "selecao_visitante_id": 14,
+    "grupo": "D",
+    "rodada": 1,
+    "data": "12/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 15,
+    "selecao_visitante_id": 16,
+    "grupo": "D",
+    "rodada": 1,
+    "data": "14/06/2026",
+    "hora": "01:00"
+  },
+  {
+    "selecao_mandante_id": 16,
+    "selecao_visitante_id": 14,
+    "grupo": "D",
+    "rodada": 2,
+    "data": "19/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 13,
+    "selecao_visitante_id": 15,
+    "grupo": "D",
+    "rodada": 2,
+    "data": "20/06/2026",
+    "hora": "00:00"
+  },
+  {
+    "selecao_mandante_id": 14,
+    "selecao_visitante_id": 15,
+    "grupo": "D",
+    "rodada": 3,
+    "data": "25/06/2026",
+    "hora": "23:00"
+  },
+  {
+    "selecao_mandante_id": 16,
+    "selecao_visitante_id": 13,
+    "grupo": "D",
+    "rodada": 3,
+    "data": "25/06/2026",
+    "hora": "23:00"
+  },
+
+  {
+    "selecao_mandante_id": 17,
+    "selecao_visitante_id": 18,
+    "grupo": "E",
+    "rodada": 1,
+    "data": "14/06/2026",
+    "hora": "14:00"
+  },
+  {
+    "selecao_mandante_id": 19,
+    "selecao_visitante_id": 20,
+    "grupo": "E",
+    "rodada": 1,
+    "data": "14/06/2026",
+    "hora": "20:00"
+  },
+  {
+    "selecao_mandante_id": 20,
+    "selecao_visitante_id": 18,
+    "grupo": "E",
+    "rodada": 2,
+    "data": "20/06/2026",
+    "hora": "21:00"
+  },
+  {
+    "selecao_mandante_id": 17,
+    "selecao_visitante_id": 19,
+    "grupo": "E",
+    "rodada": 2,
+    "data": "20/06/2026",
+    "hora": "17:00"
+  },
+  {
+    "selecao_mandante_id": 18,
+    "selecao_visitante_id": 19,
+    "grupo": "E",
+    "rodada": 3,
+    "data": "25/06/2026",
+    "hora": "17:00"
+  },
+  {
+    "selecao_mandante_id": 20,
+    "selecao_visitante_id": 21,
+    "grupo": "E",
+    "rodada": 3,
+    "data": "25/06/2026",
+    "hora": "17:00"
+  },
+
+  {
+    "selecao_mandante_id": 21,
+    "selecao_visitante_id": 22,
+    "grupo": "F",
+    "rodada": 1,
+    "data": "14/06/2026",
+    "hora": "17:00"
+  },
+  {
+    "selecao_mandante_id": 23,
+    "selecao_visitante_id": 24,
+    "grupo": "F",
+    "rodada": 1,
+    "data": "14/06/2026",
+    "hora": "23:00"
+  },
+  {
+    "selecao_mandante_id": 24,
+    "selecao_visitante_id": 22,
+    "grupo": "F",
+    "rodada": 2,
+    "data": "21/06/2026",
+    "hora": "01:00"
+  },
+  {
+    "selecao_mandante_id": 21,
+    "selecao_visitante_id": 23,
+    "grupo": "F",
+    "rodada": 2,
+    "data": "20/06/2026",
+    "hora": "14:00"
+  },
+  {
+    "selecao_mandante_id": 22,
+    "selecao_visitante_id": 23,
+    "grupo": "F",
+    "rodada": 3,
+    "data": "25/06/2026",
+    "hora": "20:00"
+  },
+  {
+    "selecao_mandante_id": 24,
+    "selecao_visitante_id": 25,
+    "grupo": "F",
+    "rodada": 3,
+    "data": "25/06/2026",
+    "hora": "20:00"
+  },
+
+  {
+    "selecao_mandante_id": 25,
+    "selecao_visitante_id": 26,
+    "grupo": "G",
+    "rodada": 1,
+    "data": "15/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 27,
+    "selecao_visitante_id": 28,
+    "grupo": "G",
+    "rodada": 1,
+    "data": "15/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 28,
+    "selecao_visitante_id": 26,
+    "grupo": "G",
+    "rodada": 2,
+    "data": "21/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 25,
+    "selecao_visitante_id": 27,
+    "grupo": "G",
+    "rodada": 2,
+    "data": "21/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 26,
+    "selecao_visitante_id": 27,
+    "grupo": "G",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "00:00"
+  },
+  {
+    "selecao_mandante_id": 28,
+    "selecao_visitante_id": 25,
+    "grupo": "G",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "00:00"
+  },
+
+  {
+    "selecao_mandante_id": 29,
+    "selecao_visitante_id": 30,
+    "grupo": "H",
+    "rodada": 1,
+    "data": "15/06/2026",
+    "hora": "13:00"
+  },
+  {
+    "selecao_mandante_id": 31,
+    "selecao_visitante_id": 32,
+    "grupo": "H",
+    "rodada": 1,
+    "data": "15/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 32,
+    "selecao_visitante_id": 30,
+    "grupo": "H",
+    "rodada": 2,
+    "data": "21/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 29,
+    "selecao_visitante_id": 31,
+    "grupo": "H",
+    "rodada": 2,
+    "data": "21/06/2026",
+    "hora": "13:00"
+  },
+  {
+    "selecao_mandante_id": 30,
+    "selecao_visitante_id": 31,
+    "grupo": "H",
+    "rodada": 3,
+    "data": "26/06/2026",
+    "hora": "21:00"
+  },
+  {
+    "selecao_mandante_id": 32,
+    "selecao_visitante_id": 29,
+    "grupo": "H",
+    "rodada": 3,
+    "data": "26/06/2026",
+    "hora": "21:00"
+  },
+
+  {
+    "selecao_mandante_id": 33,
+    "selecao_visitante_id": 34,
+    "grupo": "I",
+    "rodada": 1,
+    "data": "16/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 35,
+    "selecao_visitante_id": 36,
+    "grupo": "I",
+    "rodada": 1,
+    "data": "16/06/2026",
+    "hora": "19:00"
+  },
+  {
+    "selecao_mandante_id": 36,
+    "selecao_visitante_id": 34,
+    "grupo": "I",
+    "rodada": 2,
+    "data": "22/06/2026",
+    "hora": "21:00"
+  },
+  {
+    "selecao_mandante_id": 33,
+    "selecao_visitante_id": 35,
+    "grupo": "I",
+    "rodada": 2,
+    "data": "22/06/2026",
+    "hora": "18:00"
+  },
+  {
+    "selecao_mandante_id": 34,
+    "selecao_visitante_id": 35,
+    "grupo": "I",
+    "rodada": 3,
+    "data": "26/06/2026",
+    "hora": "16:00"
+  },
+  {
+    "selecao_mandante_id": 36,
+    "selecao_visitante_id": 33,
+    "grupo": "I",
+    "rodada": 3,
+    "data": "26/06/2026",
+    "hora": "16:00"
+  },
+
+  {
+    "selecao_mandante_id": 37,
+    "selecao_visitante_id": 38,
+    "grupo": "J",
+    "rodada": 1,
+    "data": "16/06/2026",
+    "hora": "22:00"
+  },
+  {
+    "selecao_mandante_id": 39,
+    "selecao_visitante_id": 40,
+    "grupo": "J",
+    "rodada": 1,
+    "data": "17/06/2026",
+    "hora": "01:00"
+  },
+  {
+    "selecao_mandante_id": 40,
+    "selecao_visitante_id": 38,
+    "grupo": "J",
+    "rodada": 2,
+    "data": "23/06/2026",
+    "hora": "00:00"
+  },
+  {
+    "selecao_mandante_id": 37,
+    "selecao_visitante_id": 39,
+    "grupo": "J",
+    "rodada": 2,
+    "data": "22/06/2026",
+    "hora": "14:00"
+  },
+  {
+    "selecao_mandante_id": 38,
+    "selecao_visitante_id": 39,
+    "grupo": "J",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "23:00"
+  },
+  {
+    "selecao_mandante_id": 40,
+    "selecao_visitante_id": 37,
+    "grupo": "J",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "23:00"
+  },
+
+  {
+    "selecao_mandante_id": 41,
+    "selecao_visitante_id": 42,
+    "grupo": "K",
+    "rodada": 1,
+    "data": "17/06/2026",
+    "hora": "14:00"
+  },
+  {
+    "selecao_mandante_id": 43,
+    "selecao_visitante_id": 44,
+    "grupo": "K",
+    "rodada": 1,
+    "data": "17/06/2026",
+    "hora": "23:00"
+  },
+  {
+    "selecao_mandante_id": 44,
+    "selecao_visitante_id": 42,
+    "grupo": "K",
+    "rodada": 2,
+    "data": "23/06/2026",
+    "hora": "23:00"
+  },
+  {
+    "selecao_mandante_id": 41,
+    "selecao_visitante_id": 43,
+    "grupo": "K",
+    "rodada": 2,
+    "data": "23/06/2026",
+    "hora": "14:00"
+  },
+  {
+    "selecao_mandante_id": 42,
+    "selecao_visitante_id": 43,
+    "grupo": "K",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "20:30"
+  },
+  {
+    "selecao_mandante_id": 44,
+    "selecao_visitante_id": 41,
+    "grupo": "K",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "20:30"
+  },
+
+  {
+    "selecao_mandante_id": 45,
+    "selecao_visitante_id": 46,
+    "grupo": "L",
+    "rodada": 1,
+    "data": "17/06/2026",
+    "hora": "17:00"
+  },
+  {
+    "selecao_mandante_id": 47,
+    "selecao_visitante_id": 48,
+    "grupo": "L",
+    "rodada": 1,
+    "data": "17/06/2026",
+    "hora": "20:00"
+  },
+  {
+    "selecao_mandante_id": 48,
+    "selecao_visitante_id": 46,
+    "grupo": "L",
+    "rodada": 2,
+    "data": "23/06/2026",
+    "hora": "20:00"
+  },
+  {
+    "selecao_mandante_id": 45,
+    "selecao_visitante_id": 47,
+    "grupo": "L",
+    "rodada": 2,
+    "data": "23/06/2026",
+    "hora": "17:00"
+  },
+  {
+    "selecao_mandante_id": 46,
+    "selecao_visitante_id": 47,
+    "grupo": "L",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "18:00"
+  },
+  {
+    "selecao_mandante_id": 48,
+    "selecao_visitante_id": 45,
+    "grupo": "L",
+    "rodada": 3,
+    "data": "27/06/2026",
+    "hora": "18:00"
+  }
+]

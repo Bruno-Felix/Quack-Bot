@@ -1,0 +1,32 @@
+{
+    "rodada_1": [
+        {
+            "mandante": 1,
+            "visitante":2
+        },
+        {
+            "mandante": 3,
+            "visitante":4
+        }
+    ],
+    "rodada_2": [
+        {
+            "mandante": 4,
+            "visitante":2
+        },
+        {
+            "mandante": 1,
+            "visitante":3
+        }
+    ],
+    "rodada_3":[
+        {
+            "mandante": 2,
+            "visitante":3
+        },
+        {
+            "mandante": 4,
+            "visitante":1
+        }
+    ]
+}

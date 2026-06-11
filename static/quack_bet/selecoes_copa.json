@@ -1,0 +1,61 @@
+[
+  { "id": 1,"nome": "México", "continente": "América do Norte", "grupo": "A", "tier": 1, "bandeira": "🇲🇽" },
+  { "id": 2,"nome": "África do Sul", "continente": "África", "grupo": "A", "tier": 2, "bandeira": "🇿🇦" },
+  { "id": 3,"nome": "Coreia do Sul", "continente": "Ásia", "grupo": "A", "tier": 3, "bandeira": "🇰🇷" },
+  { "id": 4,"nome": "República Tcheca", "continente": "Europa", "grupo": "A", "tier": 4, "bandeira": "🇨🇿" },
+
+  { "id": 5,"nome": "Canadá", "continente": "América do Norte", "grupo": "B", "tier": 1, "bandeira": "🇨🇦" },
+  { "id": 6,"nome": "Bósnia e Herzegovina", "continente": "Europa", "grupo": "B", "tier": 2, "bandeira": "🇧🇦" },
+  { "id": 7,"nome": "Catar", "continente": "Ásia", "grupo": "B", "tier": 3, "bandeira": "🇶🇦" },
+  { "id": 8,"nome": "Suíça", "continente": "Europa", "grupo": "B", "tier": 4, "bandeira": "🇨🇭" },
+
+  { "id": 9,"nome": "Brasil", "continente": "América do Sul", "grupo": "C", "tier": 1, "bandeira": "🇧🇷" },
+  { "id": 10,"nome": "Marrocos", "continente": "África", "grupo": "C", "tier": 2, "bandeira": "🇲🇦" },
+  { "id": 11,"nome": "Haiti", "continente": "América do Norte", "grupo": "C", "tier": 3, "bandeira": "🇭🇹" },
+  { "id": 12,"nome": "Escócia", "continente": "Europa", "grupo": "C", "tier": 4, "bandeira": "🏴󠁧󠁢󠁳󠁣󠁴󠁿" },
+
+  { "id": 13,"nome": "Estados Unidos", "continente": "América do Norte", "grupo": "D", "tier": 1, "bandeira": "🇺🇸" },
+  { "id": 14,"nome": "Paraguai", "continente": "América do Sul", "grupo": "D", "tier": 2, "bandeira": "🇵🇾" },
+  { "id": 15,"nome": "Austrália", "continente": "Oceania", "grupo": "D", "tier": 3, "bandeira": "🇦🇺" },
+  { "id": 16,"nome": "Turquia", "continente": "Europa", "grupo": "D", "tier": 4, "bandeira": "🇹🇷" },
+
+  { "id": 17,"nome": "Alemanha", "continente": "Europa", "grupo": "E", "tier": 1, "bandeira": "🇩🇪" },
+  { "id": 18,"nome": "Curaçao", "continente": "América do Norte", "grupo": "E", "tier": 2, "bandeira": "🇨🇼" },
+  { "id": 19,"nome": "Costa do Marfim", "continente": "África", "grupo": "E", "tier": 3, "bandeira": "🇨🇮" },
+  { "id": 20,"nome": "Equador", "continente": "América do Sul", "grupo": "E", "tier": 4, "bandeira": "🇪🇨" },
+
+  { "id": 21,"nome": "Holanda", "continente": "Europa", "grupo": "F", "tier": 1, "bandeira": "🇳🇱" },
+  { "id": 22,"nome": "Japão", "continente": "Ásia", "grupo": "F", "tier": 2, "bandeira": "🇯🇵" },
+  { "id": 23,"nome": "Suécia", "continente": "Europa", "grupo": "F", "tier": 3, "bandeira": "🇸🇪" },
+  { "id": 24,"nome": "Tunísia", "continente": "África", "grupo": "F", "tier": 4, "bandeira": "🇹🇳" },
+
+  { "id": 25,"nome": "Bélgica", "continente": "Europa", "grupo": "G", "tier": 1, "bandeira": "🇧🇪" },
+  { "id": 26,"nome": "Egito", "continente": "África", "grupo": "G", "tier": 2, "bandeira": "🇪🇬" },
+  { "id": 27,"nome": "Irã", "continente": "Ásia", "grupo": "G", "tier": 3, "bandeira": "🇮🇷" },
+  { "id": 28,"nome": "Nova Zelândia", "continente": "Oceania", "grupo": "G", "tier": 4, "bandeira": "🇳🇿" },
+
+  { "id": 29,"nome": "Espanha", "continente": "Europa", "grupo": "H", "tier": 1, "bandeira": "🇪🇸" },
+  { "id": 30,"nome": "Cabo Verde", "continente": "África", "grupo": "H", "tier": 2, "bandeira": "🇨🇻" },
+  { "id": 31,"nome": "Arábia Saudita", "continente": "Ásia", "grupo": "H", "tier": 3, "bandeira": "🇸🇦" },
+  { "id": 32,"nome": "Uruguai", "continente": "América do Sul", "grupo": "H", "tier": 4, "bandeira": "🇺🇾" },
+
+  { "id": 33,"nome": "França", "continente": "Europa", "grupo": "I", "tier": 1, "bandeira": "🇫🇷" },
+  { "id": 34,"nome": "Senegal", "continente": "África", "grupo": "I", "tier": 2, "bandeira": "🇸🇳" },
+  { "id": 35,"nome": "Iraque", "continente": "Ásia", "grupo": "I", "tier": 3, "bandeira": "🇮🇶" },
+  { "id": 36,"nome": "Noruega", "continente": "Europa", "grupo": "I", "tier": 4, "bandeira": "🇳🇴" },
+
+  { "id": 37,"nome": "Argentina", "continente": "América do Sul", "grupo": "J", "tier": 1, "bandeira": "🇦🇷" },
+  { "id": 38,"nome": "Argélia", "continente": "África", "grupo": "J", "tier": 2, "bandeira": "🇩🇿" },
+  { "id": 39,"nome": "Áustria", "continente": "Europa", "grupo": "J", "tier": 3, "bandeira": "🇦🇹" },
+  { "id": 40,"nome": "Jordânia", "continente": "Ásia", "grupo": "J", "tier": 4, "bandeira": "🇯🇴" },
+
+  { "id": 41,"nome": "Portugal", "continente": "Europa", "grupo": "K", "tier": 1, "bandeira": "🇵🇹" },
+  { "id": 42,"nome": "RD do Congo", "continente": "África", "grupo": "K", "tier": 2, "bandeira": "🇨🇩" },
+  { "id": 43,"nome": "Uzbequistão", "continente": "Ásia", "grupo": "K", "tier": 3, "bandeira": "🇺🇿" },
+  { "id": 44,"nome": "Colômbia", "continente": "América do Sul", "grupo": "K", "tier": 4, "bandeira": "🇨🇴" },
+
+  { "id": 45,"nome": "Inglaterra", "continente": "Europa", "grupo": "L", "tier": 1, "bandeira": "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
+  { "id": 46,"nome": "Croácia", "continente": "Europa", "grupo": "L", "tier": 2, "bandeira": "🇭🇷" },
+  { "id": 47,"nome": "Gana", "continente": "África", "grupo": "L", "tier": 3, "bandeira": "🇬🇭" },
+  { "id": 48,"nome": "Panamá", "continente": "América do Norte", "grupo": "L", "tier": 4, "bandeira": "🇵🇦" }
+]
