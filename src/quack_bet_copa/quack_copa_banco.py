@@ -146,7 +146,7 @@ def buscar_selecoes():
 
     return resultado
 
-def popular_jogos_copa(json_path="static/quack_bet/jogos_grupos.json"):
+def popular_jogos_copa(json_path="static/quack_bet/jogos_playoffs.json"):
     conn, cursor = get_db_copa_connection()
 
     caminho_json = Path(json_path)
