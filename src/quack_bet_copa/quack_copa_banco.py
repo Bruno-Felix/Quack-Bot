@@ -147,6 +147,7 @@ def buscar_selecoes():
     return resultado
 
 def popular_jogos_copa(json_path="static/quack_bet/jogos_playoffs.json"):
+    print('POPULANDO COPA')
     conn, cursor = get_db_copa_connection()
 
     caminho_json = Path(json_path)
@@ -216,6 +217,8 @@ def popular_jogos_copa(json_path="static/quack_bet/jogos_playoffs.json"):
 
     conn.commit()
     conn.close()
+
+    print('POPULADO: ', inseridos, 'IGNORADOS:', ignorados)
 
     return {
         "inseridos": inseridos,
