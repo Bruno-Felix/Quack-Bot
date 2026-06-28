@@ -105,11 +105,11 @@ class QuackBetCopa(commands.Cog):
         name="postar_rodada_copa",
         description="Começar Copa")
     @app_commands.describe(
-        rodada="Coeçar Rodada (1, 2 ou 3)")
+        rodada="Começar Rodada (1, 2, 3 ou 4)")
     async def postar_rodada_copa(self, interaction: discord.Interaction, rodada: int):
-        if rodada is not None and rodada not in [1, 2, 3]:
+        if rodada is not None and rodada not in [1, 2, 3, 4]:
             await interaction.response.send_message(
-                "A rodada deve ser 1, 2 ou 3.",
+                "A rodada deve ser 1, 2, 3 ou 4.",
                 ephemeral=True
             )
             return
