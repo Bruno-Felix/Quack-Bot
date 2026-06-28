@@ -236,7 +236,7 @@
   },
   {
     "selecao_mandante_id": 20,
-    "selecao_visitante_id": 21,
+    "selecao_visitante_id": 17,
     "grupo": "E",
     "rodada": 3,
     "data": "25/06/2026",
@@ -285,7 +285,7 @@
   },
   {
     "selecao_mandante_id": 24,
-    "selecao_visitante_id": 25,
+    "selecao_visitante_id": 21,
     "grupo": "F",
     "rodada": 3,
     "data": "25/06/2026",

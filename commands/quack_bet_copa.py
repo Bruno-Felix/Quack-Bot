@@ -9,6 +9,87 @@ from src.quack_bet_copa.palpite_views import PalpiteView, construir_embed_palpit
 
 ESPORTES_CHANNEL_ID = os.getenv('ESPORTES_CHANNEL_ID')
 
+class RankingCopaView(discord.ui.View):
+    def __init__(self, bot, ranking):
+        super().__init__(timeout=300)
+
+        self.bot = bot
+        self.ranking = ranking
+        self.pagina = 0
+        self.por_pagina = 15
+
+    async def gerar_embed(self):
+        inicio = self.pagina * self.por_pagina
+        fim = inicio + self.por_pagina
+
+        ranking_pagina = self.ranking[inicio:fim]
+
+        embed = discord.Embed(
+            title="🏆 Ranking da Copa",
+            color=discord.Color.gold()
+        )
+
+        medalhas = {
+            1: "🥇",
+            2: "🥈",
+            3: "🥉",
+        }
+
+        linhas = []
+
+        for indice, usuario in enumerate(
+            ranking_pagina,
+            start=inicio + 1
+        ):
+            emoji = medalhas.get(indice, f"`{indice:02}`")
+
+            linhas.append(
+                f"{emoji} **{usuario['nome']}** — {usuario['pontos']} pontos"
+            )
+
+        embed.description = "\n".join(linhas)
+
+        total_paginas = (
+            len(self.ranking) - 1
+        ) // self.por_pagina + 1
+
+        embed.set_footer(
+            text=f"Página {self.pagina + 1}/{total_paginas}"
+        )
+
+        return embed
+
+    @discord.ui.button(label="⬅️", style=discord.ButtonStyle.secondary)
+    async def anterior(
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button
+    ):
+        if self.pagina > 0:
+            self.pagina -= 1
+
+        await interaction.response.edit_message(
+            embed=await self.gerar_embed(),
+            view=self
+        )
+
+    @discord.ui.button(label="➡️", style=discord.ButtonStyle.secondary)
+    async def proximo(
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button
+    ):
+        total_paginas = (
+            len(self.ranking) - 1
+        ) // self.por_pagina + 1
+
+        if self.pagina < total_paginas - 1:
+            self.pagina += 1
+
+        await interaction.response.edit_message(
+            embed=await self.gerar_embed(),
+            view=self
+        )
 
 class QuackBetCopa(commands.Cog):
     def __init__(self, bot):
@@ -341,43 +422,35 @@ class QuackBetCopa(commands.Cog):
         description="Mostra o ranking da Copa"
     )
     async def ranking_copa(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+      
         ranking = quack_copa_banco.get_ranking_copa()
-
-        if not ranking:
-            await interaction.response.send_message(
-                "Nenhum usuário pontuou ainda."
-            )
-            return
-
-        embed = discord.Embed(
-            title="🏆 Ranking da Copa",
-            color=discord.Color.gold()
-        )
-
-        linhas = []
-
-        medalhas = {
-            1: "🥇",
-            2: "🥈",
-            3: "🥉",
-        }
-
-        for posicao, (user_id, pontos) in enumerate(ranking[:20], start=1):
+    
+        ranking_com_nomes = []
+    
+        for user_id, pontos in ranking:
             try:
                 usuario = await self.bot.fetch_user(int(user_id))
                 nome = usuario.display_name
             except Exception:
                 nome = f"Usuário {user_id}"
-
-            emoji = medalhas.get(posicao, f"`{posicao:02}`")
-
-            linhas.append(
-                f"{emoji} **{nome}** — {pontos} pontos"
+    
+            ranking_com_nomes.append(
+                {
+                    "nome": nome,
+                    "pontos": pontos
+                }
             )
-
-        embed.description = "\n".join(linhas)
-
-        await interaction.response.send_message(embed=embed)
+    
+        view = RankingCopaView(
+            self.bot,
+            ranking_com_nomes
+        )
+    
+        await interaction.followup.send(
+            embed=await view.gerar_embed(),
+            view=view
+        )
 
 async def setup(bot):
     await bot.add_cog(QuackBetCopa(bot))
