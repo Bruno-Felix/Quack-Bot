@@ -503,6 +503,7 @@ def get_jogos(rodada=None, grupo=None):
     return jogos
 
 async def postar_rodada_copa(rodada):
+    print('POSTANDO RODADA COPA:', rodada)
     conn, cursor = get_db_copa_connection()
 
     cursor.execute(
@@ -544,6 +545,7 @@ async def postar_rodada_copa(rodada):
     )
 
     jogos = cursor.fetchall()
+    print('JOGOS A POSTAR 1:', len(jogos))
 
     conn.close()
 

@@ -116,6 +116,8 @@ class QuackBetCopa(commands.Cog):
         
         novos_jogos = await quack_copa_banco.postar_rodada_copa(rodada)
 
+        print('JOGOS A POSTAR:', len(novos_jogos))
+
         if novos_jogos:
             for jogo in novos_jogos:
                 embed = discord.Embed(
