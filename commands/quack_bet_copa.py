@@ -140,7 +140,7 @@ class QuackBetCopa(commands.Cog):
                     embed=embed
                 )
 
-                for emoji in ["1️⃣", "🇪", "2️⃣"]:
+                for emoji in ["1️⃣", "2️⃣"]:
                     await mensagem.add_reaction(emoji)
 
                 quack_copa_banco.atualizar_message_id(jogo['partida_id'], mensagem.id)

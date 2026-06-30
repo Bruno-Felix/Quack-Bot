@@ -861,7 +861,7 @@ async def pontuar_usuarios_copa(jogo_id: int, resultado: str):
         cursor.execute(
             """
             UPDATE usuarios
-            SET pontos = pontos + 1
+            SET pontos = pontos + 2
             WHERE id = ?
             """,
             (user_id,)
