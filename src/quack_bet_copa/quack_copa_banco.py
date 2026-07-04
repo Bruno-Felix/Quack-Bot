@@ -163,7 +163,7 @@ def popular_jogos_copa(json_path="static/quack_bet/jogos_playoffs.json"):
 
     inseridos = 0
     ignorados = 0
-    partida_id = 73
+    partida_id = 89
 
     for jogo in jogos:
         mandante = str(jogo["selecao_mandante_id"])
@@ -503,7 +503,7 @@ def get_jogos(rodada=None, grupo=None):
     return jogos
 
 async def postar_rodada_copa(rodada):
-    print('POSTANDO RODADA COPA:', rodada)
+    print('POSTANDO RODADA ', rodada)
     conn, cursor = get_db_copa_connection()
 
     cursor.execute(
