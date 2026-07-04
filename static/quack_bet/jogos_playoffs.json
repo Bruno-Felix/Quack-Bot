@@ -1,18 +1,10 @@
 [
-  { "selecao_mandante_id": 2,  "selecao_visitante_id": 5,  "grupo": "16avos", "rodada": 4, "data": "28/06/2026", "hora": "16:00" },
-  { "selecao_mandante_id": 9,  "selecao_visitante_id": 22, "grupo": "16avos", "rodada": 4, "data": "29/06/2026", "hora": "14:00" },
-  { "selecao_mandante_id": 17, "selecao_visitante_id": 14, "grupo": "16avos", "rodada": 4, "data": "29/06/2026", "hora": "17:30" },
-  { "selecao_mandante_id": 21, "selecao_visitante_id": 10, "grupo": "16avos", "rodada": 4, "data": "29/06/2026", "hora": "22:00" },
-  { "selecao_mandante_id": 19, "selecao_visitante_id": 36, "grupo": "16avos", "rodada": 4, "data": "30/06/2026", "hora": "14:00" },
-  { "selecao_mandante_id": 33, "selecao_visitante_id": 23, "grupo": "16avos", "rodada": 4, "data": "30/06/2026", "hora": "18:00" },
-  { "selecao_mandante_id": 1,  "selecao_visitante_id": 20, "grupo": "16avos", "rodada": 4, "data": "30/06/2026", "hora": "22:00" },
-  { "selecao_mandante_id": 45, "selecao_visitante_id": 42, "grupo": "16avos", "rodada": 4, "data": "01/07/2026", "hora": "13:00" },
-  { "selecao_mandante_id": 25, "selecao_visitante_id": 34, "grupo": "16avos", "rodada": 4, "data": "01/07/2026", "hora": "17:00" },
-  { "selecao_mandante_id": 13, "selecao_visitante_id": 6,  "grupo": "16avos", "rodada": 4, "data": "01/07/2026", "hora": "21:00" },
-  { "selecao_mandante_id": 29, "selecao_visitante_id": 39, "grupo": "16avos", "rodada": 4, "data": "02/07/2026", "hora": "16:00" },
-  { "selecao_mandante_id": 41, "selecao_visitante_id": 46, "grupo": "16avos", "rodada": 4, "data": "02/07/2026", "hora": "20:00" },
-  { "selecao_mandante_id": 8,  "selecao_visitante_id": 38, "grupo": "16avos", "rodada": 4, "data": "03/07/2026", "hora": "00:00" },
-  { "selecao_mandante_id": 15, "selecao_visitante_id": 26, "grupo": "16avos", "rodada": 4, "data": "03/07/2026", "hora": "15:00" },
-  { "selecao_mandante_id": 37, "selecao_visitante_id": 30, "grupo": "16avos", "rodada": 4, "data": "03/07/2026", "hora": "19:00" },
-  { "selecao_mandante_id": 44, "selecao_visitante_id": 47, "grupo": "16avos", "rodada": 4, "data": "03/07/2026", "hora": "22:30" }
+  { "selecao_mandante_id": 5, "selecao_visitante_id": 10, "grupo": "oitavas", "rodada": 5, "data": "04/07/2026", "hora": "14:00" },
+  { "selecao_mandante_id": 14, "selecao_visitante_id": 33, "grupo": "oitavas", "rodada": 5, "data": "04/07/2026", "hora": "18:00" },
+  { "selecao_mandante_id": 9, "selecao_visitante_id": 36, "grupo": "oitavas", "rodada": 5, "data": "05/07/2026", "hora": "17:00" },
+  { "selecao_mandante_id": 1, "selecao_visitante_id": 45, "grupo": "oitavas", "rodada": 5, "data": "05/07/2026", "hora": "21:00" },
+  { "selecao_mandante_id": 41, "selecao_visitante_id": 29, "grupo": "oitavas", "rodada": 5, "data": "06/07/2026", "hora": "16:00" },
+  { "selecao_mandante_id": 13, "selecao_visitante_id": 25, "grupo": "oitavas", "rodada": 5, "data": "06/07/2026", "hora": "21:00" },
+  { "selecao_mandante_id": 37, "selecao_visitante_id": 26, "grupo": "oitavas", "rodada": 5, "data": "07/07/2026", "hora": "13:00" },
+  { "selecao_mandante_id": 8, "selecao_visitante_id": 44, "grupo": "oitavas", "rodada": 5, "data": "07/07/2026", "hora": "17:00" }
 ]
