@@ -163,7 +163,7 @@ def popular_jogos_copa(json_path="static/quack_bet/jogos_playoffs.json"):
 
     inseridos = 0
     ignorados = 0
-    partida_id = 89
+    partida_id = 103
 
     for jogo in jogos:
         mandante = str(jogo["selecao_mandante_id"])
@@ -861,7 +861,7 @@ async def pontuar_usuarios_copa(jogo_id: int, resultado: str):
         cursor.execute(
             """
             UPDATE usuarios
-            SET pontos = pontos + 2
+            SET pontos = pontos + 3
             WHERE id = ?
             """,
             (user_id,)
@@ -874,6 +874,119 @@ async def pontuar_usuarios_copa(jogo_id: int, resultado: str):
         "acertadores": len(palpites_corretos),
         "pontos_distribuidos": len(palpites_corretos)
     }
+
+PONTOS_ACERTO_CORRECAO_COPA = 3
+
+
+async def corrigir_resultado_copa(partida_id: int, novo_resultado: str):
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            status,
+            resultado,
+            selecao_mandante_id,
+            selecao_visitante_id
+        FROM jogos
+        WHERE partida_id = ?
+        """,
+        (partida_id,)
+    )
+
+    jogo = cursor.fetchone()
+
+    if not jogo:
+        conn.close()
+        raise ValueError(
+            f"Partida {partida_id} não encontrada."
+        )
+
+    (
+        jogo_id,
+        status_atual,
+        resultado_atual,
+        selecao_mandante_id,
+        selecao_visitante_id
+    ) = jogo
+
+    if status_atual != 3 or resultado_atual is None:
+        conn.close()
+        raise ValueError(
+            f"A partida {partida_id} ainda não possui um resultado registrado."
+        )
+
+    if resultado_atual == novo_resultado:
+        conn.close()
+        raise ValueError(
+            "O novo resultado é igual ao resultado já registrado."
+        )
+
+    cursor.execute(
+        """
+        SELECT user_id
+        FROM palpites
+        WHERE jogo_id = ?
+          AND palpite = ?
+        """,
+        (jogo_id, resultado_atual)
+    )
+    antigos_acertadores = cursor.fetchall()
+
+    for (user_id,) in antigos_acertadores:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET pontos = MAX(0, pontos - ?)
+            WHERE id = ?
+            """,
+            (PONTOS_ACERTO_CORRECAO_COPA, user_id)
+        )
+
+    cursor.execute(
+        """
+        UPDATE jogos
+        SET resultado = ?
+        WHERE partida_id = ?
+        """,
+        (novo_resultado, partida_id)
+    )
+
+    cursor.execute(
+        """
+        SELECT user_id
+        FROM palpites
+        WHERE jogo_id = ?
+          AND palpite = ?
+        """,
+        (jogo_id, novo_resultado)
+    )
+    novos_acertadores = cursor.fetchall()
+
+    for (user_id,) in novos_acertadores:
+        cursor.execute(
+            """
+            UPDATE usuarios
+            SET pontos = pontos + ?
+            WHERE id = ?
+            """,
+            (PONTOS_ACERTO_CORRECAO_COPA, user_id)
+        )
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "partida_id": partida_id,
+        "selecao_mandante_id": selecao_mandante_id,
+        "selecao_visitante_id": selecao_visitante_id,
+        "resultado_anterior": resultado_atual,
+        "resultado_novo": novo_resultado,
+        "pontos_removidos": len(antigos_acertadores),
+        "pontos_adicionados": len(novos_acertadores),
+    }
+
 
 def get_selecao_por_id(selecao_id):
     conn, cursor = get_db_copa_connection()
