@@ -1046,3 +1046,57 @@ def get_ranking_copa():
     conn.close()
 
     return ranking
+
+
+def _carregar_classificacao_grupos_copa(json_path="static/quack_bet/classificacao_grupos_copa.json"):
+    caminho_json = Path(json_path)
+
+    if not caminho_json.exists():
+        raise FileNotFoundError(f"Arquivo nao encontrado: {caminho_json}")
+
+    with caminho_json.open("r", encoding="utf-8") as arquivo:
+        return json.load(arquivo)
+
+
+def get_ranking_acertos_apostas_copa():
+    classificacao = _carregar_classificacao_grupos_copa()
+
+    primeiros_colocados = set(classificacao["primeiros_colocados"])
+    classificados = set(classificacao["classificados"])
+    ultimos_colocados = set(classificacao["ultimos_colocados"])
+
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute(
+        """
+        SELECT user_id, lideres, classificados, lanternas
+        FROM apostas_copa
+        WHERE finalizada = 1
+        """
+    )
+    apostas = cursor.fetchall()
+
+    conn.close()
+
+    ranking = []
+
+    for user_id, lideres_json, classificados_json, lanternas_json in apostas:
+        lideres_aposta = set(_parse_lista_json(lideres_json))
+        classificados_aposta = set(_parse_lista_json(classificados_json))
+        lanternas_aposta = set(_parse_lista_json(lanternas_json))
+
+        acertos_lideres = len(lideres_aposta & primeiros_colocados)
+        acertos_classificados = len(classificados_aposta & classificados)
+        acertos_lanternas = len(lanternas_aposta & ultimos_colocados)
+
+        ranking.append({
+            "user_id": user_id,
+            "acertos_lideres": acertos_lideres,
+            "acertos_classificados": acertos_classificados,
+            "acertos_lanternas": acertos_lanternas,
+            "total_acertos": acertos_lideres + acertos_classificados + acertos_lanternas,
+        })
+
+    ranking.sort(key=lambda item: (-item["total_acertos"], item["user_id"]))
+
+    return ranking

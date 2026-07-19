@@ -91,6 +91,89 @@ class RankingCopaView(discord.ui.View):
             view=self
         )
 
+class RankingAcertosApostasCopaView(discord.ui.View):
+    def __init__(self, bot, ranking):
+        super().__init__(timeout=300)
+
+        self.bot = bot
+        self.ranking = ranking
+        self.pagina = 0
+        self.por_pagina = 15
+
+    async def gerar_embed(self):
+        inicio = self.pagina * self.por_pagina
+        fim = inicio + self.por_pagina
+
+        ranking_pagina = self.ranking[inicio:fim]
+
+        embed = discord.Embed(
+            title="🎯 Ranking de Acertos - Palpites da Copa",
+            color=discord.Color.gold()
+        )
+
+        medalhas = {
+            1: "🥇",
+            2: "🥈",
+            3: "🥉",
+        }
+
+        linhas = []
+
+        for indice, usuario in enumerate(
+            ranking_pagina,
+            start=inicio + 1
+        ):
+            emoji = medalhas.get(indice, f"`{indice:02}`")
+
+            linhas.append(
+                f"{emoji} **{usuario['nome']}** — {usuario['total_acertos']} acertos "
+                f"(🏆 {usuario['acertos_lideres']} | ✅ {usuario['acertos_classificados']} | 🔻 {usuario['acertos_lanternas']})"
+            )
+
+        embed.description = "\n".join(linhas) if linhas else "Nenhum palpite finalizado encontrado."
+
+        total_paginas = (
+            len(self.ranking) - 1
+        ) // self.por_pagina + 1 if self.ranking else 1
+
+        embed.set_footer(
+            text=f"Página {self.pagina + 1}/{total_paginas}"
+        )
+
+        return embed
+
+    @discord.ui.button(label="⬅️", style=discord.ButtonStyle.secondary)
+    async def anterior(
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button
+    ):
+        if self.pagina > 0:
+            self.pagina -= 1
+
+        await interaction.response.edit_message(
+            embed=await self.gerar_embed(),
+            view=self
+        )
+
+    @discord.ui.button(label="➡️", style=discord.ButtonStyle.secondary)
+    async def proximo(
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button
+    ):
+        total_paginas = (
+            len(self.ranking) - 1
+        ) // self.por_pagina + 1 if self.ranking else 1
+
+        if self.pagina < total_paginas - 1:
+            self.pagina += 1
+
+        await interaction.response.edit_message(
+            embed=await self.gerar_embed(),
+            view=self
+        )
+
 class QuackBetCopa(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -550,6 +633,46 @@ class QuackBetCopa(commands.Cog):
             ranking_com_nomes
         )
     
+        await interaction.followup.send(
+            embed=await view.gerar_embed(),
+            view=view
+        )
+
+    @app_commands.command(
+        name="ranking_acertos_apostas_copa",
+        description="Mostra o ranking de acertos dos palpites de líderes, classificados e lanternas"
+    )
+    async def ranking_acertos_apostas_copa(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
+        try:
+            ranking = quack_copa_banco.get_ranking_acertos_apostas_copa()
+        except FileNotFoundError as e:
+            await interaction.followup.send(f"❌ Erro: {e}")
+            return
+
+        ranking_com_nomes = []
+
+        for item in ranking:
+            try:
+                usuario = await self.bot.fetch_user(int(item["user_id"]))
+                nome = usuario.display_name
+            except Exception:
+                nome = f"Usuário {item['user_id']}"
+
+            ranking_com_nomes.append({
+                "nome": nome,
+                "total_acertos": item["total_acertos"],
+                "acertos_lideres": item["acertos_lideres"],
+                "acertos_classificados": item["acertos_classificados"],
+                "acertos_lanternas": item["acertos_lanternas"],
+            })
+
+        view = RankingAcertosApostasCopaView(
+            self.bot,
+            ranking_com_nomes
+        )
+
         await interaction.followup.send(
             embed=await view.gerar_embed(),
             view=view

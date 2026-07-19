@@ -1,0 +1,119 @@
+{
+  "grupos": {
+    "A": [
+      { "posicao": 1, "selecao_id": 1, "nome": "México" },
+      { "posicao": 2, "selecao_id": 2, "nome": "África do Sul" },
+      { "posicao": 3, "selecao_id": 3, "nome": "Coreia do Sul" },
+      { "posicao": 4, "selecao_id": 4, "nome": "República Tcheca" }
+    ],
+    "B": [
+      { "posicao": 1, "selecao_id": 8, "nome": "Suíça" },
+      { "posicao": 2, "selecao_id": 5, "nome": "Canadá" },
+      { "posicao": 3, "selecao_id": 6, "nome": "Bósnia e Herzegovina" },
+      { "posicao": 4, "selecao_id": 7, "nome": "Catar" }
+    ],
+    "C": [
+      { "posicao": 1, "selecao_id": 9, "nome": "Brasil" },
+      { "posicao": 2, "selecao_id": 10, "nome": "Marrocos" },
+      { "posicao": 3, "selecao_id": 12, "nome": "Escócia" },
+      { "posicao": 4, "selecao_id": 11, "nome": "Haiti" }
+    ],
+    "D": [
+      { "posicao": 1, "selecao_id": 13, "nome": "Estados Unidos" },
+      { "posicao": 2, "selecao_id": 15, "nome": "Austrália" },
+      { "posicao": 3, "selecao_id": 14, "nome": "Paraguai" },
+      { "posicao": 4, "selecao_id": 16, "nome": "Turquia" }
+    ],
+    "E": [
+      { "posicao": 1, "selecao_id": 17, "nome": "Alemanha" },
+      { "posicao": 2, "selecao_id": 19, "nome": "Costa do Marfim" },
+      { "posicao": 3, "selecao_id": 20, "nome": "Equador" },
+      { "posicao": 4, "selecao_id": 18, "nome": "Curaçao" }
+    ],
+    "F": [
+      { "posicao": 1, "selecao_id": 21, "nome": "Países Baixos" },
+      { "posicao": 2, "selecao_id": 22, "nome": "Japão" },
+      { "posicao": 3, "selecao_id": 23, "nome": "Suécia" },
+      { "posicao": 4, "selecao_id": 24, "nome": "Tunísia" }
+    ],
+    "G": [
+      { "posicao": 1, "selecao_id": 25, "nome": "Bélgica" },
+      { "posicao": 2, "selecao_id": 26, "nome": "Egito" },
+      { "posicao": 3, "selecao_id": 27, "nome": "Irã" },
+      { "posicao": 4, "selecao_id": 28, "nome": "Nova Zelândia" }
+    ],
+    "H": [
+      { "posicao": 1, "selecao_id": 29, "nome": "Espanha" },
+      { "posicao": 2, "selecao_id": 30, "nome": "Cabo Verde" },
+      { "posicao": 3, "selecao_id": 32, "nome": "Uruguai" },
+      { "posicao": 4, "selecao_id": 31, "nome": "Arábia Saudita" }
+    ],
+    "I": [
+      { "posicao": 1, "selecao_id": 33, "nome": "França" },
+      { "posicao": 2, "selecao_id": 36, "nome": "Noruega" },
+      { "posicao": 3, "selecao_id": 34, "nome": "Senegal" },
+      { "posicao": 4, "selecao_id": 35, "nome": "Iraque" }
+    ],
+    "J": [
+      { "posicao": 1, "selecao_id": 37, "nome": "Argentina" },
+      { "posicao": 2, "selecao_id": 39, "nome": "Áustria" },
+      { "posicao": 3, "selecao_id": 38, "nome": "Argélia" },
+      { "posicao": 4, "selecao_id": 40, "nome": "Jordânia" }
+    ],
+    "K": [
+      { "posicao": 1, "selecao_id": 44, "nome": "Colômbia" },
+      { "posicao": 2, "selecao_id": 41, "nome": "Portugal" },
+      { "posicao": 3, "selecao_id": 42, "nome": "RD do Congo" },
+      { "posicao": 4, "selecao_id": 43, "nome": "Uzbequistão" }
+    ],
+    "L": [
+      { "posicao": 1, "selecao_id": 45, "nome": "Inglaterra" },
+      { "posicao": 2, "selecao_id": 46, "nome": "Croácia" },
+      { "posicao": 3, "selecao_id": 47, "nome": "Gana" },
+      { "posicao": 4, "selecao_id": 48, "nome": "Panamá" }
+    ]
+  },
+  "primeiros_colocados": [1, 8, 9, 13, 17, 21, 25, 29, 33, 37, 44, 45],
+  "classificados_diretos": [
+    1, 2,
+    8, 5,
+    9, 10,
+    13, 15,
+    17, 19,
+    21, 22,
+    25, 26,
+    29, 30,
+    33, 36,
+    37, 39,
+    44, 41,
+    45, 46
+  ],
+  "candidatos_melhores_terceiros": [3, 6, 12, 14, 20, 23, 27, 32, 34, 38, 42, 47],
+  "melhores_terceiros": [
+    { "ranking": 1, "selecao_id": 42, "nome": "RD do Congo" },
+    { "ranking": 2, "selecao_id": 23, "nome": "Suécia" },
+    { "ranking": 3, "selecao_id": 47, "nome": "Gana" },
+    { "ranking": 4, "selecao_id": 20, "nome": "Equador" },
+    { "ranking": 5, "selecao_id": 6, "nome": "Bósnia e Herzegovina" },
+    { "ranking": 6, "selecao_id": 38, "nome": "Argélia" },
+    { "ranking": 7, "selecao_id": 14, "nome": "Paraguai" },
+    { "ranking": 8, "selecao_id": 34, "nome": "Senegal" }
+  ],
+  "terceiros_eliminados": [3, 12, 27, 32],
+  "classificados": [
+    1, 2,
+    8, 5,
+    9, 10,
+    13, 15,
+    17, 19,
+    21, 22,
+    25, 26,
+    29, 30,
+    33, 36,
+    37, 39,
+    44, 41,
+    45, 46,
+    42, 23, 47, 20, 6, 38, 14, 34
+  ],
+  "ultimos_colocados": [4, 7, 11, 16, 18, 24, 28, 31, 35, 40, 43, 48]
+}
