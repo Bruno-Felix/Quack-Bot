@@ -455,6 +455,55 @@ def get_todos_jogos():
 
     return jogos
 
+def get_jogos_sem_resultado():
+    conn, cursor = get_db_copa_connection()
+
+    cursor.execute(
+        """
+        SELECT
+            j.id,
+            j.partida_id,
+            j.grupo_id,
+            j.rodada_id,
+            j.partida_data,
+            j.partida_hora,
+            casa.nome,
+            casa.bandeira,
+            visitante.nome,
+            visitante.bandeira
+        FROM jogos j
+        INNER JOIN selecoes casa
+            ON casa.id = j.selecao_mandante_id
+        INNER JOIN selecoes visitante
+            ON visitante.id = j.selecao_visitante_id
+        WHERE j.status = 2
+          AND j.resultado IS NULL
+        ORDER BY
+            j.partida_data,
+            j.partida_hora
+        """
+    )
+
+    jogos = cursor.fetchall()
+
+    conn.close()
+
+    return [
+        {
+            "jogo_id": jogo[0],
+            "partida_id": jogo[1],
+            "grupo_id": jogo[2],
+            "rodada_id": jogo[3],
+            "partida_data": jogo[4],
+            "partida_hora": jogo[5],
+            "selecao_mandante_nome": jogo[6],
+            "selecao_mandante_bandeira": jogo[7],
+            "selecao_visitante_nome": jogo[8],
+            "selecao_visitante_bandeira": jogo[9],
+        }
+        for jogo in jogos
+    ]
+
 def get_jogos(rodada=None, grupo=None):
     conn, cursor = get_db_copa_connection()
 
