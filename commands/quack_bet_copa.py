@@ -298,6 +298,45 @@ class QuackBetCopa(commands.Cog):
         await interaction.followup.send(embed=embed)
 
 
+    @app_commands.command(
+        name="jogos_sem_resultado_copa",
+        description="Lista jogos já encerrados que ainda não têm resultado registrado"
+    )
+    async def jogos_sem_resultado_copa(self, interaction: discord.Interaction):
+        await interaction.response.defer()
+
+        jogos = quack_copa_banco.get_jogos_sem_resultado()
+
+        if not jogos:
+            await interaction.followup.send(
+                "✅ Não há jogos pendentes de resultado."
+            )
+            return
+
+        embed = discord.Embed(
+            title="⚠️ Jogos sem resultado registrado",
+            color=discord.Color.red()
+        )
+
+        for jogo in jogos:
+            embed.add_field(
+                name=(
+                    f"{jogo['selecao_mandante_bandeira']} "
+                    f"{jogo['selecao_mandante_nome']} 🆚 "
+                    f"{jogo['selecao_visitante_nome']} "
+                    f"{jogo['selecao_visitante_bandeira']}"
+                ),
+                value=(
+                    f"Grupo {jogo['grupo_id']} | Rodada {jogo['rodada_id']}\n"
+                    f"📅 {jogo['partida_data']} às {jogo['partida_hora']}\n"
+                    f"ID: {jogo['partida_id']}"
+                ),
+                inline=False
+            )
+
+        await interaction.followup.send(embed=embed)
+
+
     @app_commands.command(name="palpite_copa", description="Abrir painel de palpite da Copa")
     async def palpite(self, interaction: discord.Interaction):
         quack_copa_banco.get_aposta_copa(str(interaction.user.id))
