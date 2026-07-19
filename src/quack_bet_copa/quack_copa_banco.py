@@ -875,10 +875,8 @@ async def pontuar_usuarios_copa(jogo_id: int, resultado: str):
         "pontos_distribuidos": len(palpites_corretos)
     }
 
-PONTOS_ACERTO_CORRECAO_COPA = 3
 
-
-async def corrigir_resultado_copa(partida_id: int, novo_resultado: str):
+async def adicionar_pontos_faltantes_copa(partida_id: int, pontos: int):
     conn, cursor = get_db_copa_connection()
 
     cursor.execute(
@@ -917,12 +915,6 @@ async def corrigir_resultado_copa(partida_id: int, novo_resultado: str):
             f"A partida {partida_id} ainda não possui um resultado registrado."
         )
 
-    if resultado_atual == novo_resultado:
-        conn.close()
-        raise ValueError(
-            "O novo resultado é igual ao resultado já registrado."
-        )
-
     cursor.execute(
         """
         SELECT user_id
@@ -932,46 +924,16 @@ async def corrigir_resultado_copa(partida_id: int, novo_resultado: str):
         """,
         (jogo_id, resultado_atual)
     )
-    antigos_acertadores = cursor.fetchall()
+    acertadores = cursor.fetchall()
 
-    for (user_id,) in antigos_acertadores:
-        cursor.execute(
-            """
-            UPDATE usuarios
-            SET pontos = MAX(0, pontos - ?)
-            WHERE id = ?
-            """,
-            (PONTOS_ACERTO_CORRECAO_COPA, user_id)
-        )
-
-    cursor.execute(
-        """
-        UPDATE jogos
-        SET resultado = ?
-        WHERE partida_id = ?
-        """,
-        (novo_resultado, partida_id)
-    )
-
-    cursor.execute(
-        """
-        SELECT user_id
-        FROM palpites
-        WHERE jogo_id = ?
-          AND palpite = ?
-        """,
-        (jogo_id, novo_resultado)
-    )
-    novos_acertadores = cursor.fetchall()
-
-    for (user_id,) in novos_acertadores:
+    for (user_id,) in acertadores:
         cursor.execute(
             """
             UPDATE usuarios
             SET pontos = pontos + ?
             WHERE id = ?
             """,
-            (PONTOS_ACERTO_CORRECAO_COPA, user_id)
+            (pontos, user_id)
         )
 
     conn.commit()
@@ -981,10 +943,9 @@ async def corrigir_resultado_copa(partida_id: int, novo_resultado: str):
         "partida_id": partida_id,
         "selecao_mandante_id": selecao_mandante_id,
         "selecao_visitante_id": selecao_visitante_id,
-        "resultado_anterior": resultado_atual,
-        "resultado_novo": novo_resultado,
-        "pontos_removidos": len(antigos_acertadores),
-        "pontos_adicionados": len(novos_acertadores),
+        "resultado": resultado_atual,
+        "pontos_adicionados_por_usuario": pontos,
+        "usuarios_afetados": len(acertadores),
     }
 
 

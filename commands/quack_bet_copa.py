@@ -236,6 +236,68 @@ class QuackBetCopa(commands.Cog):
         await interaction.followup.send(embed=embed)
 
 
+    @app_commands.command(
+        name="adicionar_pontos_faltantes_copa",
+        description="Adiciona pontos faltantes para quem acertou o resultado de um jogo já registrado"
+    )
+    @app_commands.describe(
+        partida_id="ID da partida",
+        pontos="Quantidade de pontos a adicionar para cada acertador"
+    )
+    async def adicionar_pontos_faltantes_copa(self, interaction: discord.Interaction, partida_id: int, pontos: int):
+        await interaction.response.defer()
+
+        if pontos <= 0:
+            await interaction.followup.send("❌ A quantidade de pontos deve ser maior que zero.")
+            return
+
+        try:
+            res = await quack_copa_banco.adicionar_pontos_faltantes_copa(partida_id, pontos)
+        except ValueError as e:
+            await interaction.followup.send(f"❌ Erro: {e}")
+            return
+
+        mandante = quack_copa_banco.get_selecao_por_id(
+            res["selecao_mandante_id"]
+        )
+
+        visitante = quack_copa_banco.get_selecao_por_id(
+            res["selecao_visitante_id"]
+        )
+
+        resultado_texto = {
+            "1": f"Vitória de {mandante['nome']} {mandante['bandeira']}",
+            "E": "Empate",
+            "2": f"Vitória de {visitante['nome']} {visitante['bandeira']}"
+        }
+
+        embed = discord.Embed(
+            title=(
+                f"{mandante['bandeira']} {mandante['nome']} 🆚 "
+                f"{visitante['nome']} {visitante['bandeira']}"
+            ),
+            description="Pontos faltantes adicionados com sucesso",
+            color=discord.Color.blue()
+        )
+
+        embed.add_field(
+            name="Resultado",
+            value=resultado_texto[res["resultado"]],
+            inline=False
+        )
+
+        embed.add_field(
+            name="Ajuste",
+            value=(
+                f"➕ {res['pontos_adicionados_por_usuario']} ponto(s) para "
+                f"{res['usuarios_afetados']} usuário(s)"
+            ),
+            inline=False
+        )
+
+        await interaction.followup.send(embed=embed)
+
+
     @app_commands.command(name="palpite_copa", description="Abrir painel de palpite da Copa")
     async def palpite(self, interaction: discord.Interaction):
         quack_copa_banco.get_aposta_copa(str(interaction.user.id))
