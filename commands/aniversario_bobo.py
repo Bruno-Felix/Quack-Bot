@@ -6,6 +6,7 @@ from discord import app_commands
 from src.aniversario_bobo.aniversario_banco import (
     deletar_aniversario,
     listar_aniversarios as buscar_aniversarios,
+    normalize_discord_user_id,
     salvar_aniversarios,
     setup_aniversario_database,
 )
@@ -32,7 +33,15 @@ class AniversarioBobeira(commands.Cog):
                 return await interaction.followup.send(embed=embed, ephemeral=True)
 
         if id_usuario:
-            user_id = id_usuario
+            try:
+                user_id = normalize_discord_user_id(id_usuario)
+            except ValueError as exc:
+                embed = discord.Embed(
+                    title="ID inválido! 🎂",
+                    description=str(exc),
+                    color=discord.Color.red(),
+                )
+                return await interaction.followup.send(embed=embed, ephemeral=True)
         else:
             user_id = str(interaction.user.id)
 

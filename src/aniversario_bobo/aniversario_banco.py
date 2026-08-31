@@ -1,7 +1,28 @@
 import os
+import re
 import sqlite3
 
 DB_PATH = "aniversario_bobo.db"
+
+
+def normalize_discord_user_id(user_id):
+    if user_id is None:
+        raise ValueError("ID do usuário não informado.")
+
+    normalized = str(user_id).strip()
+
+    if normalized.startswith("<@") and normalized.endswith(">"):
+        normalized = normalized[2:-1]
+        if normalized.startswith("!"):
+            normalized = normalized[1:]
+
+    if not normalized.isdigit():
+        raise ValueError(
+            "ID inválido. Use somente números, como 1288260951606431744, ou uma menção do Discord, como <@1288260951606431744>."
+        )
+
+    return normalized
+
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
