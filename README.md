@@ -4,6 +4,9 @@
 - **/hoje**: Comando de listagem das lançamentos de kpop do dia;
 - **/semana**: Comando de listagem das lançamentos de kpop da semana;
 - **!fifa**: Comando para chamada do pessoal para jogar FIFA;
+- **Links sociais**: links crus de X/Twitter, Instagram e TikTok são sanitizados e
+  reenviados com embeds aprimorados, alternância de domínio e controles privados.
+  Os domínios do recurso de links sociais podem ser editados no `.env`;
 - **Mencionada**:
    - Medica;
    - Maluca;
