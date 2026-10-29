@@ -6,7 +6,13 @@
 - **!fifa**: Comando para chamada do pessoal para jogar FIFA;
 - **Links sociais**: links crus de X/Twitter, Instagram e TikTok são sanitizados e
   reenviados com embeds aprimorados, alternância de domínio e controles privados.
-  Os domínios do recurso de links sociais podem ser editados no `.env`;
+  Os domínios e alternativas podem ser editados em
+  [`src/data/social_links.json`](src/data/social_links.json). Cada entrada aceita
+  `source_domains`, `standard`, `alternatives` e `raw_alternatives`, permitindo
+  adicionar novos serviços sem alterar o código. Os links corrigidos são enviados
+  no formato `[quack!](link_do_video)` e têm os parâmetros de rastreamento
+  removidos. Mensagens contendo vários links são processadas integralmente, com
+  uma correção independente para cada link;
 - **Mencionada**:
    - Medica;
    - Maluca;

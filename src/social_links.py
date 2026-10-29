@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
 import re
@@ -8,8 +9,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Callable
-from urllib.parse import ParseResult, urlparse
+from urllib.parse import ParseResult, parse_qsl, urlencode, urlparse
 
 import discord
 from dotenv import load_dotenv
@@ -30,78 +30,81 @@ SOCIAL_LINK_CLEANUP_INTERVAL_SECONDS = float(
 )
 
 TRACKING_QUERY_NAMES = {
-    "feature",
+    "a",
+    "cxt",
     "fbclid",
+    "feature",
     "igsh",
     "igshid",
+    "is_from_webapp",
+    "mx",
+    "q",
     "ref",
+    "ref_src",
     "rpxt",
     "s",
+    "sender_device",
     "si",
     "share",
     "t",
+    "twclid",
+    "url",
 }
-URL_PATTERN = re.compile(r"https?://[^\s<>()]+", re.IGNORECASE)
+URL_PATTERN = r"https?://[^\s<>()]+"
 TRAILING_URL_PUNCTUATION = ".,!?;:'\"]}"
-
-
-def _domains_from_env(name: str, defaults: tuple[str, ...]) -> tuple[str, ...]:
-    configured = os.getenv(name)
-    if configured is None:
-        return defaults
-
-    domains = tuple(domain.strip().lower() for domain in configured.split(",") if domain.strip())
-    if not domains:
-        raise ValueError(f"{name} deve conter pelo menos um domínio.")
-    return domains
 
 
 @dataclass(frozen=True)
 class SocialNetwork:
     name: str
-    pattern: re.Pattern[str]
+    source_domains: tuple[str, ...]
     standard: str
     alternatives: tuple[str, ...]
     raw_alternatives: tuple[str, ...] = ()
-    path_transform: Callable[[str], str] | None = None
 
 
-SOCIAL_NETWORKS = (
-    SocialNetwork(
-        name="twitter",
-        pattern=re.compile(r"^(?:www\.)?(?:x|twitter)\.com$", re.IGNORECASE),
-        standard=os.getenv("SOCIAL_TWITTER_STANDARD", "x.com"),
-        alternatives=_domains_from_env(
-            "SOCIAL_TWITTER_ALTERNATIVES", ("fxtwitter.com", "fixupx.com")
-        ),
-        raw_alternatives=_domains_from_env(
-            "SOCIAL_TWITTER_RAW_ALTERNATIVES", ("d.fxtwitter.com", "d.fixupx.com")
-        ),
-    ),
-    SocialNetwork(
-        name="instagram",
-        pattern=re.compile(r"^(?:www\.)?instagram\.com$", re.IGNORECASE),
-        standard=os.getenv("SOCIAL_INSTAGRAM_STANDARD", "instagram.com"),
-        alternatives=_domains_from_env(
-            "SOCIAL_INSTAGRAM_ALTERNATIVES", ("ddinstagram.com", "oginstagram.com")
-        ),
-        raw_alternatives=_domains_from_env(
-            "SOCIAL_INSTAGRAM_RAW_ALTERNATIVES",
-            ("d.ddinstagram.com", "d.oginstagram.com"),
-        ),
-    ),
-    SocialNetwork(
-        name="tiktok",
-        pattern=re.compile(r"^(?:www\.)?tiktok\.com$", re.IGNORECASE),
-        standard=os.getenv("SOCIAL_TIKTOK_STANDARD", "tiktok.com"),
-        alternatives=_domains_from_env(
-            "SOCIAL_TIKTOK_ALTERNATIVES", ("tnktok.com", "vxtiktok.com")
-        ),
-        raw_alternatives=_domains_from_env(
-            "SOCIAL_TIKTOK_RAW_ALTERNATIVES", ("d.tnktok.com", "d.vxtiktok.com")
-        ),
-    ),
-)
+def _load_social_networks() -> tuple[SocialNetwork, ...]:
+    config_path = Path(__file__).parent / "data" / "social_links.json"
+    try:
+        configuration = json.loads(config_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise RuntimeError(f"Não foi possível carregar {config_path}.") from error
+
+    networks = []
+    for entry in configuration.get("links", []):
+        source_domains = tuple(
+            domain.strip().lower()
+            for domain in entry["source_domains"]
+            if domain.strip()
+        )
+        alternatives = tuple(
+            domain.strip().lower()
+            for domain in entry.get("alternatives", [])
+            if domain.strip()
+        )
+        raw_alternatives = tuple(
+            domain.strip().lower()
+            for domain in entry.get("raw_alternatives", [])
+            if domain.strip()
+        )
+        if not source_domains or not alternatives:
+            raise ValueError(
+                f"A configuração de links '{entry.get('name', '<sem nome>')}' "
+                "deve conter source_domains e alternatives."
+            )
+        networks.append(
+            SocialNetwork(
+                name=entry["name"],
+                source_domains=source_domains,
+                standard=entry.get("standard", source_domains[0]),
+                alternatives=alternatives,
+                raw_alternatives=raw_alternatives,
+            )
+        )
+    return tuple(networks)
+
+
+SOCIAL_NETWORKS = _load_social_networks()
 
 
 @dataclass
@@ -115,9 +118,13 @@ class LinkBinding:
 
 
 def _network_for_host(host: str) -> SocialNetwork | None:
-    normalized_host = host.lower().rstrip(".")
+    normalized_host = host.lower().removeprefix("www.").rstrip(".")
     return next(
-        (network for network in SOCIAL_NETWORKS if network.pattern.fullmatch(normalized_host)),
+        (
+            network
+            for network in SOCIAL_NETWORKS
+            if normalized_host in network.source_domains
+        ),
         None,
     )
 
@@ -128,35 +135,45 @@ def sanitize_url(raw_url: str) -> str | None:
     if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
         return None
 
-    network = _network_for_host(parsed.hostname)
-    if network is None:
+    if _network_for_host(parsed.hostname) is None:
         return None
 
-    path = parsed.path or "/"
-    if network.path_transform is not None:
-        path = network.path_transform(path)
+    query = urlencode(
+        [
+            (name, value)
+            for name, value in parse_qsl(parsed.query, keep_blank_values=True)
+            if name.lower() not in TRACKING_QUERY_NAMES
+            and not name.lower().startswith("utm_")
+        ]
+    )
 
     sanitized = ParseResult(
         scheme=parsed.scheme,
         netloc=parsed.netloc,
-        path=path,
+        path=parsed.path or "/",
         params="",
-        query="",
+        query=query,
         fragment="",
     )
     return sanitized.geturl()
 
 
 def find_social_link(content: str) -> tuple[str, SocialNetwork] | None:
-    for match in URL_PATTERN.finditer(content):
+    links = find_social_links(content)
+    return links[0] if links else None
+
+
+def find_social_links(content: str) -> list[tuple[str, SocialNetwork]]:
+    links = []
+    for match in re.finditer(URL_PATTERN, content, re.IGNORECASE):
         candidate = match.group(0).rstrip(TRAILING_URL_PUNCTUATION)
         parsed = urlparse(candidate)
         if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
             continue
         network = _network_for_host(parsed.hostname)
         if network is not None:
-            return candidate, network
-    return None
+            links.append((candidate, network))
+    return links
 
 
 def build_social_url(
@@ -170,7 +187,8 @@ def build_social_url(
     if not domains:
         domains = network.alternatives
     domain = domains[alternative_index % len(domains)]
-    return parsed._replace(netloc=domain, query="", fragment="").geturl()
+    url = parsed._replace(netloc=domain, fragment="").geturl()
+    return f"[quack!]({url})"
 
 
 class SocialLinkView(discord.ui.View):
@@ -277,7 +295,7 @@ class SocialLinkView(discord.ui.View):
 class SocialLinks(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.bindings: dict[int, LinkBinding] = {}
+        self.bindings: dict[int, list[LinkBinding]] = {}
         self.cleanup_task = asyncio.create_task(self._cleanup_loop())
 
     def cog_unload(self) -> None:
@@ -285,21 +303,26 @@ class SocialLinks(commands.Cog):
 
     def binding_for_corrected_message(self, message_id: int) -> LinkBinding | None:
         return next(
-            (binding for binding in self.bindings.values() if binding.corrected_message_id == message_id),
-            None,
-        )
-
-    def remove_binding_by_corrected_message(self, message_id: int) -> None:
-        original_id = next(
             (
-                original_id
-                for original_id, binding in self.bindings.items()
+                binding
+                for bindings in self.bindings.values()
+                for binding in bindings
                 if binding.corrected_message_id == message_id
             ),
             None,
         )
-        if original_id is not None:
-            self.bindings.pop(original_id, None)
+
+    def remove_binding_by_corrected_message(self, message_id: int) -> None:
+        for original_id, bindings in list(self.bindings.items()):
+            remaining = [
+                binding
+                for binding in bindings
+                if binding.corrected_message_id != message_id
+            ]
+            if remaining:
+                self.bindings[original_id] = remaining
+            else:
+                self.bindings.pop(original_id, None)
 
     async def _cleanup_loop(self) -> None:
         await self.bot.wait_until_ready()
@@ -308,7 +331,7 @@ class SocialLinks(commands.Cog):
             self.bindings = {
                 key: value
                 for key, value in self.bindings.items()
-                if value.created_at >= cutoff
+                if any(binding.created_at >= cutoff for binding in value)
             }
             await asyncio.sleep(SOCIAL_LINK_CLEANUP_INTERVAL_SECONDS)
 
@@ -329,51 +352,60 @@ class SocialLinks(commands.Cog):
     async def on_message(self, message: discord.Message) -> None:
         if message.author.bot:
             return
-        found = find_social_link(message.content)
-        if found is None:
+        found_links = find_social_links(message.content)
+        if not found_links:
             return
 
         now = datetime.now(UTC)
-        raw_url, network = found
-        sanitized_url = sanitize_url(raw_url)
-        if sanitized_url is None:
+        sanitized_links = [
+            (sanitized_url, network)
+            for raw_url, network in found_links
+            if (sanitized_url := sanitize_url(raw_url)) is not None
+        ]
+        if not sanitized_links:
             return
         await self._suppress_original_embed(message)
 
-        view = SocialLinkView(
-            self,
-            author_id=message.author.id,
-            sanitized_url=sanitized_url,
-            network=network,
-        )
-        corrected = await message.channel.send(
-            build_social_url(sanitized_url, network), view=view
-        )
-        view.message = corrected
-        self.bindings[message.id] = LinkBinding(
-            original_message_id=message.id,
-            corrected_message_id=corrected.id,
-            channel_id=message.channel.id,
-            author_id=message.author.id,
-            created_at=now,
-            view=view,
-        )
+        bindings = []
+        for sanitized_url, network in sanitized_links:
+            view = SocialLinkView(
+                self,
+                author_id=message.author.id,
+                sanitized_url=sanitized_url,
+                network=network,
+            )
+            corrected = await message.channel.send(
+                build_social_url(sanitized_url, network), view=view
+            )
+            view.message = corrected
+            bindings.append(
+                LinkBinding(
+                    original_message_id=message.id,
+                    corrected_message_id=corrected.id,
+                    channel_id=message.channel.id,
+                    author_id=message.author.id,
+                    created_at=now,
+                    view=view,
+                )
+            )
+        self.bindings[message.id] = bindings
 
         try:
             await message.channel.fetch_message(message.id)
         except discord.NotFound:
             self.bindings.pop(message.id, None)
-            try:
-                await corrected.delete()
-            except (discord.NotFound, discord.Forbidden, discord.HTTPException):
-                pass
+            await asyncio.gather(
+                *(self._delete_corrected(binding) for binding in bindings)
+            )
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message) -> None:
-        binding = self.bindings.pop(message.id, None)
-        if binding is None:
+        bindings = self.bindings.pop(message.id, None)
+        if bindings is None:
             return
-        await self._delete_corrected(binding)
+        await asyncio.gather(
+            *(self._delete_corrected(binding) for binding in bindings)
+        )
 
     @commands.Cog.listener()
     async def on_bulk_message_delete(self, messages: list[discord.Message]) -> None:
@@ -397,7 +429,13 @@ class SocialLinks(commands.Cog):
             for message_id in message_ids
             if message_id in self.bindings
         ]
-        await asyncio.gather(*(self._delete_corrected(binding) for binding in bindings))
+        await asyncio.gather(
+            *(
+                self._delete_corrected(binding)
+                for message_bindings in bindings
+                for binding in message_bindings
+            )
+        )
 
     async def _delete_corrected(self, binding: LinkBinding) -> None:
         channel = self.bot.get_channel(binding.channel_id)
