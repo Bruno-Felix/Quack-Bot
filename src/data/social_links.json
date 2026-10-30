@@ -1,0 +1,46 @@
+{
+  "links": [
+    {
+      "name": "x",
+      "source_domains": [
+        "x.com",
+        "twitter.com"
+      ],
+      "standard": "x.com",
+      "alternatives": [
+        "fxtwitter.com",
+        "fixupx.com"
+      ],
+      "raw_alternatives": [
+        "d.fxtwitter.com",
+        "d.fixupx.com"
+      ]
+    },
+    {
+      "name": "instagram",
+      "source_domains": [
+        "instagram.com"
+      ],
+      "standard": "instagram.com",
+      "alternatives": [
+        "oginstagram.com"
+      ],
+      "raw_alternatives": [
+        "d.oginstagram.com"
+      ]
+    },
+    {
+      "name": "tiktok",
+      "source_domains": [
+        "tiktok.com"
+      ],
+      "standard": "tiktok.com",
+      "alternatives": [
+        "tnktok.com"
+      ],
+      "raw_alternatives": [
+        "d.tnktok.com"
+      ]
+    }
+  ]
+}
