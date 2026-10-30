@@ -16,7 +16,6 @@ intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-
 async def load_commands():
     print('----------------------------')
     print('Comandos sincronizados:')
