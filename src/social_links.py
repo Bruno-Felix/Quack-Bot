@@ -22,6 +22,8 @@ load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 SOCIAL_LINK_VIEW_TIMEOUT_SECONDS = float(
     os.getenv("SOCIAL_LINK_VIEW_TIMEOUT_SECONDS", "300")
 )
+SOCIAL_LINK_ORIGINAL_EMBED_MONITOR_TIMEOUT_SECONDS = 300
+SOCIAL_LINK_ORIGINAL_EMBED_MONITOR_INTERVAL_SECONDS = 5
 SOCIAL_LINK_BINDING_TTL_SECONDS = float(
     os.getenv("SOCIAL_LINK_BINDING_TTL_SECONDS", str(24 * 60 * 60))
 )
@@ -210,13 +212,13 @@ class SocialLinkView(discord.ui.View):
         self.message: discord.Message | None = None
 
         switch_button = discord.ui.Button(
-            label="Alternar link", emoji="🔁", style=discord.ButtonStyle.primary
+            emoji="🔁",
+            style=discord.ButtonStyle.primary
         )
         switch_button.callback = self.switch_link
         self.add_item(switch_button)
 
         raw_button = discord.ui.Button(
-            label="Vídeo bruto",
             emoji="🎬",
             style=discord.ButtonStyle.secondary,
             disabled=not network.raw_alternatives,
@@ -225,7 +227,8 @@ class SocialLinkView(discord.ui.View):
         self.add_item(raw_button)
 
         delete_button = discord.ui.Button(
-            label="Excluir", emoji="🗑️", style=discord.ButtonStyle.danger
+            emoji="🗑️",
+            style=discord.ButtonStyle.danger
         )
         delete_button.callback = self.delete_message
         self.add_item(delete_button)
@@ -282,24 +285,26 @@ class SocialLinkView(discord.ui.View):
             logger.warning("Não foi possível excluir o link corrigido: %s", error)
 
     async def on_timeout(self) -> None:
-        for item in self.children:
-            if isinstance(item, discord.ui.Button):
-                item.disabled = True
+        self.clear_items()
         if self.message is not None:
             try:
-                await self.message.edit(view=self)
-            except (discord.NotFound, discord.Forbidden, discord.HTTPException):
-                pass
+                await self.message.edit(view=None)
+            except (discord.NotFound, discord.Forbidden, discord.HTTPException) as error:
+                logger.warning("Não foi possível remover os botões expirados: %s", error)
+        self.stop()
 
 
 class SocialLinks(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self.bindings: dict[int, list[LinkBinding]] = {}
+        self.original_embed_tasks: dict[int, asyncio.Task[None]] = {}
         self.cleanup_task = asyncio.create_task(self._cleanup_loop())
 
     def cog_unload(self) -> None:
         self.cleanup_task.cancel()
+        for task in self.original_embed_tasks.values():
+            task.cancel()
 
     def binding_for_corrected_message(self, message_id: int) -> LinkBinding | None:
         return next(
@@ -335,18 +340,65 @@ class SocialLinks(commands.Cog):
             }
             await asyncio.sleep(SOCIAL_LINK_CLEANUP_INTERVAL_SECONDS)
 
-    async def _suppress_original_embed(self, message: discord.Message) -> None:
+    async def _suppress_original_embed(self, message: discord.Message) -> bool:
         if message.guild is None:
-            return
+            return True
         me = message.guild.me
         if me is None:
-            return
-        permissions = me.guild_permissions
-        if permissions.manage_messages:
-            try:
-                await message.edit(suppress=True)
-            except (discord.NotFound, discord.Forbidden, discord.HTTPException) as error:
-                logger.warning("Não foi possível suprimir o embed original: %s", error)
+            logger.warning(
+                "Não foi possível suprimir o embed original: "
+                "membro do bot indisponível."
+            )
+            return False
+        if not me.guild_permissions.manage_messages:
+            logger.warning(
+                "Não foi possível suprimir o embed original: o bot não tem "
+                "permissão para gerenciar mensagens."
+            )
+            return False
+        try:
+            await message.edit(suppress=True)
+            return True
+        except discord.NotFound:
+            return True
+        except (discord.Forbidden, discord.HTTPException) as error:
+            logger.warning(
+                "Não foi possível suprimir o embed original: %s", error
+            )
+            return False
+
+    async def _monitor_original_embed(self, message: discord.Message) -> None:
+        deadline = asyncio.get_running_loop().time() + (
+            SOCIAL_LINK_ORIGINAL_EMBED_MONITOR_TIMEOUT_SECONDS
+        )
+        try:
+            while asyncio.get_running_loop().time() < deadline:
+                if await self._suppress_original_embed(message):
+                    return
+                await asyncio.sleep(SOCIAL_LINK_ORIGINAL_EMBED_MONITOR_INTERVAL_SECONDS)
+            logger.warning(
+                "Tempo limite atingido ao tentar suprimir o embed original: %s",
+                message.id,
+            )
+        except asyncio.CancelledError:
+            raise
+        finally:
+            current_task = asyncio.current_task()
+            if self.original_embed_tasks.get(message.id) is current_task:
+                self.original_embed_tasks.pop(message.id, None)
+
+    def _start_original_embed_monitor(self, message: discord.Message) -> None:
+        previous_task = self.original_embed_tasks.pop(message.id, None)
+        if previous_task is not None:
+            previous_task.cancel()
+        self.original_embed_tasks[message.id] = asyncio.create_task(
+            self._monitor_original_embed(message)
+        )
+
+    def _stop_original_embed_monitor(self, message_id: int) -> None:
+        task = self.original_embed_tasks.pop(message_id, None)
+        if task is not None:
+            task.cancel()
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message) -> None:
@@ -364,7 +416,7 @@ class SocialLinks(commands.Cog):
         ]
         if not sanitized_links:
             return
-        await self._suppress_original_embed(message)
+        self._start_original_embed_monitor(message)
 
         bindings = []
         for sanitized_url, network in sanitized_links:
@@ -393,6 +445,7 @@ class SocialLinks(commands.Cog):
         try:
             await message.channel.fetch_message(message.id)
         except discord.NotFound:
+            self._stop_original_embed_monitor(message.id)
             self.bindings.pop(message.id, None)
             await asyncio.gather(
                 *(self._delete_corrected(binding) for binding in bindings)
@@ -400,6 +453,7 @@ class SocialLinks(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message_delete(self, message: discord.Message) -> None:
+        self._stop_original_embed_monitor(message.id)
         bindings = self.bindings.pop(message.id, None)
         if bindings is None:
             return
@@ -424,6 +478,9 @@ class SocialLinks(commands.Cog):
         await self._remove_deleted_originals(payload.message_ids)
 
     async def _remove_deleted_originals(self, message_ids: Iterable[int]) -> None:
+        message_ids = tuple(message_ids)
+        for message_id in message_ids:
+            self._stop_original_embed_monitor(message_id)
         bindings = [
             self.bindings.pop(message_id)
             for message_id in message_ids

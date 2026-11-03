@@ -32,14 +32,28 @@
     {
       "name": "tiktok",
       "source_domains": [
-        "tiktok.com"
+        "tiktok.com",
+        "vt.tiktok.com"
       ],
-      "standard": "tiktok.com",
+      "standard": "vt.tiktok.com",
       "alternatives": [
         "tnktok.com"
       ],
       "raw_alternatives": [
         "d.tnktok.com"
+      ]
+    },
+    {
+      "name": "reddit",
+      "source_domains": [
+        "reddit.com"
+      ],
+      "standard": "reddit.com",
+      "alternatives": [
+        "vxreddit.com"
+      ],
+      "raw_alternatives": [
+        "vxreddit.com"
       ]
     }
   ]
